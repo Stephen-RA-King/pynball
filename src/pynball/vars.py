@@ -27,9 +27,9 @@ class VarControl:
             self.project_home = Path("")
         try:
             self.pynball = os.environ["PYNBALL"]
-            self.versions = ast.literal_eval(self.pynball)  # type: ignore
+            self.pynball_versions = ast.literal_eval(self.pynball)  # type: ignore
         except KeyError:
-            self.versions = {}  # type: ignore
+            self.pynball_versions = {}  # type: ignore
 
     @staticmethod
     def _execute(*args, supress_exception=False):
@@ -81,8 +81,9 @@ class VarControl:
         return value
 
     def deletenv(self, scope, name):
-        """No need to open the key as they are one of the predefined
-        HKEY_* constants.
+        """A Windows utility method to delete an environment variable key from the
+        named scope. There is No need to open the key as they are one of the
+        predefined HKEY_* constants.
         """
         if scope != "user" and scope != "system":
             print("Scope value must be 'user' or 'system'")
@@ -96,22 +97,60 @@ class VarControl:
         except OSError as e:
             print(f"Deletion of key: '{name}' failed -\n {e}")
 
+    def get_pynball(self):
+        """Reads the environment variable 'PYNBALL' from the user scope as a string.
+        The string is then converted to a dictionary and then the path components are
+        converted to pathlib.Path objects
+        The dictionary should be the following format:
+        {"name: str": "path to version": Path,}.
+        """
+        try:
+            pynball = self.getenv("user", "PYNBALL")
+            print(pynball)
+            pynball_raw_dict = ast.literal_eval(pynball)
+            print(pynball_raw_dict)
+            pynball_versions = {
+                name: Path(path) for name, path in pynball_raw_dict.items()
+            }
+        except (KeyError, ValueError):
+            pynball_versions = {}
+        print(pynball_versions)
+        return pynball_versions
+
+    def set_pynball(self, dict_object):
+        """Accepts a dictionary object, converts it to a string and then
+        writes the string to the 'PYNBALL' environment variable in the user scope.
+        The dictionary should be the following format:
+        {"name: str": "path to version": Path,}.
+        """
+        pynball_raw_dict = {name: str(path) for name, path in dict_object.items()}
+        pynball = str(pynball_raw_dict)
+        self.setenv("user", "PYNBALL", pynball)
+
     def add_version(self, name, version_path):
         """Adds a friendly name and path of an installation."""
+        pynball_versions = self.get_pynball()
+        pynball_versions[f"{str(name)}"] = Path(version_path)
+        self.set_pynball(pynball_versions)
 
-        pass
-
-    def delete_version(self):
+    def delete_version(self, name):
         """Deletes a friendly name and path of an installation."""
-        pass
+        pynball_versions = self.get_pynball()
+        print(pynball_versions)
+        pynball_versions.pop(str(name), None)
+        print(pynball_versions)
+        self.set_pynball(pynball_versions)
 
     def clear_versions(self):
         """Delete all friendly names and paths"""
+        self.deletenv("user", "PYNBALL")
 
     def version(self):
         """Returns details about the current Python version."""
-        print("{0.major}.{0.minor}.{0.micro}".format(sys.version_info))
-        pass
+        print(
+            "{0.major}.{0.minor}.{0.micro}  ReleaseLevel: "
+            "{0.releaselevel}, Serial: {0.serial}".format(sys.version_info)
+        )
 
     def versions(self):
         """Lists the names of the python installs."""
@@ -176,13 +215,5 @@ class VarControl:
 
 
 x = VarControl()
-"""
-x.setenv("system", "STEVE", "123")
-x.setenv("user", "STEVE", "456")
-print(x.getenv("system", "STEVE"))
-print(x.getenv("user", "STEVE"))
-x.deletenv("system", "STEVE")
-x.deletenv("user", "STEVE")
-"""
 
-x.mkproject(3, "steve")
+x.add_version("3.8", r"D:\PYTHON\python3.8")
