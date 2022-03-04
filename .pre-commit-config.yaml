@@ -58,6 +58,7 @@ repos:
           - flake8-comprehensions
           - flake8-eradicate
           - flake8-simplify
+        args: ["--ignore=E800,F842,F841,W503"]
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v2.31.0
