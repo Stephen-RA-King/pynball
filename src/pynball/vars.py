@@ -167,40 +167,22 @@ class VarControl:
         self.setenv("user", "PYNBALL", pynball)
 
     def get_system_path(self):
-        """Reads the environment variable 'Path' from the system scope as a string.
-        The return value will be a list comprising the system python interpreters, along
-        with the pynball friendly name if they are the same.
-        If the system version is not in PYNBALL the name will be empty string.
-        If more than one system interpreter exists an error will be raised.
-        """
-        system_path_python_2 = []  # items in path and pynball variable
-        system_name = []
-        system_path_total = set()  # unique items
-        system_path_final = []
+        python_system_paths = []
+        pynball_system_names = []
         pynball_versions = self.get_pynball("dict")
-        # pynball_versions = {name: str(path) for name, path in pynball_var.items()}
-        system_path: str = self.getenv("system", "PATH")
-        system_path_list = system_path.split(";")
-        system_path_python_1 = [
-            str(Path(i))
-            for i in system_path_list
-            if "python".casefold() in i.casefold()
-        ]
-        for name, path in pynball_versions.items():
-            if path.casefold() in system_path.casefold():
-                system_path_python_2.append(path)
-                system_name.append(name)
-        system_path_total.update(set(system_path_python_1))
-        system_path_total.update(set(system_path_python_2))
-        for path in system_path_total:
-            if "Scripts".casefold() not in path.casefold():
-                system_path_final.append(path)
-        if len(system_path_final) > 1 or len(system_name) > 1:
-            raise ValueError(
-                "Configuration Error! - more than one version of python"
-                "is configured in the system path"
-            )
-        return system_path_final, system_name
+        system_path_string: str = self.getenv("system", "PATH")
+        system_path_variables = system_path_string.split(";")
+        for path in system_path_variables:
+            pathobject = Path(path)
+            if (pathobject / "python.exe").is_file() and os.path.getsize(
+                pathobject / "python.exe"
+            ) > 0:
+                python_system_paths.append(path)
+        if pynball_versions:
+            for name, path in pynball_versions.items():
+                if path.casefold() in python_system_paths:
+                    pynball_system_names.append(name)
+        return python_system_paths, pynball_system_names
 
     def set_system_path(self, path_list):
         """Takes a list of python path details and writes this to the exiting
@@ -213,24 +195,28 @@ class VarControl:
         sorted_versions = []
         sorted_versions_dict = {}
         pynball_versions = self.get_pynball("dict_path_object")
+
         path_object = Path(version_path)
         if not (path_object / "python.exe").is_file():
             message = f"There is no python executable on path: {version_path}"
             self.feedback(message, "warning")
             return
-        if version_path in self.get_pynball("paths"):
-            message = "Python version already added to configuration"
-            self.feedback(message, "warning")
-            return
-        for version in pynball_versions:
-            sorted_versions.append(version)
-        sorted_versions.append(str(name))
-        sorted_versions.sort(key=lambda i: float(i))
-        for version in sorted_versions:
-            if version == str(name):
-                sorted_versions_dict[version] = path_object
-            else:
-                sorted_versions_dict[version] = pynball_versions[version]
+        if pynball_versions:
+            if version_path in self.get_pynball("paths"):
+                message = "Python version already added to configuration"
+                self.feedback(message, "warning")
+                return
+            for version in pynball_versions:
+                sorted_versions.append(version)
+            sorted_versions.append(str(name))
+            sorted_versions.sort(key=lambda x: float(x))
+            for version in sorted_versions:
+                if version == str(name):
+                    sorted_versions_dict[version] = path_object
+                else:
+                    sorted_versions_dict[version] = pynball_versions[version]
+        else:
+            sorted_versions_dict[name] = path_object
         self.set_pynball(sorted_versions_dict)
 
     def delete_version(self, name):
@@ -253,25 +239,30 @@ class VarControl:
 
     def versions(self):
         """Lists the names of the python installs."""
-        system_path, pynball_name = self.get_system_path()
-        # pynball_var = self.get_pynball()
-        # pynball_versions = {name: str(path) for name, path in pynball_var.items()}
+        system_paths, pynball_names = self.get_system_path()
         pynball_versions = self.get_pynball("dict")
-        if not pynball_name:
-            print(
-                colorama.Fore.GREEN
-                + f"{system_path} : --> System Interpreter"
-                + colorama.Style.RESET_ALL
-            )
-        for ver in pynball_versions:
-            if ver == pynball_name:
-                print(
-                    colorama.Fore.GREEN
-                    + f"{ver:15}{pynball_versions[ver]} : --> System Interpreter"
-                    + colorama.Style.RESET_ALL
-                )
-            else:
-                print(f"{ver:10}{pynball_versions[ver]}")
+        if not system_paths:
+            message = "System Interpreter is not configured"
+            self.feedback(message, "warning")
+        if not pynball_names and system_paths:
+            for path in system_paths:
+                message = f"{path} : --> System Interpreter"
+                self.feedback(message, "nominal")
+        if pynball_versions is None:
+            message = "Pynball configuration is empty - use 'add' command"
+            self.feedback(message, "warning")
+        else:
+            for ver in pynball_versions:
+                if ver in pynball_names:
+                    message = (
+                        f"{ver:15}{pynball_versions[ver]} : --> System Interpreter"
+                    )
+                    self.feedback(message, "nominal")
+                else:
+                    print(f"{ver:10}{pynball_versions[ver]}")
+        if pynball_versions and system_paths and not pynball_names:
+            message = "System Interpreter is not in Pynball Configuration"
+            self.feedback(message, "warning")
 
     def switchto(self, name):
         """Changes the version of python."""
@@ -358,13 +349,5 @@ class VarControl:
         pass
 
 
-x = VarControl()
-# x.add_version("3.10", "D:\\PYTHON\\python3.10")
-# x.versions()
-# x.get_system_path()
-x.mkproject("3.10", "steve")
-# print(x.get_pynball("string"))
-# print(x.get_pynball("dict"))
-# print(x.get_pynball("dict_path_object"))
-# print(x.get_pynball("names"))
-# print(x.get_pynball("paths"))
+z = VarControl()
+z.add_version("3.9", "D:\\PYTHON\\python3.9")
