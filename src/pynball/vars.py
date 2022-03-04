@@ -180,7 +180,7 @@ class VarControl:
                 python_system_paths.append(path)
         if pynball_versions:
             for name, path in pynball_versions.items():
-                if path.casefold() in python_system_paths:
+                if path in python_system_paths:
                     pynball_system_names.append(name)
         return python_system_paths, pynball_system_names
 
@@ -255,7 +255,7 @@ class VarControl:
             for ver in pynball_versions:
                 if ver in pynball_names:
                     message = (
-                        f"{ver:15}{pynball_versions[ver]} : --> System Interpreter"
+                        f"{ver:10}{pynball_versions[ver]} : --> System Interpreter"
                     )
                     self.feedback(message, "nominal")
                 else:
@@ -265,28 +265,42 @@ class VarControl:
             self.feedback(message, "warning")
 
     def switchto(self, name):
-        """Changes the version of python."""
+        """Changes the system version of python."""
         name = str(name)
+        path_new = ""
         pynball_versions = self.get_pynball("dict")
-        print(pynball_versions)
-        try:
-            pynball_path = pynball_versions[name]
-            print(pynball_path)
-        except KeyError:
-            print("That version is not configured")
-            return
-        sys_path_list, in_pynball = self.get_system_path()
-        print(sys_path_list)
-        sys_path = self.getenv("system", "PATH")
-        print(sys_path)
-        if name not in pynball_versions:
-            print("That Version is not configured")
+        system_paths, pynball_names = self.get_system_path()
+        all_paths: str = self.getenv("system", "PATH")
+        if name not in self.get_pynball("names"):
+            message = f"{name} is not in Pynballs' configuration"
+            self.feedback(message, "warning")
             self.versions()
             return
-        if sys_path_list:
-            for version in sys_path_list:
-                if "switch".casefold() not in version.casefold():
-                    system_path = version
+        if len(system_paths) > 1 or len(pynball_names) > 1:
+            message = (
+                "Multiple system interpreters have been detected - "
+                "There should be only one"
+            )
+            self.feedback(message, "error")
+            self.versions()
+            return
+        if name in pynball_names:
+            message = f"{name} is already configured as the system interpreter"
+            self.feedback(message, "warning")
+            self.versions()
+            return
+        pynball_path = pynball_versions[name]
+        if system_paths:
+            for old_version in system_paths:
+                path_new: str = all_paths.replace(old_version, pynball_path)
+            print(path_new)
+        if not system_paths:
+            # add pynball name - path to position 1
+            path_patch = "".join(
+                [pynball_path, "/" ";", pynball_path, "/", "scripts", "/", ";"]
+            )
+            path_new = "".join([path_patch, all_paths])
+            print(path_new)
 
     def pythonpath(self):
         """Sets environment variable."""
@@ -350,4 +364,6 @@ class VarControl:
 
 
 z = VarControl()
-z.add_version("3.9", "D:\\PYTHON\\python3.9")
+# z.add_version("3.6", "D:\\PYTHON\\python3.6")
+# print(z.get_system_path())
+z.switchto("3.10")
