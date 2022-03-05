@@ -289,18 +289,18 @@ class VarControl:
             self.feedback(message, "warning")
             self.versions()
             return
-        pynball_path = pynball_versions[name]
+        pynball_path = "".join([pynball_versions[name], "\\"])
         if system_paths:
             for old_version in system_paths:
                 path_new: str = all_paths.replace(old_version, pynball_path)
-            print(path_new)
+            self.setenv("system", "PATH", path_new)
         if not system_paths:
-            # add pynball name - path to position 1
             path_patch = "".join(
-                [pynball_path, "/" ";", pynball_path, "/", "scripts", "/", ";"]
+                [pynball_path, "\\" ";", pynball_path, "\\", "Scripts", "\\", ";"]
             )
             path_new = "".join([path_patch, all_paths])
             print(path_new)
+            self.setenv("system", "PATH", path_new)
 
     def pythonpath(self):
         """Sets environment variable."""
@@ -350,7 +350,7 @@ class VarControl:
                 print(f"""The directory '{new_path}' already exits""")
                 return
 
-    def rmproject(self, ver, project_name):
+    def rmproject(self, project_name):
         """Deletes a virtual environment from a specific version."""
         pass
 
@@ -366,4 +366,4 @@ class VarControl:
 z = VarControl()
 # z.add_version("3.6", "D:\\PYTHON\\python3.6")
 # print(z.get_system_path())
-z.switchto("3.10")
+z.switchto("3.9")
