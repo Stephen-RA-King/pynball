@@ -1,6 +1,7 @@
 # Core Library modules
 import ast
 import os
+import shutil
 import subprocess
 import sys
 import winreg
@@ -36,6 +37,7 @@ class VarControl:
 
     @staticmethod
     def feedback(message, feedback_type):
+        """A utility method to generate nicely formatted messages"""
         if feedback_type == "nominal":
             print(colorama.Fore.GREEN + f"{message}" + colorama.Style.RESET_ALL)
         if feedback_type == "warning":
@@ -55,7 +57,7 @@ class VarControl:
 
     @staticmethod
     def _execute(*args, supress_exception=False):
-        print(args)
+        """A utility method to run command line tools"""
         try:
             proc = subprocess.Popen(
                 args, stdout=subprocess.PIPE, stderr=subprocess.PIPE
@@ -71,8 +73,12 @@ class VarControl:
             print(e)
 
     def setenv(self, scope, name, value):
+        """Utility method to set an environment variable given a scope,
+        variable name and a value.
+        """
         if scope != "user" and scope != "system":
-            print("Scope value must be 'user' or 'system'")
+            message = "Scope value must be 'user' or 'system'"
+            self.feedback(message, "warning")
             return
         if scope == "user":
             key = winreg.OpenKey(
@@ -86,8 +92,9 @@ class VarControl:
         winreg.CloseKey(key)
 
     def getenv(self, scope, name):
-        """No need to open the key as they are one of the predefined
-        HKEY_* constants.
+        """Utility method to set an environment variable given a scope,
+        variable name and a value.
+        No need to open the key as they are one of the predefined HKEY_* constants.
         """
         if scope != "user" and scope != "system":
             print("Scope value must be 'user' or 'system'")
@@ -103,9 +110,9 @@ class VarControl:
         return value
 
     def deletenv(self, scope, name):
-        """A Windows utility method to delete an environment variable key from the
-        named scope. There is No need to open the key as they are one of the
-        predefined HKEY_* constants.
+        """A utility method to delete an environment variable key from the
+        named scope.
+        No need to open the key as they are one of the predefined HKEY_* constants.
         """
         if scope != "user" and scope != "system":
             print("Scope value must be 'user' or 'system'")
@@ -121,10 +128,8 @@ class VarControl:
 
     def get_pynball(self, returntype):
         """Reads the environment variable 'PYNBALL' from the user scope as a string.
-        The string is then converted to a dictionary and then the path components are
-        converted to pathlib.Path objects
-        The dictionary should be the following format:
-        {"name: str": "path to version": Path,}.
+        The string is then converted to the data structure specified by the
+        returntype
         """
         names_list = []
         paths_list = []
@@ -183,12 +188,6 @@ class VarControl:
                 if path in python_system_paths:
                     pynball_system_names.append(name)
         return python_system_paths, pynball_system_names
-
-    def set_system_path(self, path_list):
-        """Takes a list of python path details and writes this to the exiting
-        system path variable
-        """
-        pass
 
     def add_version(self, name, version_path):
         """Adds a friendly name and path of an installation."""
@@ -302,8 +301,8 @@ class VarControl:
             print(path_new)
             self.setenv("system", "PATH", path_new)
 
-    def pythonpath(self):
-        """Sets environment variable."""
+    def pypath(self):
+        """Sets pythonpath environment variable."""
         pass
 
     def mkproject(self, ver: str, project_name):
@@ -351,14 +350,36 @@ class VarControl:
                 return
 
     def rmproject(self, project_name):
-        """Deletes a virtual environment from a specific version."""
+        """Deletes a virtual environment."""
+        if self.workon_home is None or self.project_home is None:
+            print(
+                """Virtualenv-wrapper is not configured on you system:
+            Please install Virtualenv and Virtualenv-wrapper and configure
+            'WORKON_HOME' and 'PROJECT_HOME' environment variables"""
+            )
+            return
+        for directory in [self.workon_home, self.project_home]:
+            del_path = directory / project_name
+            if directory == self.project_home:
+                x = input(
+                    "Continuing will delete the project directory. Are you sure? (y/n)"
+                )
+                if x.lower() == "n":
+                    continue
+            try:
+                shutil.rmtree(del_path)
+            except FileNotFoundError:
+                print(f"Project: {project_name} does not exist")
+
+    def lsproject(self):
+        """Lists all projects"""
         pass
 
-    def export_config_file(self):
+    def export_config(self):
         """Creates a configuration file backup"""
         pass
 
-    def import_config_file(self):
+    def import_config(self):
         """Creates a configuration file backup"""
         pass
 
@@ -366,4 +387,5 @@ class VarControl:
 z = VarControl()
 # z.add_version("3.6", "D:\\PYTHON\\python3.6")
 # print(z.get_system_path())
-z.switchto("3.9")
+# z.switchto("3.9")
+z.rmproject("steve")
