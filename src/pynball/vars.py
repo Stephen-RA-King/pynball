@@ -97,7 +97,8 @@ class VarControl:
         No need to open the key as they are one of the predefined HKEY_* constants.
         """
         if scope != "user" and scope != "system":
-            print("Scope value must be 'user' or 'system'")
+            message = "Scope value must be 'user' or 'system'"
+            self.feedback(message, "warning")
             return
         elif scope == "user":
             key = winreg.CreateKey(self.user_key, self.user_subkey)
@@ -115,7 +116,8 @@ class VarControl:
         No need to open the key as they are one of the predefined HKEY_* constants.
         """
         if scope != "user" and scope != "system":
-            print("Scope value must be 'user' or 'system'")
+            message = "Scope value must be 'user' or 'system'"
+            self.feedback(message, "warning")
             return
         elif scope == "user":
             key = winreg.CreateKey(self.user_key, self.user_subkey)
@@ -124,7 +126,8 @@ class VarControl:
         try:
             winreg.DeleteValue(key, name)  # noqa
         except OSError as e:
-            print(f"Deletion of key: '{name}' failed -\n {e}")
+            message = f"Deletion of key: '{name}' failed -\n {e}"
+            self.feedback(message, "warning")
 
     def get_pynball(self, returntype):
         """Reads the environment variable 'PYNBALL' from the user scope as a string.
@@ -135,7 +138,8 @@ class VarControl:
         paths_list = []
         returntypes = ("string", "dict", "dict_path_object", "names", "paths")
         if returntype not in returntypes:
-            print("Please use a correct returntype")
+            message = f"Please use a correct returntype - \n {returntypes}"
+
         pynball_var = self.getenv("user", "PYNBALL")
         if pynball_var is None:
             return None
@@ -228,13 +232,13 @@ class VarControl:
         """Delete all friendly names and paths"""
         self.deletenv("user", "PYNBALL")
 
-    @staticmethod
-    def version():
+    def version(self):
         """Returns details about the current Python version."""
-        print(
-            "{0.major}.{0.minor}.{0.micro}  ReleaseLevel: "
-            "{0.releaselevel}, Serial: {0.serial}".format(sys.version_info)
+        message = (
+            "{0.major}.{0.minor}.{0.micro}  ReleaseLevel: {0.releaselevel}, "
+            "Serial: {0.serial}".format(sys.version_info)
         )
+        self.feedback(message, "nominal")
 
     def versions(self):
         """Lists the names of the python installs."""
