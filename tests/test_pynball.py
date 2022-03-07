@@ -2,139 +2,110 @@
 """Tests for package pynball.py"""
 
 # Core Library modules
-import os
-import sqlite3
+import re
 import sys
-import warnings
 
 # Third party modules
 import pytest
 
 # First party modules
-from src.pynball import pynball
+from src.pynball.pynball import Pynball
 
-# ******************FIXTURES ***************************
-# fixture moved to conftest
-
-
-@pytest.fixture(name="cursor")
-def db_setup():
-    """pytest fixture to create a DB in memory and add a record."""
-    db = sqlite3.connect(":memory:")
-    cursor = db.cursor()
-    cursor.execute(
-        """CREATE TABLE users(id INTEGER PRIMARY KEY, name TEXT, email TEXT unique)"""
-    )
-    cursor.execute(
-        """INSERT INTO users(name, email)
-                      VALUES(?,?)""",
-        ("Stephen R A King", "stephen.ra.king@gmail.com"),
-    )
-    db.commit()
-    yield cursor
-    db.close()
+pb = Pynball()
 
 
-# Inbuilt fixture - tmpdir_factory
-@pytest.fixture(scope="session")
-def text_file(tmpdir_factory):
-    """pytest fixture for tmpdir_factory feature."""
-    fn = tmpdir_factory.mktemp("data").join("bigfile.txt")
-    fn.write("content")
-    return fn
-
-
-# Inbuilt fixture - request (Parametrized fixture)
-data = [(3, "cat"), (3, "dog"), (7, "hamster"), (6, "gerbil")]
-
-
-@pytest.fixture(params=data)
-def gen_data(request):
-    """pytest fixture for request Parametrized data feature."""
-    return request.param
-
-
-# ======= START PYTEST FIXTURES TESTS ================================================
-
-
-def test_get_db_record(cursor):
-    """Pytest test to assert name & email from DB created by fixture."""
-    cursor.execute("""SELECT name, email FROM users""")
-    user1 = cursor.fetchone()
-    assert user1 == ("Stephen R A King", "stephen.ra.king@gmail.com")
-
-
-# Inbuilt fixture - tmpdir
-def test_create_file(tmpdir):
-    """pytest test to assert contents of a file using tmpdir pytest feature."""
-    p = tmpdir.mkdir("sub").join("hello.txt")
-    p.write("content")
-    assert p.read() == "content"
-    assert len(tmpdir.listdir()) == 1
-
-
-# Inbuilt fixture - tmpdir_factory
-def test_create_file2(text_file):
-    """pytest test to assert contents of a file using tmpdir_factory pytest feature."""
-    assert text_file.read() == "content"
-
-
-# Inbuilt fixture - request
-def test_func(gen_data):
-    """pytest test to assert request Parametrized data pytest feature."""
-    assert gen_data[0] == len(gen_data[1])
-
-
-# Inbuilt fixture -  capsys
-def test_output(capsys):
-    """pytest test to assert capsys pytest feature."""
-    pynball.check_output()
-    captured = capsys.readouterr()
-    assert captured.out == "hello world\n"
-    assert captured.err == ""
-
-
-# Inbuilt fixture - recwarn
-def test_lame_function(recwarn):
-    """pytest test to assert recwarn pytest feature."""
-    pynball.lame_function()
-    assert len(recwarn) == 1
-    w = recwarn.pop()
-    assert w.category == DeprecationWarning
-    assert str(w.message) == "Please stop using this"
-
-
-# ======= MONKEY PATCHING ============================================================
-# Original function may call a real API or access the network, or access a
-# real database etc. Monkey patching is useful for replacing this behaviour
-# with a mock behaviour that is non-invasive
-
-
-# def getssh():  # monkeypatch this function - this Original function is not changed
-#     return os.path.join(os.path.expanduser("~admin"), "ssh")
-
-
-# Inbuilt fixture - monkeypatch
-def test_mytest(monkeypatch):
-    """Pytest test to assert monkeypatch pytest feature."""
-    # 1 - set up the mock that will be used instead of the actual function
-    def mockreturn(object):
-        return "\\abc"
-
-    # 2 - Redirect actual function to mock function
-    monkeypatch.setattr(os.path, "expanduser", mockreturn)
-
-    # 3 - now test the actual function
-    x = pynball.getssh()
-    assert x == "\\abc\\ssh"
-
-
-# ======= START BASIC TESTS ==========================================================
-def test_doubleit():
+def test_spaceholder():
     """Assert package pynball function return."""
-    assert pynball.doubleit(10) == 20
+    assert Pynball._spaceholder() == 1
 
 
+def test_execute():
+    pattern = r"\d+.\d+.\d+"
+    py_ver_script = "{0.major}.{0.minor}.{0.micro}".format(sys.version_info)
+    py_ver_cli = Pynball._execute("python", "--version")
+    assert re.findall(pattern, py_ver_script) == re.findall(pattern, py_ver_cli)
+
+
+@pytest.mark.parametrize(
+    "message, message_type, result",
+    [
+        ("this is a null message", "null", "None"),
+        ("this is a nominal message", "nominal", "None"),
+        ("this is a warning message", "warning", "None"),
+        ("this is an error message", "error", "None"),
+        ("this is an error message", "wrong", "Incorrect feedback type"),
+    ],
+)
+def test_feedback(message, message_type, result):
+    """Pytest test to assert mark parametrize pytest feature."""
+    assert result == str(Pynball._feedback(message, message_type))
+
+
+def test_setenv():
+    assert "Scope value must be 'user' or 'system'" == pb._setenv(
+        "unknown", "DELETEKEY", "deletevalue"
+    )
+    assert None is pb._setenv("user", "DELETEKEY", "deletevalue")
+    assert None is pb._setenv("system", "DELETEKEY", "deletevalue")
+
+    assert "Scope value must be 'user' or 'system'" == pb._getenv(
+        "unknown", "DELETEKEY"
+    )
+    assert "deletevalue" == pb._getenv("user", "DELETEKEY")
+    assert "deletevalue" == pb._getenv("system", "DELETEKEY")
+
+    assert "Scope value must be 'user' or 'system'" == pb._delenv(
+        "unknown", "DELETEKEY"
+    )
+    assert None is pb._delenv("user", "DELETEKEY")
+    assert None is pb._delenv("system", "DELETEKEY")
+
+
+def test_get_pynball():
+    pass
+
+
+def test_set_pynball():
+    pass
+
+
+def test_get_system_path():
+    pass
+
+
+def test_add_version():
+    pass
+
+
+def test_delete_version():
+    pass
+
+
+def test_clear_versions():
+    pass
+
+
+def test_version():
+    pass
+
+
+def test_versions():
+    pass
+
+
+def test_switchto():
+    pass
+
+
+def test_pypath():
+    pass
+
+
+def test_mkproject():
+    pass
+
+
+'''
 # ======= START PYTEST FUNCTIONS =====================================================
 # pytest.raises
 def test_doubleit_except_type():
@@ -229,3 +200,4 @@ def test_param_example(length, pet):
 def test_userwarning():
     """Pytest test to assert mark filterwarnings pytest feature."""
     warnings.warn("this is a warning", UserWarning)
+'''
