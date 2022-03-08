@@ -2,8 +2,10 @@
 """Tests for package pynball.py"""
 
 # Core Library modules
+import os
 import re
 import sys
+import winreg
 
 # Third party modules
 import pytest
@@ -14,9 +16,11 @@ from src.pynball.pynball import Pynball
 pb = Pynball()
 
 
-def test_spaceholder():
-    """Assert package pynball function return."""
-    assert Pynball._spaceholder() == 1
+PYNBALL_BACKUP = os.environ["PYNBALL"]
+PATH_BACKUP = getenv("system", "PATH")
+WORKON_HOME_BACKUP = os.environ["WORKON_HOME"]
+PROJECT_HOME_BACKUP = os.environ["PROJECT_HOME"]
+HOMEPATH = os.environ["HOMEPATH"]
 
 
 def test_execute():
@@ -41,19 +45,21 @@ def test_feedback(message, message_type, result):
     assert result == str(Pynball._feedback(message, message_type))
 
 
-def test_setenv():
+def test_set_get_del_env():
+    """Test case to check environmental variable getter and setter mkethods"""
+    # Setter
     assert "Scope value must be 'user' or 'system'" == pb._setenv(
         "unknown", "DELETEKEY", "deletevalue"
     )
     assert None is pb._setenv("user", "DELETEKEY", "deletevalue")
     assert None is pb._setenv("system", "DELETEKEY", "deletevalue")
-
+    # Getter
     assert "Scope value must be 'user' or 'system'" == pb._getenv(
         "unknown", "DELETEKEY"
     )
     assert "deletevalue" == pb._getenv("user", "DELETEKEY")
     assert "deletevalue" == pb._getenv("system", "DELETEKEY")
-
+    # Deleter
     assert "Scope value must be 'user' or 'system'" == pb._delenv(
         "unknown", "DELETEKEY"
     )
@@ -61,11 +67,11 @@ def test_setenv():
     assert None is pb._delenv("system", "DELETEKEY")
 
 
-def test_get_pynball():
+def test_set_pynball():
     pass
 
 
-def test_set_pynball():
+def test_get_pynball():
     pass
 
 
