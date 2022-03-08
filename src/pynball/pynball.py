@@ -38,13 +38,13 @@ class Pynball:
         except KeyError:
             self.pynball_versions = {}  # type: ignore
         try:
+            self.pynball_pyenv = os.environ["PYNBALL_PYENV"]
+        except KeyError:
+            self.pynball_pyenv = 0
+        try:
             self.pyenv_home = Path(os.environ["PYENV_HOME"])
         except KeyError:
             self.pyenv_home = Path("")
-
-    @staticmethod
-    def _spaceholder():
-        return 1
 
     @staticmethod
     def _feedback(message, feedback_type):
@@ -73,13 +73,13 @@ class Pynball:
     def help(self):
         """Return a short description about each public method"""
         message = """
+        include_pyenv:      automatically include the versions installed by pyenv
         add-version:        Adds a Python version to the configuration
         delete-version:     Deletes a Python version from the configuration
         clear-versions:     Clears all versions
         version:            Displays information about current system Python version
         versions:           Displays a list of all configured Python versions
         switchto:           Change the system version of Python
-        pypath:             Add / delete 'PYTHONPATH' entries
         mkproject:          Creates a virtual environment from a specific Python version
         rmproject:          Deletes a virtual environment
         lsproject:          Lists all virtual environments
@@ -104,6 +104,22 @@ class Pynball:
                 return decoded_out
         except OSError as e:
             print(e)
+
+    def _check_virtual_env(self):
+        if self.workon_home == Path("") or self.project_home == Path(""):
+            message = """Virtualenv-wrapper is not configured on you system:
+                        Please install Virtualenv and Virtualenv-wrapper and configure
+                        'WORKON_HOME' and 'PROJECT_HOME' environment variables"""
+            self._feedback(message, "warning")
+            return 1
+        return 0
+
+    def _check_pyenv(self):
+        if self.pyenv_home == Path(""):
+            message = """Pyenv is not configured on you system"""
+            self._feedback(message, "warning")
+            return 1
+        return 0
 
     def _setenv(self, scope, name, value):
         """Utility method to set an environment variable given a scope,
@@ -241,13 +257,13 @@ class Pynball:
             return
         if pynball_versions:
             if version_path in self._get_pynball("paths"):
-                message = "Python version already added to configuration"
+                message = f"{name:8} Python version already added to configuration"
                 self._feedback(message, "warning")
                 return
             for version in pynball_versions:
                 sorted_versions.append(version)
             sorted_versions.append(str(name))
-            sorted_versions.sort(key=lambda x: float(x))
+            sorted_versions.sort(key=lambda s: list(map(int, s.split("."))))
             for version in sorted_versions:
                 if version == str(name):
                     sorted_versions_dict[version] = path_object
@@ -337,21 +353,33 @@ class Pynball:
                 [pynball_path, "\\" ";", pynball_path, "\\", "Scripts", "\\", ";"]
             )
             path_new = "".join([path_patch, all_paths])
-            print(path_new)
             self._setenv("system", "PATH", path_new)
 
-    def pypath(self):
-        """Sets pythonpath environment variable."""
-        pass
+    def include_pyenv(self, flag: str):
+        if self._check_pyenv() == 1:
+            return
+        versions = self.pyenv_home / "versions"
+        dirs = {e.name: e for e in versions.iterdir() if e.is_dir()}
+        if flag.lower() == "y":
+            self._setenv("user", "PYNBALL_PYENV", "1")
+            self.pynball_pyenv = 1
+            for ver in dirs:
+                self.add_version(str(ver), str(dirs[ver]))
+        elif flag.lower() == "n":
+            self._setenv("user", "PYNBALL_PYENV", "0")
+            self.pynball_pyenv = 0
+            for ver in dirs:
+                self.delete_version(str(ver))
+        else:
+            return
 
     def mkproject(self, ver: str, project_name):
-        """Makes a virtual environment from a specific version."""
+        """Creates a virtual environment from a specific version."""
         if self.workon_home is None or self.project_home is None:
-            print(
-                """Virtualenv-wrapper is not configured on you system:
+            message = """Virtualenv-wrapper is not configured on you system:
             Please install Virtualenv and Virtualenv-wrapper and configure
             'WORKON_HOME' and 'PROJECT_HOME' environment variables"""
-            )
+            self._feedback(message, "warning")
             return
         ver = str(ver)
         version_path = ""
@@ -379,40 +407,44 @@ class Pynball:
                         f"{self.project_home / project_name}"
                     )
             except FileNotFoundError:
-                print(
-                    f"Project: '{project_name}' has NOT be created - {directory} "
-                    f"does not exist"
+                message = (
+                    f"Project: '{project_name}' has NOT be created - "
+                    f"{directory} does not exist"
                 )
+                self._feedback(message, "warning")
                 return
             except FileExistsError:
-                print(f"""The directory '{new_path}' already exits""")
+                message = f"The directory '{new_path}' already exits"
+                self._feedback(message, "warning")
                 return
 
     def rmproject(self, project_name):
         """Deletes a virtual environment."""
         if self.workon_home is None or self.project_home is None:
-            print(
-                """Virtualenv-wrapper is not configured on you system:
-            Please install Virtualenv and Virtualenv-wrapper and configure
-            'WORKON_HOME' and 'PROJECT_HOME' environment variables"""
-            )
+            message = """Virtualenv-wrapper is not configured on you system:
+                        Please install Virtualenv and Virtualenv-wrapper and configure
+                        'WORKON_HOME' and 'PROJECT_HOME' environment variables"""
+            self._feedback(message, "warning")
             return
         for directory in [self.workon_home, self.project_home]:
             del_path = directory / project_name
             if directory == self.project_home:
-                x = input(
-                    "Continuing will delete the project directory. Are you sure? (y/n)"
-                )
-                if x.lower() == "n":
+                x = input("Do you want to delete the Project directory? (y/n)")
+                if x.lower() != "y":
                     continue
             try:
                 shutil.rmtree(del_path)
             except FileNotFoundError:
-                print(f"Project: {project_name} does not exist")
+                message = f"Project: {project_name} does not exist"
+                self._feedback(message, "warning")
 
     def lsproject(self):
         """Lists all projects"""
-        pass
+        if self._check_virtual_env() == 1:
+            return
+        dirs = [e.name for e in self.workon_home.iterdir() if e.is_dir()]
+        for virt in dirs:
+            print(virt)
 
     def export_config(self):
         """Creates a configuration file backup"""
@@ -425,9 +457,14 @@ class Pynball:
 
 z = Pynball()
 # z.add_version("3.5", "C:\\Users\\conta\\.pyenv\\pyenv-win\\versions\\3.5.2")
+z.add_version("3.6", "D:\\PYTHON\\python3.6\\")
 # print(z.get_system_path())
 # z.switchto("3.9")
 # z.rmproject("")
 # z.mkproject("3.5", "deletethis")
-# z.versions()
-z.help()
+z.include_pyenv("n")
+# z.include_pyenv("y")
+z.versions()
+# z.help()
+# z.lsproject()
+# z.rmproject("deletethis")
