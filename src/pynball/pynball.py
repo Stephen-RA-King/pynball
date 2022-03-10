@@ -110,9 +110,7 @@ class Pynball:
 
     def _check_virtual_env(self):
         if self.workon_home == Path("") or self.project_home == Path(""):
-            message = """Virtualenv-wrapper is not configured on you system:
-                        Please install Virtualenv and Virtualenv-wrapper and configure
-                        'WORKON_HOME' and 'PROJECT_HOME' environment variables"""
+            message = "Virtualenv-wrapper is not configured."
             self._feedback(message, "warning")
             return 1
         return 0
@@ -181,6 +179,16 @@ class Pynball:
             message = f"Deletion of key: '{name}' failed -\n {e}"
             self._feedback(message, "warning")
 
+    def _set_pynball(self, dict_object: dict) -> None:
+        """Accepts a dictionary object, converts it to a string and then
+        writes the string to the 'PYNBALL' environment variable in the user scope.
+        The dictionary should be the following format:
+        {"name: str": "path to version": Path,}.
+        """
+        pynball_raw_dict = {name: str(path) for name, path in dict_object.items()}
+        pynball = str(pynball_raw_dict)
+        self._setenv("user", "PYNBALL", pynball)
+
     def _get_pynball(self, returntype):
         """Reads the environment variable 'PYNBALL' from the user scope as a string.
         The string is then converted to the data structure specified by the
@@ -217,16 +225,6 @@ class Pynball:
             for name in pynball_raw_dict:
                 paths_list.append(pynball_raw_dict[name])
             return paths_list
-
-    def _set_pynball(self, dict_object: dict) -> None:
-        """Accepts a dictionary object, converts it to a string and then
-        writes the string to the 'PYNBALL' environment variable in the user scope.
-        The dictionary should be the following format:
-        {"name: str": "path to version": Path,}.
-        """
-        pynball_raw_dict = {name: str(path) for name, path in dict_object.items()}
-        pynball = str(pynball_raw_dict)
-        self._setenv("user", "PYNBALL", pynball)
 
     def _get_system_path(self):
         python_system_paths = []
