@@ -2,10 +2,13 @@
 """Tests for package pynball.py"""
 
 # Core Library modules
+import ast
 import os
 import re
+import shutil
 import sys
 import winreg
+from pathlib import Path, WindowsPath
 
 # Third party modules
 import pytest
@@ -16,11 +19,73 @@ from src.pynball.pynball import Pynball
 pb = Pynball()
 
 
-PYNBALL_BACKUP = os.environ["PYNBALL"]
-PATH_BACKUP = getenv("system", "PATH")
-WORKON_HOME_BACKUP = os.environ["WORKON_HOME"]
-PROJECT_HOME_BACKUP = os.environ["PROJECT_HOME"]
-HOMEPATH = os.environ["HOMEPATH"]
+BASE_DIR = Path(__file__).parent
+"""
+(BASE_DIR / "test_env").mkdir()
+(BASE_DIR / "test_env" / "virtual_env").mkdir()
+(BASE_DIR / "test_env" / "virtual_env" / "dev").mkdir()
+(BASE_DIR / "test_env" / "virtual_env" / "pyvenv").mkdir()
+(BASE_DIR / "test_env" / "versions").mkdir()
+(BASE_DIR / "test_env" / "versions" / "3.8").mkdir()
+(BASE_DIR / "test_env" / "versions" / "3.9.2").mkdir()
+(BASE_DIR / "test_env" / "versions" / "3.10.3").mkdir()
+(BASE_DIR / "test_env" / "python").mkdir()
+(BASE_DIR / "test_env" / "python" / "3.8").mkdir()
+(BASE_DIR / "test_env" / "python" / "3.8" / "python.exe").touch()
+(BASE_DIR / "test_env" / "python" / "3.9").mkdir()
+(BASE_DIR / "test_env" / "python" / "3.9" / "python.exe").touch()
+(BASE_DIR / "test_env" / "python" / "3.10").mkdir()
+(BASE_DIR / "test_env" / "python" / "3.10" / "python.exe").touch()
+
+workon_home = (BASE_DIR / "test_env" / "virtual_env" / "pyvenv")
+project_home = (BASE_DIR / "test_env" / "virtual_env" / "dev")
+pynball = {}
+pynball_pyenv = "0"
+pyenv_home = (BASE_DIR / "test_env" / "versions")
+"""
+
+
+def feedback(message, feedback_type):
+    """A utility method to generate nicely formatted messages"""
+    print(f"{message}")
+
+
+# monkey patch for _setenv(scope, name, value)
+def create_file(scope: str, name: str, value: str) -> None:
+    filename = "".join([scope, "_", name])
+    (BASE_DIR / filename).touch()
+    (BASE_DIR / filename).write_text(value)
+
+
+# monkey patch for _getenv(scope, name)
+def read_file(scope: str, name: str) -> str:
+    filename = "".join([scope, "_", name])
+    with (BASE_DIR / filename).open() as f:
+        value = f.read()
+        value = value.replace("\\\\", "\\")
+        return value
+
+
+# monkey patch for _delenv(scope, name)
+def del_file(scope: str, name: str) -> None:
+    filename = "".join([scope, "_", name])
+    (BASE_DIR / filename).unlink()
+
+
+def test_feedback():
+    pass
+
+
+def test_help():
+    pass
+
+
+def test_check_virtual_env():
+    pass
+
+
+def test_check_pyenv():
+    pass
 
 
 def test_execute():
@@ -67,12 +132,55 @@ def test_set_get_del_env():
     assert None is pb._delenv("system", "DELETEKEY")
 
 
-def test_set_pynball():
-    pass
+def test_set_pynball1():
+    pb._setenv = create_file  # monkey patch method
+    dict_object = {"3.6": Path("D:\\Python\\python3.6")}
+    pb._set_pynball(dict_object)
+    assert read_file("user", "PYNBALL") == "{'3.6': 'D:\\Python\\python3.6'}"
+    # del_file("user", "PYNBALL")
 
 
-def test_get_pynball():
-    pass
+def test_get_pynball(capsys):
+    pb._feedback = feedback
+    pb._getenv = read_file  # monkey patch method
+    value = (
+        "{'3.10': 'D:\\PYTHON\\python3.10','3.9': 'D:\\PYTHON\\python3.9',"
+        "'3.8': 'D:\\PYTHON\\python3.8','3.7': 'D:\\PYTHON\\python3.7',"
+        "'3.6': 'D:\\PYTHON\\python3.6'}"
+    )
+    create_file("user", "PYNBALL", value)
+
+    pb._get_pynball("nosuchthing")
+    captured = capsys.readouterr()
+    assert (
+        captured.out == "Please use a correct returntype - "
+        "('string', 'dict', 'dict_path_object', 'names', 'paths')\n"
+    )
+    # assert captured.err == ""
+
+    assert pb._get_pynball("string") == value
+    assert pb._get_pynball("dict") == {
+        "3.10": "D:\\PYTHON\\python3.10",
+        "3.9": "D:\\PYTHON\\python3.9",
+        "3.8": "D:\\PYTHON\\python3.8",
+        "3.7": "D:\\PYTHON\\python3.7",
+        "3.6": "D:\\PYTHON\\python3.6",
+    }
+    assert pb._get_pynball("dict_path_object") == {
+        "3.10": WindowsPath("D:/PYTHON/python3.10"),
+        "3.9": WindowsPath("D:/PYTHON/python3.9"),
+        "3.8": WindowsPath("D:/PYTHON/python3.8"),
+        "3.7": WindowsPath("D:/PYTHON/python3.7"),
+        "3.6": WindowsPath("D:/PYTHON/python3.6"),
+    }
+    assert pb._get_pynball("names") == ["3.10", "3.9", "3.8", "3.7", "3.6"]
+    assert pb._get_pynball("paths") == [
+        "D:\\PYTHON\\python3.10",
+        "D:\\PYTHON\\python3.9",
+        "D:\\PYTHON\\python3.8",
+        "D:\\PYTHON\\python3.7",
+        "D:\\PYTHON\\python3.6",
+    ]
 
 
 def test_get_system_path():
@@ -109,6 +217,9 @@ def test_pypath():
 
 def test_mkproject():
     pass
+
+
+# shutil.rmtree((BASE_DIR / "test_env"))
 
 
 '''
