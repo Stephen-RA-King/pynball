@@ -3,6 +3,7 @@ in conjunction with Virtual Environments and pyenv
 """
 # Core Library modules
 import ast
+import configparser
 import os
 import shutil
 import subprocess
@@ -12,6 +13,8 @@ from pathlib import Path
 
 # Third party modules
 import colorama
+
+config = configparser.ConfigParser()
 
 
 class Pynball:
@@ -40,7 +43,7 @@ class Pynball:
         try:
             self.pynball_pyenv = os.environ["PYNBALL_PYENV"]
         except KeyError:
-            self.pynball_pyenv = 0
+            self.pynball_pyenv = "0"
         try:
             self.pyenv_home = Path(os.environ["PYENV_HOME"])
         except KeyError:
@@ -187,7 +190,7 @@ class Pynball:
         paths_list = []
         returntypes = ("string", "dict", "dict_path_object", "names", "paths")
         if returntype not in returntypes:
-            message = f"Please use a correct returntype - \n {returntypes}"
+            message = f"Please use a correct returntype - {returntypes}"
             self._feedback(message, "warning")
             return
         pynball_var = self._getenv("user", "PYNBALL")
@@ -215,7 +218,7 @@ class Pynball:
                 paths_list.append(pynball_raw_dict[name])
             return paths_list
 
-    def _set_pynball(self, dict_object):
+    def _set_pynball(self, dict_object: dict) -> None:
         """Accepts a dictionary object, converts it to a string and then
         writes the string to the 'PYNBALL' environment variable in the user scope.
         The dictionary should be the following format:
@@ -249,6 +252,7 @@ class Pynball:
         sorted_versions = []
         sorted_versions_dict = {}
         pynball_versions = self._get_pynball("dict_path_object")
+        pynball_dict = self._get_pynball("dict")
 
         path_object = Path(version_path)
         if not (path_object / "python.exe").is_file():
@@ -257,13 +261,18 @@ class Pynball:
             return
         if pynball_versions:
             if version_path in self._get_pynball("paths"):
-                message = f"{name:8} Python version already added to configuration"
+                existing_name = list(pynball_dict.keys())[
+                    list(pynball_dict.values()).index(version_path)
+                ]
+                message = f"{name:8} already added to configuration as {existing_name}"
                 self._feedback(message, "warning")
                 return
             for version in pynball_versions:
                 sorted_versions.append(version)
             sorted_versions.append(str(name))
-            sorted_versions.sort(key=lambda s: list(map(int, s.split("."))))
+            sorted_versions.sort(
+                reverse=True, key=lambda s: list(map(int, s.split(".")))
+            )
             for version in sorted_versions:
                 if version == str(name):
                     sorted_versions_dict[version] = path_object
@@ -448,23 +457,42 @@ class Pynball:
 
     def export_config(self):
         """Creates a configuration file backup"""
-        pass
+        config["PYNBALL"] = {}
+        config["PYNBALL"]["PYNBALL"] = self._get_pynball("string")
+        config["PYNBALL"]["PYNBALL_PYENV"] = self.pynball_pyenv
+        with open("pynball.ini", "w") as configfile:
+            config.write(configfile)
 
-    def import_config(self):
+    def import_config(self, config_path: str):
         """Creates a configuration file backup"""
-        pass
+        config_path_object = Path(config_path)
+        file_name = config_path_object.name
+        config.read(config_path)
+        try:
+            pynball: str = config["PYNBALL"]["PYNBALL"]
+            pynball_pyenv: str = config["PYNBALL"]["PYNBALL_PYENV"]
+        except KeyError:
+            message = f"There is a problem with file: {file_name}"
+            self._feedback(message, "warning")
+            return
+        self._setenv("user", "PYNBALL", pynball)
+        self._setenv("user", "PYNBALL_PYENV", pynball_pyenv)
 
 
-z = Pynball()
+# z = Pynball()
 # z.add_version("3.5", "C:\\Users\\conta\\.pyenv\\pyenv-win\\versions\\3.5.2")
-z.add_version("3.6", "D:\\PYTHON\\python3.6\\")
+# z.add_version("3.6", "D:\\PYTHON\\python3.6\\")
 # print(z.get_system_path())
 # z.switchto("3.9")
 # z.rmproject("")
 # z.mkproject("3.5", "deletethis")
-z.include_pyenv("n")
+# z.include_pyenv("n")
 # z.include_pyenv("y")
-z.versions()
+# z.versions()
 # z.help()
 # z.lsproject()
 # z.rmproject("deletethis")
+# z.export_config()
+# z.import_config("pynball.ini")
+# print(z._get_pynball("dict"))
+# print(z._get_pynball("dict_path_object"))
