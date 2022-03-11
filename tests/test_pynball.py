@@ -14,7 +14,7 @@ from pathlib import Path, WindowsPath
 import pytest
 
 # First party modules
-from src.pynball.pynball import Pynball
+from pynball.pynball import Pynball
 
 pb = Pynball()
 
@@ -45,7 +45,7 @@ pyenv_home = (BASE_DIR / "test_env" / "versions")
 """
 
 
-def feedback(message, feedback_type):
+def feedback(message, _):
     """A utility method to generate nicely formatted messages"""
     print(f"{message}")
 
@@ -72,29 +72,6 @@ def del_file(scope: str, name: str) -> None:
     (BASE_DIR / filename).unlink()
 
 
-def test_feedback():
-    pass
-
-
-def test_help():
-    pass
-
-
-def test_check_virtual_env():
-    pass
-
-
-def test_check_pyenv():
-    pass
-
-
-def test_execute():
-    pattern = r"\d+.\d+.\d+"
-    py_ver_script = "{0.major}.{0.minor}.{0.micro}".format(sys.version_info)
-    py_ver_cli = Pynball._execute("python", "--version")
-    assert re.findall(pattern, py_ver_script) == re.findall(pattern, py_ver_cli)
-
-
 @pytest.mark.parametrize(
     "message, message_type, result",
     [
@@ -107,11 +84,59 @@ def test_execute():
 )
 def test_feedback(message, message_type, result):
     """Pytest test to assert mark parametrize pytest feature."""
-    assert result == str(Pynball._feedback(message, message_type))
+    assert result == str(pb._feedback(message, message_type))
+
+
+def test_help():
+    pass
+
+
+def test_execute():
+    pattern = r"\d+.\d+.\d+"
+    py_ver_script = "{0.major}.{0.minor}.{0.micro}".format(sys.version_info)
+    py_ver_cli = Pynball._execute("python", "--version")
+    assert re.findall(pattern, py_ver_script) == re.findall(pattern, py_ver_cli)
+
+
+@pytest.mark.parametrize(
+    "wh, ph, out, err, return_value",
+    [
+        (Path("C:\\"), Path("C:\\"), "", "", 0),
+        (Path(""), Path("C:\\"), "Virtualenv-wrapper is not configured.\n", "", 1),
+        (Path("C:\\"), Path(""), "Virtualenv-wrapper is not configured.\n", "", 1),
+        (Path(""), Path(""), "Virtualenv-wrapper is not configured.\n", "", 1),
+    ],
+)
+def test_check_virtual_env(capsys, wh, ph, out, err, return_value):
+    pb._feedback = feedback
+    pb.workon_home = wh
+    pb.project_home = ph
+    x = pb._check_virtual_env()
+    output, error = capsys.readouterr()
+    assert output == out
+    assert error == err
+    assert x == return_value
+
+
+@pytest.mark.parametrize(
+    "ph, out, err, return_value",
+    [
+        (Path("C:\\"), "", "", 0),
+        (Path(""), "Pyenv is not configured.\n", "", 1),
+    ],
+)
+def test_check_pyenv(capsys, ph, out, err, return_value):
+    pb._feedback = feedback
+    pb.pyenv_home = ph
+    x = pb._check_pyenv()
+    output, error = capsys.readouterr()
+    assert output == out
+    assert error == err
+    assert x == return_value
 
 
 def test_set_get_del_env():
-    """Test case to check environmental variable getter and setter mkethods"""
+    """Test case to check environmental variable getter and setter methods"""
     # Setter
     assert "Scope value must be 'user' or 'system'" == pb._setenv(
         "unknown", "DELETEKEY", "deletevalue"
@@ -137,7 +162,7 @@ def test_set_pynball1():
     dict_object = {"3.6": Path("D:\\Python\\python3.6")}
     pb._set_pynball(dict_object)
     assert read_file("user", "PYNBALL") == "{'3.6': 'D:\\Python\\python3.6'}"
-    # del_file("user", "PYNBALL")
+    del_file("user", "PYNBALL")
 
 
 def test_get_pynball(capsys):
@@ -181,6 +206,7 @@ def test_get_pynball(capsys):
         "D:\\PYTHON\\python3.7",
         "D:\\PYTHON\\python3.6",
     ]
+    del_file("user", "PYNBALL")
 
 
 def test_get_system_path():
@@ -211,11 +237,27 @@ def test_switchto():
     pass
 
 
-def test_pypath():
+def test_include_pyenv():
     pass
 
 
 def test_mkproject():
+    pass
+
+
+def test_rmproject():
+    pass
+
+
+def test_lsproject():
+    pass
+
+
+def test_export_config():
+    pass
+
+
+def test_import_config():
     pass
 
 
