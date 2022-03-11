@@ -19,6 +19,7 @@ config = configparser.ConfigParser()
 
 class Pynball:
     def __init__(self):
+        self.idlemode = 1 if "idlelib.run" in sys.modules else 0
         self.env_variables = os.environ
         self.environment = os.name
         self.user_key = winreg.HKEY_CURRENT_USER
@@ -49,41 +50,43 @@ class Pynball:
         except KeyError:
             self.pyenv_home = Path("")
 
-    @staticmethod
-    def _feedback(message, feedback_type):
+    def _feedback(self, message, feedback_type):
         """A utility method to generate nicely formatted messages"""
-        if feedback_type == "null":
-            print(colorama.Fore.WHITE + f"{message}" + colorama.Style.RESET_ALL)
-        elif feedback_type == "nominal":
-            print(colorama.Fore.GREEN + f"{message}" + colorama.Style.RESET_ALL)
-        elif feedback_type == "warning":
-            print(
-                colorama.Fore.LIGHTYELLOW_EX
-                + colorama.Back.BLACK
-                + f"WARNING: {message}"
-                + colorama.Style.RESET_ALL
-            )
-        elif feedback_type == "error":
-            print(
-                colorama.Fore.RED
-                + colorama.Back.BLACK
-                + f"ERROR: {message}"
-                + colorama.Style.RESET_ALL
-            )
+        if self.idlemode == 1:
+            print(message)
         else:
-            return "Incorrect feedback type"
+            if feedback_type == "null":
+                print(colorama.Fore.WHITE + f"{message}" + colorama.Style.RESET_ALL)
+            elif feedback_type == "nominal":
+                print(colorama.Fore.GREEN + f"{message}" + colorama.Style.RESET_ALL)
+            elif feedback_type == "warning":
+                print(
+                    colorama.Fore.LIGHTYELLOW_EX
+                    + colorama.Back.BLACK
+                    + f"WARNING: {message}"
+                    + colorama.Style.RESET_ALL
+                )
+            elif feedback_type == "error":
+                print(
+                    colorama.Fore.RED
+                    + colorama.Back.BLACK
+                    + f"ERROR: {message}"
+                    + colorama.Style.RESET_ALL
+                )
+            else:
+                return "Incorrect feedback type"
 
     def help(self):
         """Return a short description about each public method"""
         message = """
-        include_pyenv:      automatically include the versions installed by pyenv
+        include_pyenv:      automatically include the pyenv versions
         add-version:        Adds a Python version to the configuration
         delete-version:     Deletes a Python version from the configuration
         clear-versions:     Clears all versions
-        version:            Displays information about current system Python version
+        version:            Displays current system Python version
         versions:           Displays a list of all configured Python versions
         switchto:           Change the system version of Python
-        mkproject:          Creates a virtual environment from a specific Python version
+        mkproject:          Creates a virtual environment from a Python version
         rmproject:          Deletes a virtual environment
         lsproject:          Lists all virtual environments
         import-config:      Create configuration from a file
@@ -117,7 +120,7 @@ class Pynball:
 
     def _check_pyenv(self):
         if self.pyenv_home == Path(""):
-            message = """Pyenv is not configured on you system"""
+            message = """Pyenv is not configured."""
             self._feedback(message, "warning")
             return 1
         return 0
@@ -494,3 +497,5 @@ class Pynball:
 # z.import_config("pynball.ini")
 # print(z._get_pynball("dict"))
 # print(z._get_pynball("dict_path_object"))
+# z.workon_home = Path("")
+# z._check_virtual_env()
