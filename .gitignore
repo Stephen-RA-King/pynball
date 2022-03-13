@@ -132,6 +132,8 @@ dmypy.json
 
 # pynball
 *.ini
+header.png
+NOTES.txt
 
 # miscellaneous files
 TODO.txt
