@@ -8,7 +8,7 @@ import re
 import shutil
 import sys
 import winreg
-from pathlib import Path, WindowsPath
+from pathlib import Path, PurePath, WindowsPath
 
 # Third party modules
 import pytest
@@ -16,33 +16,48 @@ import pytest
 # First party modules
 from pynball.pynball import Pynball
 
+BASE_DIR = Path(__file__).parent
+TEST_ENV = BASE_DIR / "test_env"
+WORKON_HOME = TEST_ENV / "virtual_env" / "pyvenv"
+PROJECT_HOME = TEST_ENV / "virtual_env" / "dev"
+# pynball_pyenv = "0"
+PYENV_HOME = BASE_DIR / "test_env" / "versions"
+PYTHON_DIR = TEST_ENV / "PYTHON"
+
+
 pb = Pynball()
 
 
-BASE_DIR = Path(__file__).parent
-"""
-(BASE_DIR / "test_env").mkdir()
-(BASE_DIR / "test_env" / "virtual_env").mkdir()
-(BASE_DIR / "test_env" / "virtual_env" / "dev").mkdir()
-(BASE_DIR / "test_env" / "virtual_env" / "pyvenv").mkdir()
-(BASE_DIR / "test_env" / "versions").mkdir()
-(BASE_DIR / "test_env" / "versions" / "3.8").mkdir()
-(BASE_DIR / "test_env" / "versions" / "3.9.2").mkdir()
-(BASE_DIR / "test_env" / "versions" / "3.10.3").mkdir()
-(BASE_DIR / "test_env" / "python").mkdir()
-(BASE_DIR / "test_env" / "python" / "3.8").mkdir()
-(BASE_DIR / "test_env" / "python" / "3.8" / "python.exe").touch()
-(BASE_DIR / "test_env" / "python" / "3.9").mkdir()
-(BASE_DIR / "test_env" / "python" / "3.9" / "python.exe").touch()
-(BASE_DIR / "test_env" / "python" / "3.10").mkdir()
-(BASE_DIR / "test_env" / "python" / "3.10" / "python.exe").touch()
+def create_env():
+    pyenv_ver = ["3.8", "3.9.2", "3.10.3"]
+    python_ver = [
+        ("python3.6", "n"),
+        ("python3.7", "y"),
+        ("python3.8", "y"),
+        ("python3.9", "y"),
+        ("python3.10", "y"),
+    ]
+    TEST_ENV.mkdir()
+    ve_dir = TEST_ENV / "virtual_env"
+    ve_dir.mkdir()
+    WORKON_HOME.mkdir()
+    PROJECT_HOME.mkdir()
 
-workon_home = (BASE_DIR / "test_env" / "virtual_env" / "pyvenv")
-project_home = (BASE_DIR / "test_env" / "virtual_env" / "dev")
-pynball = {}
-pynball_pyenv = "0"
-pyenv_home = (BASE_DIR / "test_env" / "versions")
-"""
+    PYENV_HOME.mkdir()
+    for ver in pyenv_ver:
+        (PYENV_HOME / ver).mkdir()
+
+    PYTHON_DIR.mkdir()
+    for ver in python_ver:
+        name, mkfile = ver
+        pyver = PYTHON_DIR / name
+        pyver.mkdir()
+        if mkfile == "y":
+            (pyver / "python.exe").touch()
+            (pyver / "python.exe").write_text(f"This is version {name}")
+
+
+create_env()
 
 
 def feedback(message, _):
@@ -72,6 +87,27 @@ def del_file(scope: str, name: str) -> None:
     (BASE_DIR / filename).unlink()
 
 
+def create_system_path_variable():
+    value = (
+        r"D:\PYTHON\python3.9\;"
+        r"D:\PYTHON\python3.9\Scripts\;"
+        r"C:\Program Files (x86)\Common Files\Oracle\Java\javapath;"
+        r"C:\WINDOWS\system32;"
+        r"C:\WINDOWS;"
+    )
+    create_file("system", "PATH", value)
+
+
+def create_pynball_variable():
+    value = (
+        "{'3.10': 'D:\\PYTHON\\python3.10',"
+        "'3.9': 'D:\\PYTHON\\python3.9',"
+        "'3.8': 'D:\\PYTHON\\python3.8'}"
+    )
+    create_file("user", "PYNBALL", value)
+
+
+# ========================== BEGIN TESTS =====================================
 @pytest.mark.parametrize(
     "message, message_type, result",
     [
@@ -168,12 +204,15 @@ def test_set_pynball1():
 def test_get_pynball(capsys):
     pb._feedback = feedback
     pb._getenv = read_file  # monkey patch method
+    create_pynball_variable()
+    """
     value = (
         "{'3.10': 'D:\\PYTHON\\python3.10','3.9': 'D:\\PYTHON\\python3.9',"
         "'3.8': 'D:\\PYTHON\\python3.8','3.7': 'D:\\PYTHON\\python3.7',"
         "'3.6': 'D:\\PYTHON\\python3.6'}"
     )
     create_file("user", "PYNBALL", value)
+    """
 
     pb._get_pynball("nosuchthing")
     captured = capsys.readouterr()
@@ -183,7 +222,14 @@ def test_get_pynball(capsys):
     )
     # assert captured.err == ""
 
-    assert pb._get_pynball("string") == value
+    assert (
+        pb._get_pynball("string") == ""
+        "{'3.10': 'D:\\PYTHON\\python3.10',"
+        "'3.9': 'D:\\PYTHON\\python3.9',"
+        "'3.8': 'D:\\PYTHON\\python3.8',"
+        "'3.7': 'D:\\PYTHON\\python3.7',"
+        "'3.6': 'D:\\PYTHON\\python3.6'}"
+    )
     assert pb._get_pynball("dict") == {
         "3.10": "D:\\PYTHON\\python3.10",
         "3.9": "D:\\PYTHON\\python3.9",
@@ -210,11 +256,38 @@ def test_get_pynball(capsys):
 
 
 def test_get_system_path():
-    pass
+    pb._getenv = read_file  # monkey patch method
+    create_system_path_variable()
+    create_pynball_variable()
+    sys_path, pynball_name = pb._get_system_path()
+    assert sys_path == ["D:\\PYTHON\\python3.9\\"]
+    assert pynball_name == ["3.9"]
+    del_file("system", "PATH")
+    del_file("user", "PYNBALL")
 
 
-def test_add_version():
-    pass
+@pytest.mark.parametrize(
+    "name, path, out, err",
+    [
+        ("3.6", "python3.6", "There is no python executable on that path\n", ""),
+        ("3.8", "python3.8", "3.8  already added to configuration as 3.8\n", ""),
+    ],
+)
+def test_add_version(capsys, name, path, out, err):
+    pb._feedback = feedback
+    pb._getenv = read_file  # monkey patch method
+    pb._setenv = create_file
+    pb._delenv = del_file
+    create_system_path_variable()
+    create_pynball_variable()
+
+    verpath = str(PurePath(PYTHON_DIR, path))
+    pb.add("name", verpath)
+    output, error = capsys.readouterr()
+    assert output == out
+    assert error == err
+    del_file("system", "PATH")
+    del_file("user", "PYNBALL")
 
 
 def test_delete_version():
