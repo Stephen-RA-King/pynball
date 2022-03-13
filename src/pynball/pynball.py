@@ -78,20 +78,18 @@ class Pynball:
 
     def help(self):
         """Return a short description about each public method"""
-        message = """
-        include_pyenv:      automatically include the pyenv versions
-        add-version:        Adds a Python version to the configuration
-        delete-version:     Deletes a Python version from the configuration
-        clear-versions:     Clears all versions
-        version:            Displays current system Python version
-        versions:           Displays a list of all configured Python versions
-        switchto:           Change the system version of Python
-        mkproject:          Creates a virtual environment from a Python version
-        rmproject:          Deletes a virtual environment
-        lsproject:          Lists all virtual environments
-        import-config:      Create configuration from a file
-        export-config:      Saves configuration to a file
-        """
+        message = """add:            Add a Python version to the configuration
+delete:         Delete a Python version from the configuration
+clear:          Clear all Configuration versions
+version:        Display current system Python version
+versions:       Display a list of all configured Python versions
+switchto:       Change the system version of Python
+mkproject:      Create a virtual environment from a Python version
+rmproject:      Delete a virtual environment
+lsproject:      List all virtual environments
+pyenv:          Automatically include the pyenv versions
+importconf:     Create configuration from a file
+exportconf:     Save configuration to a file"""
         self._feedback(message, "null")
 
     @staticmethod
@@ -248,7 +246,7 @@ class Pynball:
                     pynball_system_names.append(name)
         return python_system_paths, pynball_system_names
 
-    def add_version(self, name, version_path):
+    def add(self, name, version_path):
         """Adds a friendly name and path of an installation."""
         sorted_versions = []
         sorted_versions_dict = {}
@@ -257,7 +255,7 @@ class Pynball:
 
         path_object = Path(version_path)
         if not (path_object / "python.exe").is_file():
-            message = f"There is no python executable on path: {version_path}"
+            message = "There is no python executable on that path"
             self._feedback(message, "warning")
             return
         if pynball_versions:
@@ -282,14 +280,23 @@ class Pynball:
         else:
             sorted_versions_dict[name] = path_object
         self._set_pynball(sorted_versions_dict)
+        self.versions()
 
-    def delete_version(self, name):
+    def delete(self, name):
         """Deletes a friendly name and path of an installation."""
         pynball_versions = self._get_pynball("dict")
-        pynball_versions.pop(str(name), None)
-        self._set_pynball(pynball_versions)
+        _, sys_ver = self._get_system_path()
+        if name in sys_ver:
+            message = "Cannot delete System Interpreter"
+            self._feedback(message, "warning")
+            self.versions()
+            return
+        else:
+            pynball_versions.pop(str(name), None)
+            self._set_pynball(pynball_versions)
+            self.versions()
 
-    def clear_versions(self):
+    def clear(self):
         """Delete all friendly names and paths"""
         self._delenv("user", "PYNBALL")
 
@@ -365,7 +372,7 @@ class Pynball:
             path_new = "".join([path_patch, all_paths])
             self._setenv("system", "PATH", path_new)
 
-    def include_pyenv(self, flag: str):
+    def pyenv(self, flag: str):
         if self._check_pyenv() == 1:
             return
         versions = self.pyenv_home / "versions"
@@ -374,12 +381,12 @@ class Pynball:
             self._setenv("user", "PYNBALL_PYENV", "1")
             self.pynball_pyenv = 1
             for ver in dirs:
-                self.add_version(str(ver), str(dirs[ver]))
+                self.add(str(ver), str(dirs[ver]))
         elif flag.lower() == "n":
             self._setenv("user", "PYNBALL_PYENV", "0")
             self.pynball_pyenv = 0
             for ver in dirs:
-                self.delete_version(str(ver))
+                self.delete(str(ver))
         else:
             return
 
@@ -456,7 +463,7 @@ class Pynball:
         for virt in dirs:
             print(virt)
 
-    def export_config(self):
+    def exportconf(self):
         """Creates a configuration file backup"""
         config["PYNBALL"] = {}
         config["PYNBALL"]["PYNBALL"] = self._get_pynball("string")
@@ -464,7 +471,7 @@ class Pynball:
         with open("pynball.ini", "w") as configfile:
             config.write(configfile)
 
-    def import_config(self, config_path: str):
+    def importconf(self, config_path: str):
         """Creates a configuration file backup"""
         config_path_object = Path(config_path)
         file_name = config_path_object.name
@@ -499,3 +506,4 @@ class Pynball:
 # print(z._get_pynball("dict_path_object"))
 # z.workon_home = Path("")
 # z._check_virtual_env()
+# print(z._get_pynball("string"))
