@@ -205,14 +205,6 @@ def test_get_pynball(capsys):
     pb._feedback = feedback
     pb._getenv = read_file  # monkey patch method
     create_pynball_variable()
-    """
-    value = (
-        "{'3.10': 'D:\\PYTHON\\python3.10','3.9': 'D:\\PYTHON\\python3.9',"
-        "'3.8': 'D:\\PYTHON\\python3.8','3.7': 'D:\\PYTHON\\python3.7',"
-        "'3.6': 'D:\\PYTHON\\python3.6'}"
-    )
-    create_file("user", "PYNBALL", value)
-    """
 
     pb._get_pynball("nosuchthing")
     captured = capsys.readouterr()
@@ -220,37 +212,27 @@ def test_get_pynball(capsys):
         captured.out == "Please use a correct returntype - "
         "('string', 'dict', 'dict_path_object', 'names', 'paths')\n"
     )
-    # assert captured.err == ""
-
     assert (
         pb._get_pynball("string") == ""
         "{'3.10': 'D:\\PYTHON\\python3.10',"
         "'3.9': 'D:\\PYTHON\\python3.9',"
-        "'3.8': 'D:\\PYTHON\\python3.8',"
-        "'3.7': 'D:\\PYTHON\\python3.7',"
-        "'3.6': 'D:\\PYTHON\\python3.6'}"
+        "'3.8': 'D:\\PYTHON\\python3.8'}"
     )
     assert pb._get_pynball("dict") == {
         "3.10": "D:\\PYTHON\\python3.10",
         "3.9": "D:\\PYTHON\\python3.9",
         "3.8": "D:\\PYTHON\\python3.8",
-        "3.7": "D:\\PYTHON\\python3.7",
-        "3.6": "D:\\PYTHON\\python3.6",
     }
     assert pb._get_pynball("dict_path_object") == {
         "3.10": WindowsPath("D:/PYTHON/python3.10"),
         "3.9": WindowsPath("D:/PYTHON/python3.9"),
         "3.8": WindowsPath("D:/PYTHON/python3.8"),
-        "3.7": WindowsPath("D:/PYTHON/python3.7"),
-        "3.6": WindowsPath("D:/PYTHON/python3.6"),
     }
-    assert pb._get_pynball("names") == ["3.10", "3.9", "3.8", "3.7", "3.6"]
+    assert pb._get_pynball("names") == ["3.10", "3.9", "3.8"]
     assert pb._get_pynball("paths") == [
         "D:\\PYTHON\\python3.10",
         "D:\\PYTHON\\python3.9",
         "D:\\PYTHON\\python3.8",
-        "D:\\PYTHON\\python3.7",
-        "D:\\PYTHON\\python3.6",
     ]
     del_file("user", "PYNBALL")
 
@@ -270,7 +252,7 @@ def test_get_system_path():
     "name, path, out, err",
     [
         ("3.6", "python3.6", "There is no python executable on that path\n", ""),
-        ("3.8", "python3.8", "3.8  already added to configuration as 3.8\n", ""),
+        ("3.8", "python3.8", "3.8      already added to configuration as 3.8\n", ""),
     ],
 )
 def test_add_version(capsys, name, path, out, err):
@@ -282,7 +264,7 @@ def test_add_version(capsys, name, path, out, err):
     create_pynball_variable()
 
     verpath = str(PurePath(PYTHON_DIR, path))
-    pb.add("name", verpath)
+    pb.add(name, verpath)
     output, error = capsys.readouterr()
     assert output == out
     assert error == err
@@ -290,8 +272,29 @@ def test_add_version(capsys, name, path, out, err):
     del_file("user", "PYNBALL")
 
 
-def test_delete_version():
-    pass
+@pytest.mark.parametrize(
+    "name, out, err",
+    [
+        ("3.9", "Cannot delete System Interpreter\n", ""),
+        ("3.8", "", ""),
+    ],
+)
+def test_delete_version(capsys, name, out, err):
+    pb._feedback = feedback
+    pb._getenv = read_file  # monkey patch method
+    pb._setenv = create_file
+    pb._delenv = del_file
+    create_system_path_variable()
+    create_pynball_variable()
+
+    pb.delete(name)
+
+    pynball = read_file("user", "PYNBALL")
+    assert (
+        pynball == "{'3.10': 'D:\\PYTHON\\python3.10', '3.9': 'D:\\PYTHON\\python3.9'}"
+    )
+    # del_file("system", "PATH")
+    # del_file("user", "PYNBALL")
 
 
 def test_clear_versions():
