@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests for package pynball.py"""
+"""Tests for package _pynball.py"""
 
 # Core Library modules
 import ast
@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).parent
 TEST_ENV = BASE_DIR / "test_env"
 WORKON_HOME = TEST_ENV / "virtual_env" / "pyvenv"
 PROJECT_HOME = TEST_ENV / "virtual_env" / "dev"
-# pynball_pyenv = "0"
+# _pynball_pyenv = "0"
 PYENV_HOME = BASE_DIR / "test_env" / "versions"
 PYTHON_DIR = TEST_ENV / "PYTHON"
 
@@ -145,8 +145,8 @@ def test_execute():
 )
 def test_check_virtual_env(capsys, wh, ph, out, err, return_value):
     pb._feedback = feedback
-    pb.workon_home = wh
-    pb.project_home = ph
+    pb._workon_home = wh
+    pb._project_home = ph
     x = pb._check_virtual_env()
     output, error = capsys.readouterr()
     assert output == out
@@ -163,7 +163,7 @@ def test_check_virtual_env(capsys, wh, ph, out, err, return_value):
 )
 def test_check_pyenv(capsys, ph, out, err, return_value):
     pb._feedback = feedback
-    pb.pyenv_home = ph
+    pb._pyenv_home = ph
     x = pb._check_pyenv()
     output, error = capsys.readouterr()
     assert output == out
@@ -343,40 +343,40 @@ def test_import_config():
 def test_doubleit_except_type():
     """Pytest test to assert raises pytest feature."""
     with pytest.raises(TypeError):
-        pynball.doubleit("hello")
+        _pynball.doubleit("hello")
 
 
 # pytest.raises
 def test_doubleit_except_message():
     """Pytest test to assert raises pytest feature."""
     with pytest.raises(TypeError, match="Enter an Integer"):
-        pynball.doubleit("hello")
+        _pynball.doubleit("hello")
 
 
 # pytest.warns - Alternative way to check warnings
 def test_lame_function_warns():
     """Pytest test to assert warns pytest feature."""
     with pytest.warns(DeprecationWarning, match=".*Please stop using this.*"):
-        pynball.lame_function()
+        _pynball.lame_function()
 
 
 # pytest.approx
 def test_approx():
     """Pytest test to assert approx pytest feature."""
-    assert pynball.addit(0.1, 0.2) == pytest.approx(0.3)
+    assert _pynball.addit(0.1, 0.2) == pytest.approx(0.3)
 
 
 # ======= START EXCEPTION TESTS ======================================================
 def test_div_by_zero():
     """Pytest test to assert raises pytest feature."""
     with pytest.raises(ZeroDivisionError):
-        pynball.div_by_zero()
+        _pynball.div_by_zero()
 
 
 def test_check_message():
     """Pytest test to assert raises pytest feature"""
     with pytest.raises(ValueError) as excinfo:
-        pynball.check_message("dog")
+        _pynball.check_message("dog")
     exception_msg = excinfo.value.args[0]
     assert exception_msg == "pet must be cat"
 
@@ -384,7 +384,7 @@ def test_check_message():
 def test_manual_exc():
     """Pytest test to assert raises pytest feature."""
     with pytest.raises(ValueError):
-        if pynball.manual_exception() > 5:
+        if _pynball.manual_exception() > 5:
             raise ValueError("value must be <= 5")
 
 

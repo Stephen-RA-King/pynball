@@ -130,7 +130,7 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
-# pynball
+# _pynball
 *.ini
 header.png
 NOTES.txt

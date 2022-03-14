@@ -19,40 +19,40 @@ config = configparser.ConfigParser()
 
 class Pynball:
     def __init__(self):
-        self.idlemode = 1 if "idlelib.run" in sys.modules else 0
-        self.env_variables = os.environ
-        self.environment = os.name
-        self.user_key = winreg.HKEY_CURRENT_USER
-        self.user_subkey = "Environment"
-        self.system_key = winreg.HKEY_LOCAL_MACHINE
-        self.system_subkey = (
+        self._idlemode = 1 if "idlelib.run" in sys.modules else 0
+        self._env_variables = os.environ
+        self._environment = os.name
+        self._user_key = winreg.HKEY_CURRENT_USER
+        self._user_subkey = "Environment"
+        self._system_key = winreg.HKEY_LOCAL_MACHINE
+        self._system_subkey = (
             r"System\CurrentControlSet\Control\Session Manager\Environment"
         )
         try:
-            self.workon_home = Path(os.environ["WORKON_HOME"])
+            self._workon_home = Path(os.environ["WORKON_HOME"])
         except KeyError:
-            self.workon_home = Path("")
+            self._workon_home = Path("")
         try:
-            self.project_home = Path(os.environ["PROJECT_HOME"])
+            self._project_home = Path(os.environ["PROJECT_HOME"])
         except KeyError:
-            self.project_home = Path("")
+            self._project_home = Path("")
         try:
-            self.pynball = os.environ["PYNBALL"]
-            self.pynball_versions = ast.literal_eval(self.pynball)  # type: ignore
+            self._pynball = os.environ["PYNBALL"]
+            self._pynball_versions = ast.literal_eval(self._pynball)  # type: ignore
         except KeyError:
-            self.pynball_versions = {}  # type: ignore
+            self._pynball_versions = {}  # type: ignore
         try:
-            self.pynball_pyenv = os.environ["PYNBALL_PYENV"]
+            self._pynball_pyenv = os.environ["PYNBALL_PYENV"]
         except KeyError:
-            self.pynball_pyenv = "0"
+            self._pynball_pyenv = "0"
         try:
-            self.pyenv_home = Path(os.environ["PYENV_HOME"])
+            self._pyenv_home = Path(os.environ["PYENV_HOME"])
         except KeyError:
-            self.pyenv_home = Path("")
+            self._pyenv_home = Path("")
 
     def _feedback(self, message, feedback_type):
         """A utility method to generate nicely formatted messages"""
-        if self.idlemode == 1:
+        if self._idlemode == 1:
             print(message)
         else:
             if feedback_type == "null":
@@ -110,14 +110,14 @@ exportconf:     Save configuration to a file"""
             print(e)
 
     def _check_virtual_env(self):
-        if self.workon_home == Path("") or self.project_home == Path(""):
+        if self._workon_home == Path("") or self._project_home == Path(""):
             message = "Virtualenv-wrapper is not configured."
             self._feedback(message, "warning")
             return 1
         return 0
 
     def _check_pyenv(self):
-        if self.pyenv_home == Path(""):
+        if self._pyenv_home == Path(""):
             message = """Pyenv is not configured."""
             self._feedback(message, "warning")
             return 1
@@ -133,11 +133,11 @@ exportconf:     Save configuration to a file"""
             return message
         if scope == "user":
             key = winreg.OpenKey(
-                self.user_key, self.user_subkey, 0, winreg.KEY_ALL_ACCESS
+                self._user_key, self._user_subkey, 0, winreg.KEY_ALL_ACCESS
             )
         elif scope == "system":
             key = winreg.OpenKey(
-                self.system_key, self.system_subkey, 0, winreg.KEY_ALL_ACCESS
+                self._system_key, self._system_subkey, 0, winreg.KEY_ALL_ACCESS
             )
         winreg.SetValueEx(key, name, 0, winreg.REG_SZ, value)  # noqa
         winreg.CloseKey(key)
@@ -152,9 +152,9 @@ exportconf:     Save configuration to a file"""
             self._feedback(message, "warning")
             return message
         elif scope == "user":
-            key = winreg.CreateKey(self.user_key, self.user_subkey)
+            key = winreg.CreateKey(self._user_key, self._user_subkey)
         elif scope == "system":
-            key = winreg.CreateKey(self.system_key, self.system_subkey)
+            key = winreg.CreateKey(self._system_key, self._system_subkey)
         try:
             value, _ = winreg.QueryValueEx(key, name)  # noqa
         except FileNotFoundError:
@@ -171,9 +171,9 @@ exportconf:     Save configuration to a file"""
             self._feedback(message, "warning")
             return message
         elif scope == "user":
-            key = winreg.CreateKey(self.user_key, self.user_subkey)
+            key = winreg.CreateKey(self._user_key, self._user_subkey)
         elif scope == "system":
-            key = winreg.CreateKey(self.system_key, self.system_subkey)
+            key = winreg.CreateKey(self._system_key, self._system_subkey)
         try:
             winreg.DeleteValue(key, name)  # noqa
         except OSError as e:
@@ -301,7 +301,7 @@ exportconf:     Save configuration to a file"""
         self._delenv("user", "PYNBALL")
 
     def version(self):
-        """Returns details about the current Python version."""
+        """Returns details about the system Python version."""
         message = (
             "{0.major}.{0.minor}.{0.micro}  ReleaseLevel: {0.releaselevel}, "
             "Serial: {0.serial}".format(sys.version_info)
@@ -375,16 +375,16 @@ exportconf:     Save configuration to a file"""
     def pyenv(self, flag: str):
         if self._check_pyenv() == 1:
             return
-        versions = self.pyenv_home / "versions"
+        versions = self._pyenv_home / "versions"
         dirs = {e.name: e for e in versions.iterdir() if e.is_dir()}
         if flag.lower() == "y":
             self._setenv("user", "PYNBALL_PYENV", "1")
-            self.pynball_pyenv = 1
+            self._pynball_pyenv = 1
             for ver in dirs:
                 self.add(str(ver), str(dirs[ver]))
         elif flag.lower() == "n":
             self._setenv("user", "PYNBALL_PYENV", "0")
-            self.pynball_pyenv = 0
+            self._pynball_pyenv = 0
             for ver in dirs:
                 self.delete(str(ver))
         else:
@@ -392,7 +392,7 @@ exportconf:     Save configuration to a file"""
 
     def mkproject(self, ver: str, project_name):
         """Creates a virtual environment from a specific version."""
-        if self.workon_home is None or self.project_home is None:
+        if self._workon_home is None or self._project_home is None:
             message = """Virtualenv-wrapper is not configured on you system:
             Please install Virtualenv and Virtualenv-wrapper and configure
             'WORKON_HOME' and 'PROJECT_HOME' environment variables"""
@@ -409,11 +409,11 @@ exportconf:     Save configuration to a file"""
             message = f"{ver} is not configured in Pynball - Use the 'add' command"
             self._feedback(message, "warning")
             return
-        for directory in [self.workon_home, self.project_home]:
+        for directory in [self._workon_home, self._project_home]:
             new_path = directory / project_name
             try:
                 new_path.mkdir(parents=False, exist_ok=False)
-                if directory == self.workon_home:
+                if directory == self._workon_home:
                     self._execute(
                         "virtualenv",
                         f"-p={version_path}\\python.exe",
@@ -421,7 +421,7 @@ exportconf:     Save configuration to a file"""
                     )
                     (new_path / ".project").touch()
                     (new_path / ".project").write_text(
-                        f"{self.project_home / project_name}"
+                        f"{self._project_home / project_name}"
                     )
             except FileNotFoundError:
                 message = (
@@ -437,15 +437,15 @@ exportconf:     Save configuration to a file"""
 
     def rmproject(self, project_name):
         """Deletes a virtual environment."""
-        if self.workon_home is None or self.project_home is None:
+        if self._workon_home is None or self._project_home is None:
             message = """Virtualenv-wrapper is not configured on you system:
                         Please install Virtualenv and Virtualenv-wrapper and configure
                         'WORKON_HOME' and 'PROJECT_HOME' environment variables"""
             self._feedback(message, "warning")
             return
-        for directory in [self.workon_home, self.project_home]:
+        for directory in [self._workon_home, self._project_home]:
             del_path = directory / project_name
-            if directory == self.project_home:
+            if directory == self._project_home:
                 x = input("Do you want to delete the Project directory? (y/n)")
                 if x.lower() != "y":
                     continue
@@ -459,7 +459,7 @@ exportconf:     Save configuration to a file"""
         """Lists all projects"""
         if self._check_virtual_env() == 1:
             return
-        dirs = [e.name for e in self.workon_home.iterdir() if e.is_dir()]
+        dirs = [e.name for e in self._workon_home.iterdir() if e.is_dir()]
         for virt in dirs:
             print(virt)
 
@@ -467,8 +467,8 @@ exportconf:     Save configuration to a file"""
         """Creates a configuration file backup"""
         config["PYNBALL"] = {}
         config["PYNBALL"]["PYNBALL"] = self._get_pynball("string")
-        config["PYNBALL"]["PYNBALL_PYENV"] = self.pynball_pyenv
-        with open("pynball.ini", "w") as configfile:
+        config["PYNBALL"]["PYNBALL_PYENV"] = self._pynball_pyenv
+        with open("_pynball.ini", "w") as configfile:
             config.write(configfile)
 
     def importconf(self, config_path: str):
@@ -501,9 +501,9 @@ exportconf:     Save configuration to a file"""
 # z.lsproject()
 # z.rmproject("deletethis")
 # z.export_config()
-# z.import_config("pynball.ini")
+# z.import_config("_pynball.ini")
 # print(z._get_pynball("dict"))
 # print(z._get_pynball("dict_path_object"))
-# z.workon_home = Path("")
+# z._workon_home = Path("")
 # z._check_virtual_env()
 # print(z._get_pynball("string"))

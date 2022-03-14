@@ -53,7 +53,7 @@ def test_pkg_info_verbose():
     assert result.exit_code == 0
     assert (
         result.output == "Package Version: 0.1.0\n"
-        "pynball\n"
+        "_pynball\n"
         "Utility command line to switch between python versions\n"
     )
 

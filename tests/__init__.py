@@ -1,1 +1,1 @@
-"""Unit test package for pynball."""
+"""Unit test package for _pynball."""

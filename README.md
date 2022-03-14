@@ -18,13 +18,13 @@ One to two paragraph statement about your product and what it does.
 OS X & Linux:
 
 ```sh
-pip3 install pynball
+pip3 install _pynball
 ```
 
 Windows:
 
 ```sh
-pip install pynball
+pip install _pynball
 ```
 
 ## Usage example
@@ -38,7 +38,7 @@ _For more examples and usage, please refer to the [Wiki][wiki]._
 Describe how to install all development dependencies and how to run an automated test-suite of some kind. Potentially do this for multiple platforms.
 
 ```sh
-pip install --editable pynball
+pip install --editable _pynball
 ```
 
 ## Release History

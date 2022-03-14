@@ -22,7 +22,7 @@ sys.path.insert(0, str(BASE_DIR))
 
 # -- Project information -----------------------------------------------------
 
-project = "pynball"
+project = "_pynball"
 copyright = "2022, Stephen R A King"
 author = "Stephen R A King"
 
