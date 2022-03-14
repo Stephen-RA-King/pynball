@@ -55,20 +55,20 @@ def _feedback(message, feedback_type):
         click.echo(message)
     else:
         if feedback_type == "null":
-            click.secho(f"{message}", fg="LIGHTWHITE_EX")
+            click.secho(f"{message}", fg="bright_white")
         elif feedback_type == "nominal":
-            click.secho(f"{message}", fg="LIGHTGREEN_EX")
+            click.secho(f"{message}", fg="bright_green")
         elif feedback_type == "warning":
-            click.secho(f"WARNING: {message}", fg="LIGHTYELLOW_EX", bg="BLACK")
+            click.secho(f"WARNING: {message}", fg="bright_yellow", bg="black")
         elif feedback_type == "error":
-            click.secho(f"ERROR: {message}", fg="LIGHTRED_EX", bg="BLACK")
+            click.secho(f"ERROR: {message}", fg="bright_red", bg="black")
         else:
             return "Incorrect feedback type"
 
 
 @cli.command()
 def commands():
-    """Return a short description about each public method"""
+    """Return a short description about each command"""
     message = """add:            Add a Python version to the configuration
 delete:         Delete a Python version from the configuration
 clear:          Clear all Configuration versions
@@ -250,7 +250,7 @@ def add(name, version_path):
 
     path_object = Path(version_path)
     if not (path_object / "python.exe").is_file():
-        message = "There is no python executable on that path"
+        message = "There is no Python Interpreter on that path"
         _feedback(message, "warning")
         return
     if pynball_versions:
@@ -258,7 +258,7 @@ def add(name, version_path):
             existing_name = list(pynball_dict.keys())[
                 list(pynball_dict.values()).index(version_path)
             ]
-            message = f"{name:8} already added to configuration as {existing_name}"
+            message = f"'{name}' already added to configuration as '{existing_name}'"
             _feedback(message, "warning")
             return
         for ver in pynball_versions:
@@ -273,7 +273,6 @@ def add(name, version_path):
     else:
         sorted_versions_dict[name] = path_object
     _set_pynball(sorted_versions_dict)
-    versions()
 
 
 @cli.command()
@@ -290,7 +289,6 @@ def delete(name):
     else:
         pynball_versions.pop(str(name), None)
         _set_pynball(pynball_versions)
-        versions()
 
 
 @cli.command()
@@ -301,7 +299,7 @@ def clear():
 
 @cli.command()
 def version():
-    """Returns details about the system Python version."""
+    """Display details about the system Python version."""
     message = (
         "{0.major}.{0.minor}.{0.micro}  ReleaseLevel: {0.releaselevel}, "
         "Serial: {0.serial}".format(sys.version_info)
@@ -377,20 +375,20 @@ def switchto(name):
 
 
 @cli.command()
-@click.argument("flag")
-def pyenv(flag: str):
+@click.option("--use", type=click.Choice(["y", "n"], case_sensitive=False), prompt=True)
+@click.pass_context
+def pyenv(ctx, use):
+    """Automatically include the pyenv versions"""
     if _check_pyenv() == 1:
         return
     vers = _pyenv_home / "versions"
     dirs = {e.name: e for e in vers.iterdir() if e.is_dir()}
-    if flag.lower() == "y":
-        _setenv("user", "PYNBALL_PYENV", "1")
+    if use.lower() == "y":
         for ver in dirs:
-            add(str(ver), str(dirs[ver]))
-    elif flag.lower() == "n":
-        _setenv("user", "PYNBALL_PYENV", "0")
+            ctx.invoke(add, name=str(ver), version_path=str(dirs[ver]))
+    elif use.lower() == "n":
         for ver in dirs:
-            delete(str(ver))
+            ctx.invoke(delete, name=str(ver))
     else:
         return
 
@@ -398,7 +396,7 @@ def pyenv(flag: str):
 @cli.command()
 @click.argument("name")
 @click.argument("project_name")
-def mkproject(ver: str, project_name):
+def mkproject(name: str, project_name):
     """Creates a virtual environment from a specific version."""
     if _workon_home is None or _project_home is None:
         message = """Virtualenv-wrapper is not configured on you system:
@@ -406,7 +404,7 @@ def mkproject(ver: str, project_name):
         'WORKON_HOME' and 'PROJECT_HOME' environment variables"""
         _feedback(message, "warning")
         return
-    ver = str(ver)
+    ver = str(name)
     version_path = ""
     pynball_versions = _get_pynball("dict")
     for name in pynball_versions:
@@ -480,23 +478,21 @@ def exportconf():
     """Creates a configuration file backup"""
     config["PYNBALL"] = {}
     config["PYNBALL"]["PYNBALL"] = _get_pynball("string")
-    with open("_pynball.ini", "w") as configfile:
+    with open("pynball.ini", "w") as configfile:
         config.write(configfile)
 
 
 @cli.command()
 @click.argument("config_path", type=click.Path())
 def importconf(config_path: str):
-    """Creates a configuration file backup"""
+    """Creates a configuration from a file backup"""
     config_path_object = Path(config_path)
     file_name = config_path_object.name
     config.read(config_path)
     try:
         pynball: str = config["PYNBALL"]["PYNBALL"]
-        pynball_pyenv: str = config["PYNBALL"]["PYNBALL_PYENV"]
     except KeyError:
         message = f"There is a problem with file: {file_name}"
         _feedback(message, "warning")
         return
     _setenv("user", "PYNBALL", pynball)
-    _setenv("user", "PYNBALL_PYENV", pynball_pyenv)
