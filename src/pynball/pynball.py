@@ -298,7 +298,7 @@ def _get_system_path():
 @click.argument("name")
 @click.argument("version_path", type=click.Path())
 def add(name, version_path):
-    """Adds a friendly name and path of an installation.
+    """Adds a name / path of an installation of Python.
 
     \b
     Args:
@@ -368,7 +368,7 @@ def delete(name):
 
 @cli.command()
 def clear():
-    """Delete all friendly names and paths"""
+    """Deletes all names / paths"""
     _delenv("user", "PYNBALL")
 
 
@@ -384,7 +384,7 @@ def version():
 
 @cli.command()
 def versions():
-    """Lists the names / paths of the configured python installations"""
+    """Lists the names / paths of the configured Python installations"""
     system_paths, pynball_names = _get_system_path()
     pynball_versions = _get_pynball("dict")
     if not system_paths:
@@ -458,7 +458,7 @@ def switchto(name):
 @click.option("--use", type=click.Choice(["y", "n"], case_sensitive=False), prompt=True)
 @click.pass_context
 def pyenv(ctx, use):
-    """Automatically include the pyenv versions
+    """Automatically include the pyenv versions in Pynball
 
     \b
     Args:
@@ -485,7 +485,7 @@ def pyenv(ctx, use):
 @click.argument("name")
 @click.argument("project_name")
 def mkproject(name: str, project_name):
-    """Creates a virtual environment from a specific Python version.
+    """Creates a Virtual Environment from a specific Python version.
 
     \b
     Args:
@@ -539,7 +539,7 @@ def mkproject(name: str, project_name):
 @click.option("-a", "--all", "delete_all", flag_value="y")
 @click.argument("project_name")
 def rmproject(delete_all, project_name):
-    """Deletes a virtual environment.
+    """Deletes a Virtual Environment.
 
     \b
     Options:

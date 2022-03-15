@@ -132,7 +132,6 @@ dmypy.json
 
 # _pynball
 *.ini
-header.png
 NOTES.txt
 
 # miscellaneous files

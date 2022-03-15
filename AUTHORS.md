@@ -9,7 +9,3 @@ Credits
 # Maintainer
 
 - Stephen R A King \<stephen.ra.king@gmail.com\>
-
-# Contributors
-
-None yet. Why not be the first?

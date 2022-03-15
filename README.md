@@ -1,4 +1,4 @@
-# Product Name
+# Pynball
 
 > Short blurb about what your product does.
 
@@ -18,13 +18,13 @@ One to two paragraph statement about your product and what it does.
 OS X & Linux:
 
 ```sh
-pip3 install _pynball
+pip3 install pynball
 ```
 
 Windows:
 
 ```sh
-pip install _pynball
+pip install pynball
 ```
 
 ## Usage example
