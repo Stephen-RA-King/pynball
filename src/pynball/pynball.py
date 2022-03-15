@@ -1,5 +1,5 @@
-"""Utility script to help manage Development with different versions of Python
-in conjunction with Virtual Environments and pyenv
+"""Utility script to help manage Development with various versions of Python
+in conjunction with Virtual Environments and the pyenv module.
 """
 # Core Library modules
 import ast
@@ -46,11 +46,19 @@ except KeyError:
 
 @click.group()
 def cli():
-    pass
+    """A simple command line tool to help consolidate development with various manual
+    installations of Python , pyenv and virtualenvwrapper"""
 
 
-def _feedback(message, feedback_type):
-    """A utility method to generate nicely formatted messages"""
+def _feedback(message: str, feedback_type: str) -> None:
+    """A utility method to generate formatted messages
+
+    Args:
+        message: Text to be echoed.
+        feedback_type: identifies type of message to display.
+    """
+    if feedback_type not in ["null", "nominal", "warning", "error"]:
+        return
     if _idlemode == 1:
         click.echo(message)
     else:
@@ -62,30 +70,18 @@ def _feedback(message, feedback_type):
             click.secho(f"WARNING: {message}", fg="bright_yellow", bg="black")
         elif feedback_type == "error":
             click.secho(f"ERROR: {message}", fg="bright_red", bg="black")
-        else:
-            return "Incorrect feedback type"
-
-
-@cli.command()
-def commands():
-    """Return a short description about each command"""
-    message = """add:            Add a Python version to the configuration
-delete:         Delete a Python version from the configuration
-clear:          Clear all Configuration versions
-version:        Display current system Python version
-versions:       Display a list of all configured Python versions
-switchto:       Change the system version of Python
-mkproject:      Create a virtual environment from a Python version
-rmproject:      Delete a virtual environment
-lsproject:      List all virtual environments
-pyenv:          Automatically include the pyenv versions
-importconf:     Create configuration from a file
-exportconf:     Save configuration to a file"""
-    _feedback(message, "null")
 
 
 def _execute(*args, supress_exception=False):
-    """A utility method to run command line tools"""
+    """A utility method to run command line tools
+
+    Args:
+        *args:  The commands typically entered at the command line.
+                e.g. "virtualenv", f"-p={version_path}\\python.exe", str(new_path)
+
+    Returns:
+        The return value. True for success, False otherwise.
+    """
     try:
         proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = proc.communicate()
@@ -100,6 +96,13 @@ def _execute(*args, supress_exception=False):
 
 
 def _check_virtual_env():
+    """Check if Virtual Environment Wrapper is configured by checking environment
+    variables.
+
+    Returns:
+        1:  Indicates virtualenvwrapper is not configured
+        0:  Indicates virtualenvwrapper is configured correctly
+    """
     if _workon_home == Path("") or _project_home == Path(""):
         message = "Virtualenv-wrapper is not configured."
         _feedback(message, "warning")
@@ -108,6 +111,12 @@ def _check_virtual_env():
 
 
 def _check_pyenv():
+    """Check if pyenv is configured by checking environment variables.
+
+    Returns:
+        1:  Indicates pyenv is not configured
+        0:  Indicates pyenv is configured correctly
+    """
     if _pyenv_home == Path(""):
         message = """Pyenv is not configured."""
         _feedback(message, "warning")
@@ -116,8 +125,16 @@ def _check_pyenv():
 
 
 def _setenv(scope, name, value):
-    """Utility method to set an environment variable given a scope,
-    variable name and a value.
+    """sets an environment variable given a scope, variable name and a value.
+
+    Args:
+        scope:  Must be either 'user' or 'system'.
+        name:   The registry key name.
+        value:  The registry key value.
+
+    Returns:
+        error:  message if scope is neither 'user' nor 'system'.
+        None:   If registry write is successful.
     """
     if scope != "user" and scope != "system":
         message = "Scope value must be 'user' or 'system'"
@@ -132,9 +149,22 @@ def _setenv(scope, name, value):
 
 
 def _getenv(scope, name):
-    """Utility method to set an environment variable given a scope,
-    variable name and a value.
-    No need to open the key as they are one of the predefined HKEY_* constants.
+    """Gets an environment variable given a scope and key name.
+
+    Note:
+        No need to open the key as they are one of the predefined HKEY_* constants.
+
+    Args:
+        scope:  Must be either 'user' or 'system'
+        name:   The registry key name
+
+    Returns:
+        error:  Message if scope is neither 'user' nor 'system'.
+        value:  Registry key value on successful read
+        None:   Read failed.
+
+    Raises:
+        FileNotFoundError:  When the key is not found
     """
     if scope != "user" and scope != "system":
         message = "Scope value must be 'user' or 'system'"
@@ -152,9 +182,20 @@ def _getenv(scope, name):
 
 
 def _delenv(scope, name):
-    """A utility method to delete an environment variable key from the
-    named scope.
-    No need to open the key as they are one of the predefined HKEY_* constants.
+    """A utility method to delete an environment variable key from the named scope.
+
+    Note:
+        No need to open the key as they are one of the predefined HKEY_* constants.
+
+    Args:
+        scope:  Must be either 'user' or 'system'.
+        name:   The registry key name.
+
+    Returns:
+        error:  Message if scope is neither 'user' nor 'system'.
+
+    Raises:
+        OSError:  If the deletion failed.
     """
     if scope != "user" and scope != "system":
         message = "Scope value must be 'user' or 'system'"
@@ -172,10 +213,10 @@ def _delenv(scope, name):
 
 
 def _set_pynball(dict_object: dict) -> None:
-    """Accepts a dictionary object, converts it to a string and then
-    writes the string to the 'PYNBALL' environment variable in the user scope.
-    The dictionary should be the following format:
-    {"name: str": "path to version": Path,}.
+    """Accepts and converts a dictionary object, then writes to the registry.
+
+    Args:
+        dict_object:  The dictionary. Format: {"name: str": "path to version": Path,}
     """
     pynball_raw_dict = {name: str(path) for name, path in dict_object.items()}
     pynball = str(pynball_raw_dict)
@@ -184,8 +225,18 @@ def _set_pynball(dict_object: dict) -> None:
 
 def _get_pynball(returntype):
     """Reads the environment variable 'PYNBALL' from the user scope as a string.
+
     The string is then converted to the data structure specified by the
     returntype
+
+    Args:
+        returntype: The data structure and values to be returned
+
+    Returns:
+        error:  If the returntype is not recognised.
+        str:    If returntype is 'string'
+        dict:   If return type is 'dict' or 'dict_path_object'
+        list:   if return type is 'names' or 'paths'
     """
     names_list = []
     paths_list = []
@@ -219,6 +270,11 @@ def _get_pynball(returntype):
 
 
 def _get_system_path():
+    """Returns Python system Interpreter if set and corresponding Pynball 'name' if set.
+
+    Returns:
+        System Interpreter: list, Pynball 'name': list
+    """
     python_system_paths = []
     pynball_system_names = []
     pynball_versions = _get_pynball("dict")
@@ -242,7 +298,15 @@ def _get_system_path():
 @click.argument("name")
 @click.argument("version_path", type=click.Path())
 def add(name, version_path):
-    """Adds a friendly name and path of an installation."""
+    """Adds a friendly name and path of an installation.
+
+    \b
+    Args:
+        name:           Friendly name of a python installation. Can be any string.
+                        e.g. 3.6
+        version_path:   The path to the python interpreter
+                        e.g. /PYTHON/python3.6
+    """
     sorted_versions = []
     sorted_versions_dict = {}
     pynball_versions = _get_pynball("dict_path_object")
@@ -278,7 +342,18 @@ def add(name, version_path):
 @cli.command()
 @click.argument("name")
 def delete(name):
-    """Deletes a friendly name and path of an installation."""
+    """Deletes a name / path of an installation of Python.
+
+    \b
+    Note:
+        This only deletes the name / path in the Pynball configuration.
+        It does not delete the Python installation.
+
+    \b
+    Args:
+        name:   Friendly name of a python installation configured in Pynball.
+                e.g. 3.6
+    """
     pynball_versions = _get_pynball("dict")
     _, sys_ver = _get_system_path()
     if name in sys_ver:
@@ -299,7 +374,7 @@ def clear():
 
 @cli.command()
 def version():
-    """Display details about the system Python version."""
+    """Display details about the system Python Interpreter."""
     message = (
         "{0.major}.{0.minor}.{0.micro}  ReleaseLevel: {0.releaselevel}, "
         "Serial: {0.serial}".format(sys.version_info)
@@ -309,7 +384,7 @@ def version():
 
 @cli.command()
 def versions():
-    """Lists the names of the python installs."""
+    """Lists the names / paths of the configured python installations"""
     system_paths, pynball_names = _get_system_path()
     pynball_versions = _get_pynball("dict")
     if not system_paths:
@@ -337,7 +412,12 @@ def versions():
 @cli.command()
 @click.argument("name")
 def switchto(name):
-    """Changes the system version of python."""
+    """Changes the system Python Interpreter version.
+
+    \b
+    Args:
+        name:  The Pynball friendly name of the Python Installation
+    """
     name = str(name)
     path_new = ""
     pynball_versions = _get_pynball("dict")
@@ -378,7 +458,15 @@ def switchto(name):
 @click.option("--use", type=click.Choice(["y", "n"], case_sensitive=False), prompt=True)
 @click.pass_context
 def pyenv(ctx, use):
-    """Automatically include the pyenv versions"""
+    """Automatically include the pyenv versions
+
+    \b
+    Args:
+        use:    The commands typically entered at the command line.
+        \f
+        ctx:    The click context - Implementation detail that enables this command
+                to call another click command.
+    """
     if _check_pyenv() == 1:
         return
     vers = _pyenv_home / "versions"
@@ -397,7 +485,13 @@ def pyenv(ctx, use):
 @click.argument("name")
 @click.argument("project_name")
 def mkproject(name: str, project_name):
-    """Creates a virtual environment from a specific version."""
+    """Creates a virtual environment from a specific Python version.
+
+    \b
+    Args:
+        name:           The Pynball friendly version name.
+        project_name:   The project name only. Not the path.
+    """
     if _workon_home is None or _project_home is None:
         message = """Virtualenv-wrapper is not configured on you system:
         Please install Virtualenv and Virtualenv-wrapper and configure
@@ -441,31 +535,42 @@ def mkproject(name: str, project_name):
 
 
 @cli.command()
+@click.option("--noall", "delete_all", flag_value="n", default=True)
+@click.option("-a", "--all", "delete_all", flag_value="y")
 @click.argument("project_name")
-def rmproject(project_name):
-    """Deletes a virtual environment."""
+def rmproject(delete_all, project_name):
+    """Deletes a virtual environment.
+
+    \b
+    Options:
+        -a, --all:      Delete both the 'DEV' and 'VENV' directories
+
+    \b
+    Args:
+        project_name:   The project name to be deleted.  This is not the path.
+        \f
+        delete_all:     Determines whether the 'dev' directory gets deleted.
+    """
     if _workon_home is None or _project_home is None:
-        message = """Virtualenv-wrapper is not configured on you system:
+        message = """Virtualenv-wrapper is not configured on your system:
                     Please install Virtualenv and Virtualenv-wrapper and configure
                     'WORKON_HOME' and 'PROJECT_HOME' environment variables"""
         _feedback(message, "warning")
         return
     for directory in [_workon_home, _project_home]:
         del_path = directory / project_name
-        if directory == _project_home:
-            x = input("Do you want to delete the Project directory? (y/n)")
-            if x.lower() != "y":
-                continue
+        if directory == _project_home and delete_all != "y":
+            continue
         try:
             shutil.rmtree(del_path)
         except FileNotFoundError:
-            message = f"Project: {project_name} does not exist"
+            message = f"Project: '{del_path}' does not exist"
             _feedback(message, "warning")
 
 
 @cli.command()
 def lsproject():
-    """Lists all projects"""
+    """Displays all Virtual Environment projects"""
     if _check_virtual_env() == 1:
         return
     dirs = [e.name for e in _workon_home.iterdir() if e.is_dir()]
@@ -475,7 +580,12 @@ def lsproject():
 
 @cli.command()
 def exportconf():
-    """Creates a configuration file backup"""
+    """Creates a configuration file backup
+
+    \f
+    Returns:
+        The return value. True for success, False otherwise.
+    """
     config["PYNBALL"] = {}
     config["PYNBALL"]["PYNBALL"] = _get_pynball("string")
     with open("pynball.ini", "w") as configfile:
@@ -485,7 +595,15 @@ def exportconf():
 @cli.command()
 @click.argument("config_path", type=click.Path())
 def importconf(config_path: str):
-    """Creates a configuration from a file backup"""
+    """Creates a configuration from a file backup
+
+    Args:
+        config_path:  The commands typically entered at the command line.
+
+    \f
+    Returns:
+        The return value. True for success, False otherwise.
+    """
     config_path_object = Path(config_path)
     file_name = config_path_object.name
     config.read(config_path)
