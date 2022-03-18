@@ -17,31 +17,25 @@ import click
 
 config = configparser.ConfigParser()
 
-
-_idlemode = 1 if "idlelib.run" in sys.modules else 0
-_env_variables = os.environ
-_environment = os.name
-_user_key = winreg.HKEY_CURRENT_USER
-_user_subkey = "Environment"
-_system_key = winreg.HKEY_LOCAL_MACHINE
-_system_subkey = r"System\CurrentControlSet\Control\Session Manager\Environment"
+_IDLEMODE = 1 if "idlelib.run" in sys.modules else 0
+_ENV_VARIABLES = os.environ
+_ENVIRONMENT = os.name
+_USER_KEY = winreg.HKEY_CURRENT_USER
+_USER_SUBKEY = "Environment"
+_SYSTEM_KEY = winreg.HKEY_LOCAL_MACHINE
+_SYSTEM_SUBKEY = r"System\CurrentControlSet\Control\Session Manager\Environment"
 try:
-    _workon_home = Path(os.environ["WORKON_HOME"])
+    _WORKON_HOME = Path(os.environ["WORKON_HOME"])
 except KeyError:
-    _workon_home = Path("")
+    _WORKON_HOME = Path("")
 try:
-    _project_home = Path(os.environ["PROJECT_HOME"])
+    _PROJECT_HOME = Path(os.environ["PROJECT_HOME"])
 except KeyError:
-    _project_home = Path("")
+    _PROJECT_HOME = Path("")
 try:
-    _pynball = os.environ["PYNBALL"]
-    _pynball_versions = ast.literal_eval(_pynball)  # type: ignore
+    _PYENV_HOME = Path(os.environ["PYENV_HOME"])
 except KeyError:
-    _pynball_versions = {}  # type: ignore
-try:
-    _pyenv_home = Path(os.environ["PYENV_HOME"])
-except KeyError:
-    _pyenv_home = Path("")
+    _PYENV_HOME = Path("")
 
 
 @click.group()
@@ -60,7 +54,7 @@ def _feedback(message: str, feedback_type: str) -> None:
     """
     if feedback_type not in ["null", "nominal", "warning", "error"]:
         return
-    if _idlemode == 1:
+    if _IDLEMODE == 1:
         click.echo(message)
     else:
         if feedback_type == "null":
@@ -102,7 +96,7 @@ def _check_virtual_env() -> int:
         1:  Indicates virtualenvwrapper is not configured
         0:  Indicates virtualenvwrapper is configured correctly
     """
-    if _workon_home == Path("") or _project_home == Path(""):
+    if _WORKON_HOME == Path("") or _PROJECT_HOME == Path(""):
         message = "Virtualenv-wrapper is not configured."
         _feedback(message, "warning")
         return 1
@@ -116,7 +110,7 @@ def _check_pyenv() -> int:
         1:  Indicates pyenv is not configured
         0:  Indicates pyenv is configured correctly
     """
-    if _pyenv_home == Path(""):
+    if _PYENV_HOME == Path(""):
         message = """Pyenv is not configured."""
         _feedback(message, "warning")
         return 1
@@ -140,9 +134,9 @@ def _setenv(scope: str, name: str, value: str) -> None:
         _feedback(message, "warning")
         return
     if scope == "user":
-        key = winreg.OpenKey(_user_key, _user_subkey, 0, winreg.KEY_ALL_ACCESS)
+        key = winreg.OpenKey(_USER_KEY, _USER_SUBKEY, 0, winreg.KEY_ALL_ACCESS)
     elif scope == "system":
-        key = winreg.OpenKey(_system_key, _system_subkey, 0, winreg.KEY_ALL_ACCESS)
+        key = winreg.OpenKey(_SYSTEM_KEY, _SYSTEM_SUBKEY, 0, winreg.KEY_ALL_ACCESS)
     winreg.SetValueEx(key, name, 0, winreg.REG_SZ, value)  # noqa
     winreg.CloseKey(key)
 
@@ -170,9 +164,9 @@ def _getenv(scope: str, name: str) -> Union[None, str]:
         _feedback(message, "warning")
         return
     elif scope == "user":
-        key = winreg.CreateKey(_user_key, _user_subkey)
+        key = winreg.CreateKey(_USER_KEY, _USER_SUBKEY)
     elif scope == "system":
-        key = winreg.CreateKey(_system_key, _system_subkey)
+        key = winreg.CreateKey(_SYSTEM_KEY, _SYSTEM_SUBKEY)
     try:
         value, _ = winreg.QueryValueEx(key, name)  # noqa
     except FileNotFoundError:
@@ -201,9 +195,9 @@ def _delenv(scope: str, name: str) -> None:
         _feedback(message, "warning")
         return
     elif scope == "user":
-        key = winreg.CreateKey(_user_key, _user_subkey)
+        key = winreg.CreateKey(_USER_KEY, _USER_SUBKEY)
     elif scope == "system":
-        key = winreg.CreateKey(_system_key, _system_subkey)
+        key = winreg.CreateKey(_SYSTEM_KEY, _SYSTEM_SUBKEY)
     try:
         winreg.DeleteValue(key, name)  # noqa
     except OSError as e:
@@ -474,7 +468,7 @@ def pyenv(ctx, use_pyenv, use_force):
     """
     if _check_pyenv() == 1:
         return
-    vers = _pyenv_home / "versions"
+    vers = _PYENV_HOME / "versions"
     dirs = {e.name: e for e in vers.iterdir() if e.is_dir()}
     _, sys_ver = _get_system_path()
     if use_pyenv.lower() == "y":
@@ -512,7 +506,7 @@ def mkproject(name: str, project_name):
         name:           The Pynball friendly version name.
         project_name:   The project name only. Not the path.
     """
-    if _workon_home is None or _project_home is None:
+    if _WORKON_HOME is None or _PROJECT_HOME is None:
         message = """Virtualenv-wrapper is not configured on you system:
         Please install Virtualenv and Virtualenv-wrapper and configure
         'WORKON_HOME' and 'PROJECT_HOME' environment variables"""
@@ -529,18 +523,18 @@ def mkproject(name: str, project_name):
         message = f"{ver} is not configured in Pynball - Use the 'add' command"
         _feedback(message, "warning")
         return
-    for directory in [_workon_home, _project_home]:
+    for directory in [_WORKON_HOME, _PROJECT_HOME]:
         new_path = directory / project_name
         try:
             new_path.mkdir(parents=False, exist_ok=False)
-            if directory == _workon_home:
+            if directory == _WORKON_HOME:
                 _execute(
                     "virtualenv",
                     f"-p={version_path}\\python.exe",
                     str(new_path),
                 )
                 (new_path / ".project").touch()
-                (new_path / ".project").write_text(f"{_project_home / project_name}")
+                (new_path / ".project").write_text(f"{_PROJECT_HOME / project_name}")
         except FileNotFoundError:
             message = (
                 f"Project: '{project_name}' has NOT be created - "
@@ -571,15 +565,15 @@ def rmproject(delete_all, project_name):
         \f
         delete_all:     Determines whether the 'dev' directory gets deleted.
     """
-    if _workon_home is None or _project_home is None:
+    if _WORKON_HOME is None or _PROJECT_HOME is None:
         message = """Virtualenv-wrapper is not configured on your system:
                     Please install Virtualenv and Virtualenv-wrapper and configure
                     'WORKON_HOME' and 'PROJECT_HOME' environment variables"""
         _feedback(message, "warning")
         return
-    for directory in [_workon_home, _project_home]:
+    for directory in [_WORKON_HOME, _PROJECT_HOME]:
         del_path = directory / project_name
-        if directory == _project_home and delete_all != "y":
+        if directory == _PROJECT_HOME and delete_all != "y":
             continue
         try:
             shutil.rmtree(del_path)
@@ -593,7 +587,7 @@ def lsproject():
     """Displays all Virtual Environment projects"""
     if _check_virtual_env() == 1:
         return
-    dirs = [e.name for e in _workon_home.iterdir() if e.is_dir()]
+    dirs = [e.name for e in _WORKON_HOME.iterdir() if e.is_dir()]
     for virt in dirs:
         print(virt)
 
