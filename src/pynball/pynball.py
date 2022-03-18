@@ -10,6 +10,7 @@ import subprocess
 import sys
 import winreg
 from pathlib import Path
+from typing import Union
 
 # Third party modules
 import click
@@ -32,7 +33,6 @@ try:
     _project_home = Path(os.environ["PROJECT_HOME"])
 except KeyError:
     _project_home = Path("")
-
 try:
     _pynball = os.environ["PYNBALL"]
     _pynball_versions = ast.literal_eval(_pynball)  # type: ignore
@@ -51,11 +51,12 @@ def cli():
 
 
 def _feedback(message: str, feedback_type: str) -> None:
-    """A utility method to generate formatted messages
+    """A utility method to generate formatted messages appropriate to the
+    environment.
 
     Args:
-        message: Text to be echoed.
-        feedback_type: identifies type of message to display.
+        message:        Text to be echoed.
+        feedback_type:  identifies type of message to display.
     """
     if feedback_type not in ["null", "nominal", "warning", "error"]:
         return
@@ -79,8 +80,6 @@ def _execute(*args, supress_exception=False):
         *args:  The commands typically entered at the command line.
                 e.g. "virtualenv", f"-p={version_path}\\python.exe", str(new_path)
 
-    Returns:
-        The return value. True for success, False otherwise.
     """
     try:
         proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -95,7 +94,7 @@ def _execute(*args, supress_exception=False):
         print(e)
 
 
-def _check_virtual_env():
+def _check_virtual_env() -> int:
     """Check if Virtual Environment Wrapper is configured by checking environment
     variables.
 
@@ -110,7 +109,7 @@ def _check_virtual_env():
     return 0
 
 
-def _check_pyenv():
+def _check_pyenv() -> int:
     """Check if pyenv is configured by checking environment variables.
 
     Returns:
@@ -124,7 +123,7 @@ def _check_pyenv():
     return 0
 
 
-def _setenv(scope, name, value):
+def _setenv(scope: str, name: str, value: str) -> None:
     """sets an environment variable given a scope, variable name and a value.
 
     Args:
@@ -139,7 +138,7 @@ def _setenv(scope, name, value):
     if scope != "user" and scope != "system":
         message = "Scope value must be 'user' or 'system'"
         _feedback(message, "warning")
-        return message
+        return
     if scope == "user":
         key = winreg.OpenKey(_user_key, _user_subkey, 0, winreg.KEY_ALL_ACCESS)
     elif scope == "system":
@@ -148,7 +147,7 @@ def _setenv(scope, name, value):
     winreg.CloseKey(key)
 
 
-def _getenv(scope, name):
+def _getenv(scope: str, name: str) -> Union[None, str]:
     """Gets an environment variable given a scope and key name.
 
     Note:
@@ -169,7 +168,7 @@ def _getenv(scope, name):
     if scope != "user" and scope != "system":
         message = "Scope value must be 'user' or 'system'"
         _feedback(message, "warning")
-        return message
+        return
     elif scope == "user":
         key = winreg.CreateKey(_user_key, _user_subkey)
     elif scope == "system":
@@ -181,7 +180,7 @@ def _getenv(scope, name):
     return value
 
 
-def _delenv(scope, name):
+def _delenv(scope: str, name: str) -> None:
     """A utility method to delete an environment variable key from the named scope.
 
     Note:
@@ -200,7 +199,7 @@ def _delenv(scope, name):
     if scope != "user" and scope != "system":
         message = "Scope value must be 'user' or 'system'"
         _feedback(message, "warning")
-        return message
+        return
     elif scope == "user":
         key = winreg.CreateKey(_user_key, _user_subkey)
     elif scope == "system":
@@ -212,7 +211,7 @@ def _delenv(scope, name):
         _feedback(message, "warning")
 
 
-def _set_pynball(dict_object: dict) -> None:
+def _set_pynball(dict_object: dict[str:Path]) -> None:
     """Accepts and converts a dictionary object, then writes to the registry.
 
     Args:
@@ -223,7 +222,7 @@ def _set_pynball(dict_object: dict) -> None:
     _setenv("user", "PYNBALL", pynball)
 
 
-def _get_pynball(returntype):
+def _get_pynball(returntype: str):
     """Reads the environment variable 'PYNBALL' from the user scope as a string.
 
     The string is then converted to the data structure specified by the
@@ -269,7 +268,7 @@ def _get_pynball(returntype):
         return paths_list
 
 
-def _get_system_path():
+def _get_system_path() -> tuple[list, list]:
     """Returns Python system Interpreter if set and corresponding Pynball 'name' if set.
 
     Returns:
@@ -431,10 +430,9 @@ def switchto(name):
     if len(system_paths) > 1 or len(pynball_names) > 1:
         message = (
             "Multiple system interpreters have been detected - "
-            "There should be only one"
+            "There can be only one! (see: Highlander)"
         )
         _feedback(message, "error")
-        versions()
         return
     if name in pynball_names:
         message = f"{name} is already configured as the system interpreter"
@@ -455,30 +453,52 @@ def switchto(name):
 
 
 @cli.command()
-@click.option("--use", type=click.Choice(["y", "n"], case_sensitive=False), prompt=True)
+@click.option("--nouse", "use_pyenv", flag_value="n", default=True)
+@click.option("-u", "--use", "use_pyenv", flag_value="y")
+@click.option("--noforce", "use_force", flag_value="n", default=True)
+@click.option("-f", "--force", "use_force", flag_value="y")
 @click.pass_context
-def pyenv(ctx, use):
+def pyenv(ctx, use_pyenv, use_force):
     """Automatically include the pyenv versions in Pynball
 
     \b
     Args:
-        use:    The commands typically entered at the command line.
+        -u --use:       Include pyenv versions
+        -f --force:     Pyenv versions override manual versions if the name is the same
         \f
-        ctx:    The click context - Implementation detail that enables this command
-                to call another click command.
+        use_force:      Pyenv versions override manual versions
+        use_pyenv:      Include pyenv versions
+        ctx:            The click context - Implementation detail that enables this
+                        command to call another click command.
+                        (click says this is quite naughty. But I still did it anyway)
     """
     if _check_pyenv() == 1:
         return
     vers = _pyenv_home / "versions"
     dirs = {e.name: e for e in vers.iterdir() if e.is_dir()}
-    if use.lower() == "y":
+    _, sys_ver = _get_system_path()
+    if use_pyenv.lower() == "y":
+        pynball_names = _get_pynball("names")
         for ver in dirs:
-            ctx.invoke(add, name=str(ver), version_path=str(dirs[ver]))
-    elif use.lower() == "n":
-        for ver in dirs:
-            ctx.invoke(delete, name=str(ver))
+            if ver in sys_ver:
+                continue  # do not overwrite system version
+            elif ver in pynball_names and use_force == "n":
+                continue  # manual precedence over pyenv
+            elif ver in pynball_names and use_force == "y":
+                ctx.invoke(add, name=str(ver), version_path=str(dirs[ver]))
+            elif ver not in pynball_names:
+                ctx.invoke(add, name=str(ver), version_path=str(dirs[ver]))
+            else:
+                continue
     else:
-        return
+        pynball_paths = _get_pynball("dict_path_object")
+        for ver in dirs:
+            if ver in sys_ver:
+                continue  # do not delete system version
+            if dirs[ver] in pynball_paths.values():
+                ctx.invoke(delete, name=str(ver))
+
+    ctx.invoke(versions)
 
 
 @cli.command()
