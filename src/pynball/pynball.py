@@ -5,6 +5,7 @@ in conjunction with Virtual Environments and the pyenv module.
 import ast
 import configparser
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -333,6 +334,11 @@ def add(name, version_path):
 
 
 @cli.command()
+def addall():
+    """Add all versions to the Pynball configuration."""
+
+
+@cli.command()
 @click.argument("name")
 def delete(name):
     """Deletes a name / path of an installation of Python.
@@ -588,8 +594,37 @@ def lsproject():
     if _check_virtual_env() == 1:
         return
     dirs = [e.name for e in _WORKON_HOME.iterdir() if e.is_dir()]
+    workon_object = Path(_WORKON_HOME)
+    project_object = Path(_PROJECT_HOME)
+    pattern1 = r"(?<=version_info = )\d{1,2}.\d{1,2}.\d{1,2}"
+    pattern2 = r"(?<=version = )\d{1,2}.\d{1,2}.\d{1,2}"
+    head1 = "Project Name"
+    head2 = "Python Version"
+    head3 = "Tox Versions"
+    print(f"{head1:25}{head2:25}{head3}")
+    print(f"{len(head1)*'=':25}{len(head2)*'=':25}{len(head3)*'=':25}")
     for virt in dirs:
-        print(virt)
+        envcfg = workon_object / virt / "pyvenv.cfg"
+        if envcfg.is_file():
+            cfg_content = envcfg.read_text()
+        else:
+            message = f"{virt} appears to be missing virtual configuration"
+            _feedback(message, "warning")
+            continue
+        for pattern in [pattern1, pattern2]:
+            try:
+                virtver = re.search(pattern, cfg_content).group(0)
+                break
+            except AttributeError:
+                virtver = ""
+                continue
+        pyfile = project_object / virt / ".python-version"
+        if pyfile.is_file():
+            pyver = pyfile.read_text()
+            pyver = pyver.replace("\n", ", ")
+        else:
+            pyver = ""
+        print(f"{virt:25}{virtver:25}{pyver}")
 
 
 @cli.command()
