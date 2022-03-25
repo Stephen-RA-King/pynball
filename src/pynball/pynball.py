@@ -330,7 +330,10 @@ def add(name, version_path):
                 sorted_versions_dict[ver] = pynball_versions[ver]
     else:
         sorted_versions_dict[name] = path_object
+
     _set_pynball(sorted_versions_dict)
+    message = f"'{name}' Successfully added to configuration"
+    _feedback(message, "nominal")
 
 
 @cli.command()
@@ -629,12 +632,7 @@ def lsproject():
 
 @cli.command()
 def exportconf():
-    """Creates a configuration file backup
-
-    \f
-    Returns:
-        The return value. True for success, False otherwise.
-    """
+    """Creates a configuration file backup."""
     config["PYNBALL"] = {}
     config["PYNBALL"]["PYNBALL"] = _get_pynball("string")
     with open("pynball.ini", "w") as configfile:
@@ -648,10 +646,6 @@ def importconf(config_path: str):
 
     Args:
         config_path:  The commands typically entered at the command line.
-
-    \f
-    Returns:
-        The return value. True for success, False otherwise.
     """
     config_path_object = Path(config_path)
     file_name = config_path_object.name
