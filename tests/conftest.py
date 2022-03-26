@@ -97,9 +97,9 @@ def mock_get_env(monkeypatch):
 def mock_set_env(monkeypatch):
     def mock_setenv(scope, name, value):
         if scope == "user" and name == "PYNBALL":
-            return value
+            print(value)
         elif scope == "system" and name == "PATH":
-            return value
+            print(value)
         else:
             return
 
