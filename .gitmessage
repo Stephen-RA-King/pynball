@@ -24,9 +24,9 @@
 # Commitizen:
 # build:
 # ci:
-# docs:
-# feat:
-# fix:
+# docs:         update to documentation
+# feat:         used when a new feature is added to your application
+# fix:          bug fix for your application
 # perf:
 # refactor:
 # style:
@@ -35,3 +35,4 @@
 # revert:
 # bump:
 #
+# xxxxx (scope)!: MUST consist of a noun describing a section of the codebase
