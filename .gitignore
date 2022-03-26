@@ -131,7 +131,6 @@ venv.bak/
 dmypy.json
 
 # _pynball
-*.ini
 NOTES.txt
 
 # miscellaneous files
