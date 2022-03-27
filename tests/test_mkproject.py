@@ -17,7 +17,7 @@ def test_mkproject_nove(monkeypatch, create_env, mock_get_env):
     result = runner.invoke(pynball.mkproject, ["3.6.8", "project2"])
     assert result.exit_code == 0
     assert result.output == (
-        "WARNING: Virtualenv-wrapper is not configured on you system:\n"
+        "WARNING: Virtualenv-wrapper is not configured on your system:\n"
         "        Please install Virtualenv and Virtualenv-wrapper and configure\n"
         "        'WORKON_HOME' and 'PROJECT_HOME' environment variables\n"
     )
