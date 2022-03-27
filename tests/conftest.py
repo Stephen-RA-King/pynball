@@ -41,7 +41,7 @@ pynball_env = str(pynball_raw_dict)
 
 
 @pytest.fixture()
-def create_env():
+def create_env(monkeypatch):
     pyenv_ver = ["3.5.4", "3.9.10", "3.10.3"]
     python_ver = [
         ("3.6.8", "n"),
@@ -55,6 +55,13 @@ def create_env():
     ve_dir.mkdir()
     WORKON_HOME.mkdir()
     PROJECT_HOME.mkdir()
+    for project in ["project1", "project2"]:
+        (WORKON_HOME / project).mkdir()
+        (WORKON_HOME / project / "pyvenv.cfg").touch()
+        (WORKON_HOME / project / "pyvenv.cfg").write_text("version_info = 3.9.10")
+        (PROJECT_HOME / project).mkdir()
+        (PROJECT_HOME / project / ".python-version").touch()
+        (PROJECT_HOME / project / ".python-version").write_text("3.8.10\n3.9.10")
 
     PYENV_HOME.mkdir()
     for ver in pyenv_ver:
@@ -68,6 +75,7 @@ def create_env():
         if mkfile == "y":
             (pyver / "python.exe").touch()
             (pyver / "python.exe").write_text(f"This is version {name}")
+
     yield
     shutil.rmtree(TEST_ENV)
 
@@ -95,6 +103,19 @@ def mock_get_env(monkeypatch):
 
 @pytest.fixture
 def mock_set_env(monkeypatch):
+    def mock_setenv(scope, name, value):
+        if scope == "user" and name == "PYNBALL":
+            return
+        elif scope == "system" and name == "PATH":
+            return
+        else:
+            return
+
+    monkeypatch.setattr(pynball, "_setenv", mock_setenv)
+
+
+@pytest.fixture
+def mock_set_env_output(monkeypatch):
     def mock_setenv(scope, name, value):
         if scope == "user" and name == "PYNBALL":
             print(value)
