@@ -272,10 +272,13 @@ def _get_system_path() -> tuple[list, list]:
     python_system_paths = []
     pynball_system_names = []
     pynball_versions = _get_pynball("dict")
+    print(pynball_versions)
     system_path_string: str = _getenv("system", "PATH")
+    print(system_path_string)
     system_path_variables = system_path_string.split(";")
     for path in system_path_variables:
         pathobject = Path(path)
+        print(pathobject)
         if (pathobject / "python.exe").is_file() and os.path.getsize(
             pathobject / "python.exe"
         ) > 0:
@@ -552,7 +555,7 @@ def mkproject(name: str, project_name):
             _feedback(message, "warning")
             return
         except FileExistsError:
-            message = f"The directory '{new_path}' already exits"
+            message = f"The directory '{project_name}' already exits"
             _feedback(message, "warning")
             return
 
