@@ -515,7 +515,7 @@ def mkproject(name: str, project_name):
         name:           The Pynball friendly version name.
         project_name:   The project name only. Not the path.
     """
-    if _WORKON_HOME is None or _PROJECT_HOME is None:
+    if _WORKON_HOME == Path("") or _PROJECT_HOME == Path(""):
         message = """Virtualenv-wrapper is not configured on you system:
         Please install Virtualenv and Virtualenv-wrapper and configure
         'WORKON_HOME' and 'PROJECT_HOME' environment variables"""
@@ -574,7 +574,7 @@ def rmproject(delete_all, project_name):
         \f
         delete_all:     Determines whether the 'dev' directory gets deleted.
     """
-    if _WORKON_HOME is None or _PROJECT_HOME is None:
+    if _WORKON_HOME == Path("") or _PROJECT_HOME == Path(""):
         message = """Virtualenv-wrapper is not configured on your system:
                     Please install Virtualenv and Virtualenv-wrapper and configure
                     'WORKON_HOME' and 'PROJECT_HOME' environment variables"""
