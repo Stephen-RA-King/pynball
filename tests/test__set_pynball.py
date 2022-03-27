@@ -8,7 +8,7 @@ import pytest
 from pynball import pynball
 
 
-def test_set_pynball1(capsys, mock_set_env):
+def test_set_pynball1(capsys, mock_set_env_output):
     dict_object = {"3.6": Path("D:\\Python\\python3.6")}
     pynball._set_pynball(dict_object)
     output, error = capsys.readouterr()
