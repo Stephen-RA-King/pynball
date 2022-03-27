@@ -516,7 +516,7 @@ def mkproject(name: str, project_name):
         project_name:   The project name only. Not the path.
     """
     if _WORKON_HOME == Path("") or _PROJECT_HOME == Path(""):
-        message = """Virtualenv-wrapper is not configured on you system:
+        message = """Virtualenv-wrapper is not configured on your system:
         Please install Virtualenv and Virtualenv-wrapper and configure
         'WORKON_HOME' and 'PROJECT_HOME' environment variables"""
         _feedback(message, "warning")
@@ -576,8 +576,8 @@ def rmproject(delete_all, project_name):
     """
     if _WORKON_HOME == Path("") or _PROJECT_HOME == Path(""):
         message = """Virtualenv-wrapper is not configured on your system:
-                    Please install Virtualenv and Virtualenv-wrapper and configure
-                    'WORKON_HOME' and 'PROJECT_HOME' environment variables"""
+        Please install Virtualenv and Virtualenv-wrapper and configure
+        'WORKON_HOME' and 'PROJECT_HOME' environment variables"""
         _feedback(message, "warning")
         return
     for directory in [_WORKON_HOME, _PROJECT_HOME]:
@@ -587,7 +587,7 @@ def rmproject(delete_all, project_name):
         try:
             shutil.rmtree(del_path)
         except FileNotFoundError:
-            message = f"Project: '{del_path}' does not exist"
+            message = f"Project: '{project_name}' does not exist"
             _feedback(message, "warning")
 
 
