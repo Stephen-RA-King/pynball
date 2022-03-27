@@ -597,17 +597,15 @@ def lsproject():
     if _check_virtual_env() == 1:
         return
     dirs = [e.name for e in _WORKON_HOME.iterdir() if e.is_dir()]
-    workon_object = Path(_WORKON_HOME)
-    project_object = Path(_PROJECT_HOME)
     pattern1 = r"(?<=version_info = )\d{1,2}.\d{1,2}.\d{1,2}"
     pattern2 = r"(?<=version = )\d{1,2}.\d{1,2}.\d{1,2}"
     head1 = "Project Name"
     head2 = "Python Version"
     head3 = "Tox Versions"
     print(f"{head1:25}{head2:25}{head3}")
-    print(f"{len(head1)*'=':25}{len(head2)*'=':25}{len(head3)*'=':25}")
+    print(f"{len(head1)*'=':25}{len(head2)*'=':25}{len(head3)*'='}")
     for virt in dirs:
-        envcfg = workon_object / virt / "pyvenv.cfg"
+        envcfg = _WORKON_HOME / virt / "pyvenv.cfg"
         if envcfg.is_file():
             cfg_content = envcfg.read_text()
         else:
@@ -621,7 +619,7 @@ def lsproject():
             except AttributeError:
                 virtver = ""
                 continue
-        pyfile = project_object / virt / ".python-version"
+        pyfile = _PROJECT_HOME / virt / ".python-version"
         if pyfile.is_file():
             pyver = pyfile.read_text()
             pyver = pyver.replace("\n", ", ")
