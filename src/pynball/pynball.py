@@ -37,6 +37,10 @@ try:
     _PYENV_HOME = Path(os.environ["PYENV_HOME"])
 except KeyError:
     _PYENV_HOME = Path("")
+try:
+    _PYNBALL_HOME = Path(os.environ["PYNBALL_HOME"])
+except KeyError:
+    _PYNBALL_HOME = Path("")
 
 
 @click.group()
@@ -74,7 +78,6 @@ def _execute(*args, supress_exception=False):
     Args:
         *args:  The commands typically entered at the command line.
                 e.g. "virtualenv", f"-p={version_path}\\python.exe", str(new_path)
-
     """
     try:
         proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -206,7 +209,7 @@ def _delenv(scope: str, name: str) -> None:
         _feedback(message, "warning")
 
 
-def _set_pynball(dict_object: dict[str:Path]) -> None:
+def _set_pynball(dict_object: dict[str:Path], varname: str) -> None:
     """Accepts and converts a dictionary object, then writes to the registry.
 
     Args:
@@ -214,10 +217,10 @@ def _set_pynball(dict_object: dict[str:Path]) -> None:
     """
     pynball_raw_dict = {name: str(path) for name, path in dict_object.items()}
     pynball = str(pynball_raw_dict)
-    _setenv("user", "PYNBALL", pynball)
+    _setenv("user", varname, pynball)
 
 
-def _get_pynball(returntype: str):
+def _get_pynball(returntype: str, varname: str):
     """Reads the environment variable 'PYNBALL' from the user scope as a string.
 
     The string is then converted to the data structure specified by the
@@ -239,7 +242,7 @@ def _get_pynball(returntype: str):
         message = f"Please use a correct returntype - {returntypes}"
         _feedback(message, "warning")
         return
-    pynball_var = _getenv("user", "PYNBALL")
+    pynball_var = _getenv("user", varname)
     if pynball_var is None:
         return None
     if returntype == "string":
@@ -271,14 +274,11 @@ def _get_system_path() -> tuple[list, list]:
     """
     python_system_paths = []
     pynball_system_names = []
-    pynball_versions = _get_pynball("dict")
-    print(pynball_versions)
+    pynball_versions = _get_pynball("dict", "PYNBALL")
     system_path_string: str = _getenv("system", "PATH")
-    print(system_path_string)
     system_path_variables = system_path_string.split(";")
     for path in system_path_variables:
         pathobject = Path(path)
-        print(pathobject)
         if (pathobject / "python.exe").is_file() and os.path.getsize(
             pathobject / "python.exe"
         ) > 0:
@@ -294,7 +294,7 @@ def _get_system_path() -> tuple[list, list]:
 @cli.command()
 @click.argument("name")
 @click.argument("version_path", type=click.Path())
-def add(name, version_path):
+def add(name: str, version_path: str) -> None:
     """Adds a name / path of an installation of Python.
 
     \b
@@ -306,8 +306,8 @@ def add(name, version_path):
     """
     sorted_versions = []
     sorted_versions_dict = {}
-    pynball_versions = _get_pynball("dict_path_object")
-    pynball_dict = _get_pynball("dict")
+    pynball_versions = _get_pynball("dict_path_object", "PYNBALL")
+    pynball_dict = _get_pynball("dict", "PYNBALL")
 
     path_object = Path(version_path)
     if not (path_object / "python.exe").is_file():
@@ -315,7 +315,7 @@ def add(name, version_path):
         _feedback(message, "warning")
         return
     if pynball_versions:
-        if version_path in _get_pynball("paths"):
+        if version_path in _get_pynball("paths", "PYNBALL"):
             existing_name = list(pynball_dict.keys())[
                 list(pynball_dict.values()).index(version_path)
             ]
@@ -334,14 +334,39 @@ def add(name, version_path):
     else:
         sorted_versions_dict[name] = path_object
 
-    _set_pynball(sorted_versions_dict)
+    _set_pynball(sorted_versions_dict, "PYNBALL")
     message = f"'{name}' Successfully added to configuration"
     _feedback(message, "nominal")
 
 
 @cli.command()
-def addall():
+@click.pass_context
+def addall(ctx):
     """Add all versions to the Pynball configuration."""
+    global _PYNBALL_HOME
+    active_dirs = 0
+    pattern = r"\d{1,2}.\d{1,2}.\d{1,2}"
+    if _PYNBALL_HOME == Path(""):
+        message = "Please specify the root directory of your Python installations: "
+        _feedback(message, "nominal")
+        try:
+            while True:
+                path = Path(input(""))
+                if path.exists():
+                    _PYNBALL_HOME = path
+                    break
+        except KeyboardInterrupt:
+            return
+    dirs = [e for e in _PYNBALL_HOME.iterdir() if e.is_dir()]
+    for directory in dirs:
+        exe = directory / "python.exe"
+        if exe.exists():
+            active_dirs += 1
+            pyver_raw = _execute(exe, "--version")
+            pyver = re.search(pattern, pyver_raw).group(0)
+            ctx.invoke(add, name=pyver, version_path=directory)
+    if active_dirs > 0:
+        _setenv("user", "PYNBALL_HOME", str(_PYNBALL_HOME))
 
 
 @cli.command()
@@ -359,7 +384,7 @@ def delete(name):
         name:   Friendly name of a python installation configured in Pynball.
                 e.g. 3.6
     """
-    pynball_versions = _get_pynball("dict")
+    pynball_versions = _get_pynball("dict", "PYNBALL")
     _, sys_ver = _get_system_path()
     if name in sys_ver:
         message = "Cannot delete System Interpreter"
@@ -368,7 +393,7 @@ def delete(name):
         return
     else:
         pynball_versions.pop(str(name), None)
-        _set_pynball(pynball_versions)
+        _set_pynball(pynball_versions, "PYNBALL")
 
 
 @cli.command()
@@ -391,7 +416,7 @@ def version():
 def versions():
     """Lists the names / paths of the configured Python installations"""
     system_paths, pynball_names = _get_system_path()
-    pynball_versions = _get_pynball("dict")
+    pynball_versions = _get_pynball("dict", "PYNBALL")
     if not system_paths:
         message = "System Interpreter is not configured"
         _feedback(message, "warning")
@@ -425,10 +450,10 @@ def switchto(name):
     """
     name = str(name)
     path_new = ""
-    pynball_versions = _get_pynball("dict")
+    pynball_versions = _get_pynball("dict", "PYNBALL")
     system_paths, pynball_names = _get_system_path()
     all_paths: str = _getenv("system", "PATH")
-    if name not in _get_pynball("names"):
+    if name not in _get_pynball("names", "PYNBALL"):
         message = f"{name} is not in Pynballs' configuration"
         _feedback(message, "warning")
         versions()
@@ -484,7 +509,7 @@ def pyenv(ctx, use_pyenv, use_force):
     dirs = {e.name: e for e in vers.iterdir() if e.is_dir()}
     _, sys_ver = _get_system_path()
     if use_pyenv.lower() == "y":
-        pynball_names = _get_pynball("names")
+        pynball_names = _get_pynball("names", "PYNBALL")
         for ver in dirs:
             if ver in sys_ver:
                 continue  # do not overwrite system version
@@ -497,7 +522,7 @@ def pyenv(ctx, use_pyenv, use_force):
             else:
                 continue
     else:
-        pynball_paths = _get_pynball("dict_path_object")
+        pynball_paths = _get_pynball("dict_path_object", "PYNBALL")
         for ver in dirs:
             if ver in sys_ver:
                 continue  # do not delete system version
@@ -526,7 +551,7 @@ def mkproject(name: str, project_name):
         return
     ver = str(name)
     version_path = ""
-    pynball_versions = _get_pynball("dict")
+    pynball_versions = _get_pynball("dict", "PYNBALL")
     for name in pynball_versions:
         if name == ver:
             version_path = pynball_versions[name]
@@ -635,7 +660,7 @@ def lsproject():
 def exportconf():
     """Creates a configuration file backup."""
     config["PYNBALL"] = {}
-    config["PYNBALL"]["PYNBALL"] = _get_pynball("string")
+    config["PYNBALL"]["PYNBALL"] = _get_pynball("string", "PYNBALL")
     with open("pynball.ini", "w") as configfile:
         config.write(configfile)
 
