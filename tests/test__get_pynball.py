@@ -9,7 +9,7 @@ from pynball import pynball
 
 
 def test_get_pynball_notype(capsys, mock_get_env):
-    pynball._get_pynball("nosuchthing")
+    pynball._get_pynball("nosuchthing", "PYNBALL")
     captured = capsys.readouterr()
     assert (
         captured.out == "WARNING: Please use a correct returntype - "
@@ -18,7 +18,7 @@ def test_get_pynball_notype(capsys, mock_get_env):
 
 
 def test_get_pynball_string(mock_get_env):
-    assert pynball._get_pynball("string") == (
+    assert pynball._get_pynball("string", "PYNBALL") == (
         "{'3.6.8': 'D:\\\\PYTHON "
         "PROJECT\\\\PROJECTS\\\\DEV\\\\pynball\\\\pynball\\\\env\\\\PYTHON\\\\3.6.8', "
         "'3.7.9': 'D:\\\\PYTHON "
@@ -29,7 +29,7 @@ def test_get_pynball_string(mock_get_env):
 
 
 def test_get_pynball_dict(mock_get_env):
-    assert pynball._get_pynball("dict") == {
+    assert pynball._get_pynball("dict", "PYNBALL") == {
         "3.6.8": "D:\\PYTHON "
         "PROJECT\\PROJECTS\\DEV\\pynball\\pynball\\env\\PYTHON\\3.6.8",
         "3.7.9": "D:\\PYTHON "
@@ -40,7 +40,7 @@ def test_get_pynball_dict(mock_get_env):
 
 
 def test_get_pynball_object(mock_get_env):
-    assert pynball._get_pynball("dict_path_object") == {
+    assert pynball._get_pynball("dict_path_object", "PYNBALL") == {
         "3.6.8": WindowsPath(
             "D:/PYTHON PROJECT/PROJECTS/DEV/pynball/pynball/env/PYTHON/3.6.8"
         ),
@@ -54,11 +54,11 @@ def test_get_pynball_object(mock_get_env):
 
 
 def test_get_pynball_names(mock_get_env):
-    assert pynball._get_pynball("names") == ["3.6.8", "3.7.9", "3.9.10"]
+    assert pynball._get_pynball("names", "PYNBALL") == ["3.6.8", "3.7.9", "3.9.10"]
 
 
 def test_get_pynball_paths(mock_get_env):
-    assert pynball._get_pynball("paths") == [
+    assert pynball._get_pynball("paths", "PYNBALL") == [
         "D:\\PYTHON PROJECT\\PROJECTS\\DEV\\pynball\\pynball\\env\\PYTHON\\3.6.8",
         "D:\\PYTHON PROJECT\\PROJECTS\\DEV\\pynball\\pynball\\env\\PYTHON\\3.7.9",
         "D:\\PYTHON PROJECT\\PROJECTS\\DEV\\pynball\\pynball\\env\\PYTHON\\3.9.10",
