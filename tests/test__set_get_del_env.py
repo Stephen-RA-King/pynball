@@ -40,7 +40,7 @@ def test_get_env(capsys):
 
 
 @pytest.mark.dependency(depends=["test_set_env"])
-def test_det_env(capsys):
+def test_del_env(capsys):
     pynball._delenv("unknown", "DELETEKEY")
     output, error = capsys.readouterr()
     assert output == "WARNING: Scope value must be 'user' or 'system'\n"
