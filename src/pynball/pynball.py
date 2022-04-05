@@ -45,7 +45,7 @@ except KeyError:
 
 @click.group()
 def cli():
-    """A simple command line tool to help consolidate development with various manual
+    """A command line tool to help consolidate development with various manual
     installations of Python , pyenv and virtualenvwrapper"""
 
 
@@ -273,21 +273,28 @@ def _get_system_path() -> tuple[list, list]:
         System Interpreter: list, Pynball 'name': list
     """
     python_system_paths = []
+    python_system_paths_objects = []
     pynball_system_names = []
-    pynball_versions = _get_pynball("dict", "PYNBALL")
+    # pynball_versions = _get_pynball("dict", "PYNBALL")
+    pynball_versions = _get_pynball("dict_path_object", "PYNBALL")
     system_path_string: str = _getenv("system", "PATH")
+    # print(system_path_string)
     system_path_variables = system_path_string.split(";")
+    # print(system_path_variables)
     for path in system_path_variables:
         pathobject = Path(path)
         if (pathobject / "python.exe").is_file() and os.path.getsize(
             pathobject / "python.exe"
         ) > 0:
             python_system_paths.append(path)
+            python_system_paths_objects.append(pathobject)
+
     if pynball_versions:
-        for name, _ in pynball_versions.items():
-            pynball_path = "".join([pynball_versions[name], "\\"])
-            if pynball_path in python_system_paths:
-                pynball_system_names.append(name)
+        for pathobject in python_system_paths_objects:
+            for name, path in pynball_versions.items():
+                if path == pathobject:
+                    pynball_system_names.append(name)
+
     return python_system_paths, pynball_system_names
 
 
@@ -341,7 +348,7 @@ def add(name: str, version_path: str) -> None:
 
 @cli.command()
 @click.pass_context
-def addall(ctx):
+def addall(ctx) -> None:
     """Add all versions to the Pynball configuration."""
     global _PYNBALL_HOME
     active_dirs = 0
@@ -364,14 +371,14 @@ def addall(ctx):
             active_dirs += 1
             pyver_raw = _execute(exe, "--version")
             pyver = re.search(pattern, pyver_raw).group(0)
-            ctx.invoke(add, name=pyver, version_path=directory)
+            ctx.invoke(add, name=pyver, version_path=str(directory))
     if active_dirs > 0:
         _setenv("user", "PYNBALL_HOME", str(_PYNBALL_HOME))
 
 
 @cli.command()
 @click.argument("name")
-def delete(name):
+def delete(name) -> None:
     """Deletes a name / path of an installation of Python.
 
     \b
@@ -397,13 +404,13 @@ def delete(name):
 
 
 @cli.command()
-def clear():
+def reset() -> None:
     """Deletes all names / paths"""
     _delenv("user", "PYNBALL")
 
 
 @cli.command()
-def version():
+def version() -> None:
     """Display details about the system Python Interpreter."""
     message = (
         "{0.major}.{0.minor}.{0.micro}  ReleaseLevel: {0.releaselevel}, "
@@ -413,7 +420,7 @@ def version():
 
 
 @cli.command()
-def versions():
+def versions() -> None:
     """Lists the names / paths of the configured Python installations"""
     system_paths, pynball_names = _get_system_path()
     pynball_versions = _get_pynball("dict", "PYNBALL")
@@ -441,12 +448,17 @@ def versions():
 
 @cli.command()
 @click.argument("name")
-def switchto(name):
+@click.pass_context
+def system(ctx, name) -> None:
     """Changes the system Python Interpreter version.
 
     \b
     Args:
         name:  The Pynball friendly name of the Python Installation
+        \f
+        ctx:   The click context - Implementation detail that enables this
+               command to call another click command.
+               (click says this is quite naughty. But I still did it anyway)
     """
     name = str(name)
     path_new = ""
@@ -456,7 +468,7 @@ def switchto(name):
     if name not in _get_pynball("names", "PYNBALL"):
         message = f"{name} is not in Pynballs' configuration"
         _feedback(message, "warning")
-        versions()
+        ctx.invoke(versions)
         return
     if len(system_paths) > 1 or len(pynball_names) > 1:
         message = (
@@ -468,8 +480,9 @@ def switchto(name):
     if name in pynball_names:
         message = f"{name} is already configured as the system interpreter"
         _feedback(message, "warning")
-        versions()
+        ctx.invoke(versions)
         return
+
     pynball_path = "".join([pynball_versions[name], "\\"])
     if system_paths:
         for old_version in system_paths:
@@ -489,7 +502,7 @@ def switchto(name):
 @click.option("--noforce", "use_force", flag_value="n", default=True)
 @click.option("-f", "--force", "use_force", flag_value="y")
 @click.pass_context
-def pyenv(ctx, use_pyenv, use_force):
+def pyenv(ctx, use_pyenv, use_force) -> None:
     """Automatically include the pyenv versions in Pynball
 
     \b
@@ -535,7 +548,7 @@ def pyenv(ctx, use_pyenv, use_force):
 @cli.command()
 @click.argument("name")
 @click.argument("project_name")
-def mkproject(name: str, project_name):
+def mkproject(name: str, project_name: str) -> None:
     """Creates a Virtual Environment from a specific Python version.
 
     \b
@@ -550,13 +563,13 @@ def mkproject(name: str, project_name):
         _feedback(message, "warning")
         return
     ver = str(name)
-    version_path = ""
-    pynball_versions = _get_pynball("dict", "PYNBALL")
+    version_path = Path("")
+    pynball_versions = _get_pynball("dict_path_object", "PYNBALL")
     for name in pynball_versions:
         if name == ver:
             version_path = pynball_versions[name]
             break
-    if version_path == "":
+    if version_path == Path(""):
         message = f"{ver} is not configured in Pynball - Use the 'add' command"
         _feedback(message, "warning")
         return
@@ -565,9 +578,10 @@ def mkproject(name: str, project_name):
         try:
             new_path.mkdir(parents=False, exist_ok=False)
             if directory == _WORKON_HOME:
+                python_path = version_path / "python.exe"
                 _execute(
                     "virtualenv",
-                    f"-p={version_path}\\python.exe",
+                    f"-p={str(python_path)}",
                     str(new_path),
                 )
                 (new_path / ".project").touch()
@@ -589,7 +603,7 @@ def mkproject(name: str, project_name):
 @click.option("--noall", "delete_all", flag_value="n", default=True)
 @click.option("-a", "--all", "delete_all", flag_value="y")
 @click.argument("project_name")
-def rmproject(delete_all, project_name):
+def rmproject(delete_all, project_name) -> None:
     """Deletes a Virtual Environment.
 
     \b
@@ -620,7 +634,7 @@ def rmproject(delete_all, project_name):
 
 
 @cli.command()
-def lsproject():
+def lsproject() -> None:
     """Displays all Virtual Environment projects"""
     if _check_virtual_env() == 1:
         return
