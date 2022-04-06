@@ -17,8 +17,8 @@ def test_lsproject(monkeypatch, create_env, mock_get_env):
     result = runner.invoke(pynball.lsproject)
     assert result.exit_code == 0
     assert result.output == (
-        "Project Name             Python Version           Tox Versions\n"
-        "============             ==============           ============\n"
+        "Project Name             System Version           Pyenv Versions\n"
+        "============             ==============           ==============\n"
         "project1                 3.9.10                   3.8.10, 3.9.10\n"
         "project2                 3.9.10                   3.8.10, 3.9.10\n"
     )
