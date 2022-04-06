@@ -461,10 +461,9 @@ def system(ctx, name) -> None:
                (click says this is quite naughty. But I still did it anyway)
     """
     name = str(name)
-    path_new = ""
-    pynball_versions = _get_pynball("dict", "PYNBALL")
-    system_paths, pynball_names = _get_system_path()
     all_paths: str = _getenv("system", "PATH")
+    system_paths, pynball_names = _get_system_path()
+    pynball_versions = _get_pynball("dict_path_object", "PYNBALL")
     if name not in _get_pynball("names", "PYNBALL"):
         message = f"{name} is not in Pynballs' configuration"
         _feedback(message, "warning")
@@ -482,18 +481,17 @@ def system(ctx, name) -> None:
         _feedback(message, "warning")
         ctx.invoke(versions)
         return
-
-    pynball_path = "".join([pynball_versions[name], "\\"])
-    if system_paths:
-        for old_version in system_paths:
-            path_new: str = all_paths.replace(old_version, pynball_path)
-        _setenv("system", "PATH", path_new)
-    if not system_paths:
-        path_patch = "".join(
-            [pynball_path, "\\" ";", pynball_path, "\\", "Scripts", "\\", ";"]
-        )
-        path_new = "".join([path_patch, all_paths])
-        _setenv("system", "PATH", path_new)
+    pypath_new = pynball_versions[name]
+    pypath_scripts_new = pypath_new / "Scripts"
+    if len(system_paths) == 1:
+        pypath_old = Path(system_paths[0])
+        pypath_scripts_old = pypath_old / "Scripts"
+        all_paths = all_paths.replace(str(pypath_scripts_old), str(pypath_scripts_new))
+        all_paths = all_paths.replace(str(pypath_old), str(pypath_new))
+    else:
+        all_paths = "".join([str(pypath_scripts_new), ";", all_paths])
+        all_paths = "".join([str(pypath_new), ";", all_paths])
+    _setenv("system", "PATH", all_paths)
 
 
 @cli.command()
