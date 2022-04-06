@@ -45,8 +45,8 @@ except KeyError:
 
 @click.group()
 def cli():
-    """A command line tool to help consolidate development with various manual
-    installations of Python , pyenv and virtualenvwrapper"""
+    """Utility script to help manage development with various versions of Python
+    in conjunction with Virtual Environments and optionally the pyenv module"""
 
 
 def _feedback(message: str, feedback_type: str) -> None:
@@ -640,13 +640,13 @@ def lsproject() -> None:
     pattern1 = r"(?<=version_info = )\d{1,2}.\d{1,2}.\d{1,2}"
     pattern2 = r"(?<=version = )\d{1,2}.\d{1,2}.\d{1,2}"
     head1 = "Project Name"
-    head2 = "Python Version"
-    head3 = "Tox Versions"
+    head2 = "System Version"
+    head3 = "Pyenv Versions"
     print(f"{head1:25}{head2:25}{head3}")
     print(f"{len(head1)*'=':25}{len(head2)*'=':25}{len(head3)*'='}")
     for virt in dirs:
         envcfg = _WORKON_HOME / virt / "pyvenv.cfg"
-        if envcfg.is_file():
+        if envcfg.exists():
             cfg_content = envcfg.read_text()
         else:
             message = f"{virt} appears to be missing virtual configuration"
@@ -659,12 +659,12 @@ def lsproject() -> None:
             except AttributeError:
                 virtver = ""
                 continue
-        pyfile = _PROJECT_HOME / virt / ".python-version"
-        if pyfile.is_file():
-            pyver = pyfile.read_text()
+        pyenv_file = _PROJECT_HOME / virt / ".python-version"
+        if pyenv_file.exists():
+            pyver = pyenv_file.read_text()
             pyver = pyver.replace("\n", ", ")
         else:
-            pyver = ""
+            pyver = "-"
         print(f"{virt:25}{virtver:25}{pyver}")
 
 
