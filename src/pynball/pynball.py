@@ -16,7 +16,13 @@ from typing import Union
 # Third party modules
 import click
 
-config = configparser.ConfigParser()
+_PLATFORM = sys.platform
+if _PLATFORM != "win32":
+    print(
+        "Your Operating system is not supported yet."
+        "Linux will be supported in version 2."
+    )
+    exit(1)
 _IDLEMODE = 1 if "idlelib.run" in sys.modules else 0
 _ENV_VARIABLES = os.environ
 _ENVIRONMENT = os.name
@@ -24,7 +30,8 @@ _USER_KEY = winreg.HKEY_CURRENT_USER
 _USER_SUBKEY = "Environment"
 _SYSTEM_KEY = winreg.HKEY_LOCAL_MACHINE
 _SYSTEM_SUBKEY = r"System\CurrentControlSet\Control\Session Manager\Environment"
-_PLATFORM = sys.platform
+
+config = configparser.ConfigParser()
 
 
 def get_environ(env_name):
@@ -130,16 +137,19 @@ def _setenv(scope: str, name: str, value: str) -> None:
         error:  message if scope is neither 'user' nor 'system'.
         None:   If registry write is successful.
     """
-    if scope != "user" and scope != "system":
-        message = "Scope value must be 'user' or 'system'"
-        _feedback(message, "warning")
-        return
-    if scope == "user":
-        key = winreg.OpenKey(_USER_KEY, _USER_SUBKEY, 0, winreg.KEY_ALL_ACCESS)
-    elif scope == "system":
-        key = winreg.OpenKey(_SYSTEM_KEY, _SYSTEM_SUBKEY, 0, winreg.KEY_ALL_ACCESS)
-    winreg.SetValueEx(key, name, 0, winreg.REG_SZ, value)  # noqa
-    winreg.CloseKey(key)
+    if _PLATFORM == "win32":
+        if scope != "user" and scope != "system":
+            message = "Scope value must be 'user' or 'system'"
+            _feedback(message, "warning")
+            return
+        if scope == "user":
+            key = winreg.OpenKey(_USER_KEY, _USER_SUBKEY, 0, winreg.KEY_ALL_ACCESS)
+        elif scope == "system":
+            key = winreg.OpenKey(_SYSTEM_KEY, _SYSTEM_SUBKEY, 0, winreg.KEY_ALL_ACCESS)
+        winreg.SetValueEx(key, name, 0, winreg.REG_SZ, value)  # noqa
+        winreg.CloseKey(key)
+    else:
+        pass
 
 
 def _getenv(scope: str, name: str) -> Union[None, str]:
@@ -160,19 +170,22 @@ def _getenv(scope: str, name: str) -> Union[None, str]:
     Raises:
         FileNotFoundError:  When the key is not found
     """
-    if scope != "user" and scope != "system":
-        message = "Scope value must be 'user' or 'system'"
-        _feedback(message, "warning")
-        return
-    elif scope == "user":
-        key = winreg.CreateKey(_USER_KEY, _USER_SUBKEY)
-    elif scope == "system":
-        key = winreg.CreateKey(_SYSTEM_KEY, _SYSTEM_SUBKEY)
-    try:
-        value, _ = winreg.QueryValueEx(key, name)  # noqa
-    except FileNotFoundError:
-        value = None
-    return value
+    if _PLATFORM == "win32":
+        if scope != "user" and scope != "system":
+            message = "Scope value must be 'user' or 'system'"
+            _feedback(message, "warning")
+            return
+        elif scope == "user":
+            key = winreg.CreateKey(_USER_KEY, _USER_SUBKEY)
+        elif scope == "system":
+            key = winreg.CreateKey(_SYSTEM_KEY, _SYSTEM_SUBKEY)
+        try:
+            value, _ = winreg.QueryValueEx(key, name)  # noqa
+        except FileNotFoundError:
+            value = None
+        return value
+    else:
+        pass
 
 
 def _delenv(scope: str, name: str) -> None:
@@ -191,19 +204,22 @@ def _delenv(scope: str, name: str) -> None:
     Raises:
         OSError:  If the deletion failed.
     """
-    if scope != "user" and scope != "system":
-        message = "Scope value must be 'user' or 'system'"
-        _feedback(message, "warning")
-        return
-    elif scope == "user":
-        key = winreg.CreateKey(_USER_KEY, _USER_SUBKEY)
-    elif scope == "system":
-        key = winreg.CreateKey(_SYSTEM_KEY, _SYSTEM_SUBKEY)
-    try:
-        winreg.DeleteValue(key, name)  # noqa
-    except OSError as e:
-        message = f"Deletion of key: '{name}' failed -\n {e}"
-        _feedback(message, "warning")
+    if _PLATFORM == "win32":
+        if scope != "user" and scope != "system":
+            message = "Scope value must be 'user' or 'system'"
+            _feedback(message, "warning")
+            return
+        elif scope == "user":
+            key = winreg.CreateKey(_USER_KEY, _USER_SUBKEY)
+        elif scope == "system":
+            key = winreg.CreateKey(_SYSTEM_KEY, _SYSTEM_SUBKEY)
+        try:
+            winreg.DeleteValue(key, name)  # noqa
+        except OSError as e:
+            message = f"Deletion of key: '{name}' failed -\n {e}"
+            _feedback(message, "warning")
+    else:
+        pass
 
 
 def _set_pynball(dict_object: dict[str:Path], varname: str) -> None:
