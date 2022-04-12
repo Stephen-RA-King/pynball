@@ -17,7 +17,6 @@ from typing import Union
 import click
 
 config = configparser.ConfigParser()
-
 _IDLEMODE = 1 if "idlelib.run" in sys.modules else 0
 _ENV_VARIABLES = os.environ
 _ENVIRONMENT = os.name
@@ -25,22 +24,20 @@ _USER_KEY = winreg.HKEY_CURRENT_USER
 _USER_SUBKEY = "Environment"
 _SYSTEM_KEY = winreg.HKEY_LOCAL_MACHINE
 _SYSTEM_SUBKEY = r"System\CurrentControlSet\Control\Session Manager\Environment"
-try:
-    _WORKON_HOME = Path(os.environ["WORKON_HOME"])
-except KeyError:
-    _WORKON_HOME = Path("")
-try:
-    _PROJECT_HOME = Path(os.environ["PROJECT_HOME"])
-except KeyError:
-    _PROJECT_HOME = Path("")
-try:
-    _PYENV_HOME = Path(os.environ["PYENV_HOME"])
-except KeyError:
-    _PYENV_HOME = Path("")
-try:
-    _PYNBALL_HOME = Path(os.environ["PYNBALL_HOME"])
-except KeyError:
-    _PYNBALL_HOME = Path("")
+_PLATFORM = sys.platform
+
+
+def get_environ(env_name):
+    try:
+        env_value = Path(os.environ[env_name])
+    except KeyError:
+        env_value = Path("")
+    return env_value
+
+
+_WORKON_HOME = get_environ("WORKON_HOME")
+_PROJECT_HOME = get_environ("PROJECT_HOME")
+_PYENV_HOME = get_environ("PYENV_HOME")
 
 
 @click.group()
@@ -275,12 +272,9 @@ def _get_system_path() -> tuple[list, list]:
     python_system_paths = []
     python_system_paths_objects = []
     pynball_system_names = []
-    # pynball_versions = _get_pynball("dict", "PYNBALL")
     pynball_versions = _get_pynball("dict_path_object", "PYNBALL")
     system_path_string: str = _getenv("system", "PATH")
-    # print(system_path_string)
     system_path_variables = system_path_string.split(";")
-    # print(system_path_variables)
     for path in system_path_variables:
         pathobject = Path(path)
         if (pathobject / "python.exe").is_file() and os.path.getsize(
@@ -350,7 +344,11 @@ def add(name: str, version_path: str) -> None:
 @click.pass_context
 def addall(ctx) -> None:
     """Add all versions to the Pynball configuration."""
-    global _PYNBALL_HOME
+    try:
+        _PYNBALL_HOME = Path(os.environ["PYNBALL_HOME"])
+    except KeyError:
+        _PYNBALL_HOME = Path("")
+
     active_dirs = 0
     pattern = r"\d{1,2}.\d{1,2}.\d{1,2}"
     if _PYNBALL_HOME == Path(""):
