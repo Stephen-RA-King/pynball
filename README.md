@@ -39,9 +39,7 @@ system installations etc. Pynball can make leveraging such environments a lot ea
 
 OS X & Linux:
 
-```sh
-pipx install pynball
-```
+Will be supported in version 2
 
 Windows:
 
@@ -51,7 +49,143 @@ pipx install pynball
 
 ## Usage example
 
-A few motivating and useful examples of how your product can be used. Spice this up with code blocks and potentially more screenshots.
+### View Available commands
+
+```sh
+pynball
+Usage: pynball [OPTIONS] COMMAND [ARGS]...
+
+  Utility script to help manage development with various versions of Python in
+  conjunction with Virtual Environments and optionally the pyenv module
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  add         Adds a name / path of an installation of Python.
+  addall      Add all versions to the Pynball configuration.
+  delete      Deletes a name / path of an installation of Python.
+  exportconf  Creates a configuration file backup.
+  importconf  Creates a configuration from a file backup
+  lsproject   Displays all Virtual Environment projects
+  mkproject   Creates a Virtual Environment from a specific Python version.
+  pyenv       Automatically include the pyenv versions in Pynball
+  reset       Deletes all names / paths
+  rmproject   Deletes a Virtual Environment.
+  system      Changes the system Python Interpreter version.
+  version     Display details about the system Python Interpreter.
+  versions    Lists the names / paths of the configured Python installations
+```
+
+### Add a Python version to the config
+
+```sh
+pynball versions
+D:\PYTHON\3.9.10 : --> System Interpreter
+WARNING: Pynball configuration is empty - use 'add' command
+```
+
+```sh
+pynball add 3.8.10 D:\PYTHON\3.8.10
+'3.8.10' Successfully added to configuration
+```
+
+```sh
+pynball versions
+D:\PYTHON\3.9.10 : --> System Interpreter
+3.8.10    D:\PYTHON\3.8.10
+WARNING: System Interpreter is not in Pynball Configuration
+```
+
+### Add all manually installed Python versions to the config
+
+```sh
+pynball addall
+'3.10.4' Successfully added to configuration
+'3.5.4' Successfully added to configuration
+'3.6.8' Successfully added to configuration
+'3.7.9' Successfully added to configuration
+WARNING: '3.8.10' already added to configuration as '3.8.10'
+'3.9.10' Successfully added to configuration
+```
+
+```sh
+pynball versions
+3.10.4    D:\PYTHON\3.10.4
+3.9.10    D:\PYTHON\3.9.10 : --> System Interpreter
+3.8.10    D:\PYTHON\3.8.10
+3.7.9     D:\PYTHON\3.7.9
+3.6.8     D:\PYTHON\3.6.8
+3.5.4     D:\PYTHON\3.5.4
+```
+
+### Add pyenv Python versions (if any) to the config
+
+```sh
+pynball pyenv -u
+'3.10.2' Successfully added to configuration
+'3.5.2' Successfully added to configuration
+'3.8.0' Successfully added to configuration
+3.10.4    D:\PYTHON\3.10.4
+3.10.2    C:\Users\conta\.pyenv\pyenv-win\versions\3.10.2
+3.9.10    D:\PYTHON\3.9.10 : --> System Interpreter
+3.8.10    D:\PYTHON\3.8.10
+3.8.0     C:\Users\conta\.pyenv\pyenv-win\versions\3.8.0
+3.7.9     D:\PYTHON\3.7.9
+3.6.8     D:\PYTHON\3.6.8
+3.5.4     D:\PYTHON\3.5.4
+3.5.2     C:\Users\conta\.pyenv\pyenv-win\versions\3.5.2
+```
+
+```sh
+pynball versions
+3.10.4    D:\PYTHON\3.10.4
+3.10.2    C:\Users\conta\.pyenv\pyenv-win\versions\3.10.2
+3.9.10    D:\PYTHON\3.9.10 : --> System Interpreter
+3.8.10    D:\PYTHON\3.8.10
+3.8.0     C:\Users\conta\.pyenv\pyenv-win\versions\3.8.0
+3.7.9     D:\PYTHON\3.7.9
+3.6.8     D:\PYTHON\3.6.8
+3.5.4     D:\PYTHON\3.5.4
+3.5.2     C:\Users\conta\.pyenv\pyenv-win\versions\3.5.2
+```
+
+### Create a virtual environment using a version in the config
+
+```sh
+pynball mkproject 3.8.10 hobgoblin
+```
+
+### List all the virtual environments
+
+```sh
+pynball lsproject
+Project Name             System Version           Pyenv Versions
+============             ==============           ==============
+hobgoblin                3.8.10                   -
+organizer                3.9.10                   -
+pizazz                   3.9.10                   -
+template                 3.9.10                   -
+```
+
+### Change system interpreter
+
+```sh
+pynball system 3.6.8
+```
+
+```sh
+pynball versions
+3.10.4    D:\PYTHON\3.10.2
+3.10.2    C:\Users\conta\.pyenv\pyenv-win\versions\3.10.2
+3.9.10    D:\PYTHON\3.9.10
+3.8.10    D:\PYTHON\3.8.10
+3.8.0     C:\Users\conta\.pyenv\pyenv-win\versions\3.8.0
+3.7.9     D:\PYTHON\3.7.9
+3.6.8     D:\PYTHON\3.6.8 : --> System Interpreter
+3.5.4     D:\PYTHON\3.5.4
+3.5.2     C:\Users\conta\.pyenv\pyenv-win\versions\3.5.2
+```
 
 _For more examples and usage, please refer to the [Wiki][wiki]._
 
@@ -59,22 +193,6 @@ _For more examples and usage, please refer to the [Wiki][wiki]._
 
 - v 0.1.0
   - Work in progress
-
-## Meta
-
-Stephen R A King : stephen.ra.king@gmail.com
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
-[https://github.com/stephen-ra-king/pynball](https://github.com/stephen-ra-king/pynball)
-
-## Contributing
-
-1. Fork it (<https://github.com/stephen-ra-king/pynball/fork>)
-2. Create your feature branch (`git checkout -b feature/fooBar`)
-3. Commit your changes (`git commit -am 'Add some fooBar'`)
-4. Push to the branch (`git push origin feature/fooBar`)
-5. Create a new Pull Request
 
 <!-- Markdown link & img dfn's -->
 
