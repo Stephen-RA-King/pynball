@@ -9,7 +9,7 @@
 [![security: bandit][bandit-image]][bandit-url]
 [![licence: mit][mit-license-image]][mit-license-url]
 
-![](header.png)
+![](https://github.com/Stephen-RA-King/pynball/raw/main/header.png)
 
 You may have a requirement for development on various versions of Python.
 Or you may have a mixture of installations including pyenv, custom installations,
@@ -191,7 +191,7 @@ _For more examples and usage, please refer to the [Wiki][wiki]._
 
 ## Release History
 
-- v 1.0.1
+- v 1.0.0
   - Work in progress
 
 <!-- Markdown link & img dfn's -->
