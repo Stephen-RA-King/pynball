@@ -45,6 +45,7 @@ Windows:
 
 ```sh
 pipx install pynball
+pipx inject pynball click
 ```
 
 ## Usage example
