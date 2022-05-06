@@ -20,12 +20,6 @@ repos:
       - id: requirements-txt-fixer
       - id: trailing-whitespace
 
-  - repo: https://github.com/Woile/commitizen
-    rev: v2.21.2
-    hooks:
-      - id: commitizen
-        stages: [commit-msg]
-
   - repo: https://github.com/MartinThoma/check-pip-compile
     rev: 0.1.1
     hooks:
