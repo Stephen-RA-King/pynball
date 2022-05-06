@@ -192,7 +192,7 @@ _For more examples and usage, please refer to the [Wiki][wiki]._
 
 ## Release History
 
-- v 1.0.1
+- v 1.0.2
   - Work in progress
 
 <!-- Markdown link & img dfn's -->
