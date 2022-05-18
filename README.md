@@ -26,7 +26,7 @@ system installations etc. Pynball can make leveraging such environments a lot ea
 
 #### Minimum Requirements
 
-1. Python 3.7, 3.8, 3.9 or 3.10
+1. Python 3.8, 3.9 or 3.10
 2. [**pipx**][pipx-url]
 
 #### For Maximum Benefits additionally install the following:

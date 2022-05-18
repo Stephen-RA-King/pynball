@@ -506,6 +506,10 @@ def system(ctx, name) -> None:
         all_paths = "".join([str(pypath_scripts_new), ";", all_paths])
         all_paths = "".join([str(pypath_new), ";", all_paths])
     _setenv("system", "PATH", all_paths)
+    message = "New version set"
+    _feedback(message, "nominal")
+    message = "Remember to restart the shell to use the new version"
+    _feedback(message, "warning")
 
 
 @cli.command()
