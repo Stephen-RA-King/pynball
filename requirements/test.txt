@@ -4,11 +4,7 @@
 #
 #    pip-compile requirements/test.in
 #
-atomicwrites==1.4.0
-    # via pytest
 attrs==21.4.0
-    # via pytest
-colorama==0.4.4
     # via pytest
 iniconfig==1.1.1
     # via pytest
@@ -20,7 +16,7 @@ py==1.11.0
     # via pytest
 pyparsing==3.0.7
     # via packaging
-pytest==7.0.1
+pytest==7.1.2
     # via -r requirements/test.in
 tomli==2.0.1
     # via pytest
