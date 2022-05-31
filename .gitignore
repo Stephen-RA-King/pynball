@@ -133,5 +133,5 @@ dmypy.json
 
 
 # miscellaneous files
-*.txt
+NOTES.txt
 *.docx
