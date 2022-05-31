@@ -8,31 +8,52 @@
 # Wrap at 72 chars. ################################## which is here: #
 
 
-# At the end: Include Co-authored-by for all contributors.
-# Include at least one empty line before it. Format:
-# Co-authored-by: name <user@users.noreply.github.com>
-#
-#
-# 1.Separate subject from body with a blank line
-# 2. Limit the subject line to 50 characters
-# 3. Capitalize the subject line
-# 4. Do not end the subject line with a period
-# 5. Use the imperative mood in the subject line
-# 6. Wrap the body at 72 characters
-# 7. Use the body to explain what and why vs. how
-#
-# Commitizen:
-# build:
-# ci:
-# docs:         update to documentation
-# feat:         used when a new feature is added to your application
-# fix:          bug fix for your application
-# perf:
-# refactor:
-# style:
-# test:
-# chore:
-# revert:
-# bump:
-#
-# xxxxx (scope)!: MUST consist of a noun describing a section of the codebase
+# Commitizen and Python Semantic Release require the following:
+# ------------------------------------------------------------
+# Each commit message consists of a header, a body and a footer.
+# The header has a special format that includes a type, a scope and a subject:
+
+# <type>(<scope>): <subject>
+# <BLANK LINE>
+# <body>
+# <BLANK LINE>
+# <footer>
+
+# The header is mandatory and the scope of the header is optional.
+
+# - Revert -
+# If the commit reverts a previous commit, it should begin with revert: , followed by
+# the header of the reverted commit. In the body it should say: This reverts
+# commit <hash>., where the hash is the SHA of the commit being reverted.
+
+# - Type -
+# feat: A new feature
+# fix: A bug fix
+# docs: Documentation only changes
+# style: Changes that do not affect the meaning of the code (white-space, formatting..)
+# refactor: A code change that neither fixes a bug nor adds a feature
+# perf: A code change that improves performance
+# test: Adding missing or correcting existing tests
+# chore: Changes to the build process or auxiliary tools and libraries etc.
+
+# - Scope -
+# The scope could be anything specifying place of the commit change.
+# You can use * when the change affects more than a single scope.
+
+# - Subject -
+# contains succinct description of the change:
+# use the imperative, present tense: "change" not "changed" nor "changes"
+# don't capitalize first letter
+# no dot (.) at the end
+
+# - Body -
+# Just as in the subject, use the imperative, present tense: "change" not "changed" nor
+# "changes". The body should include the motivation for the change and contrast this with
+# previous behavior.
+
+# - Footer -
+# The footer should contain any information about Breaking Changes and is also the
+# place to reference issues that this commit closes.
+# e.g. Closes #123, #245, #992
+# Breaking Changes should start with the word BREAKING CHANGE: with a space or two
+# newlines. The rest of the commit message is then used for this.

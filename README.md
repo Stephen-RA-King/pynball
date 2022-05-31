@@ -190,10 +190,20 @@ pynball versions
 
 _For more examples and usage, please refer to the [Wiki][wiki]._
 
-## Release History
+## Documentation
 
-- v 1.0.2
-  - Work in progress
+[**Read the Docs**](https://pynball.readthedocs.io/en/latest/?)
+
+## Meta
+
+[![](assets/linkedin.png)](https://linkedin.com/in/stephen-k-3a4644210)
+[![](assets/github.png)](https://github.com/Stephen-RA-King/Stephen-RA-King)
+[![](assets/www.png)](https://www.Stephen-RA-King)
+[![](assets/email.png)](mailto:stephen.ra.king@gmail.com)
+
+Author: Stephen R A King
+
+Distributed under the MIT License. See `LICENSE` for more information.
 
 <!-- Markdown link & img dfn's -->
 

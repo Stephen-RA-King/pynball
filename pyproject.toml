@@ -9,7 +9,6 @@ build-backend = "setuptools.build_meta"
 [tool.black]
 line-length = 88
 
-
 [tool.pytest.ini_options]
 # https://docs.pytest.org/en/6.2.x/reference.html?highlight=minversion#configuration-options
 minversion = "6.0"
@@ -56,6 +55,18 @@ follow_imports = "skip"
 html_report = "mypy-report"
 mypy_path = "typeshed/pyi:typeshed/imports"
 
+[tool.semantic_release]
+version_variable = "src/pynball/__init__.py:__version__"
+branch = "main"
+changelog_file = "CHANGELOG.md"
+build_command = "python -m build"
+dist_path = "dist/"
+upload_to_pypi = true
+upload_to_repository = true
+remove_dist = true
+version_source = "tag"
+commit_message = "chore: generate by PSR"
+
 [tool.flakeheaven]
 # base = "https://raw.githubusercontent.com/flakeheaven/flakeheaven/main/pyproject.toml"
 exclude = ["example.py"]
@@ -70,3 +81,12 @@ mccabe = ["+*"]
 pep8-naming = ["+*"]
 pycodestyle = ["+*"]
 pylint = ["+F*", "+E*", "-E0611", "-E1101", "-E0401", "-E1102", "-E1123"]
+
+[tool.coverage.run]
+branch = true
+parallel = true
+
+[tool.coverage.report]
+show_missing = true
+precision = 2
+skip_empty = true

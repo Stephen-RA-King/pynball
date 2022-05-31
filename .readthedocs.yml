@@ -1,9 +1,14 @@
 # See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
+# Required
 version: 2
-sphinx:
-  configuration: docs/source/conf.py
-formats: all
+
+# Image to use
+build:
+  image: testing
+
+# Configuration
 python:
+  version: 3.9
   install:
     - requirements: docs/requirements.txt
     - method: pip

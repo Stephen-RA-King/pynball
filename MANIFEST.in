@@ -1,12 +1,9 @@
 # https://packaging.python.org/guides/using-manifest-in/
 
 include AUTHORS.md
-include HISTORY.md
+include CHANGELOG.md
 include LICENSE
 include README.md
 
-recursive-include tests *
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
-
-recursive-include docs *.rst conf.py Makefile make.bat *.jpg *.png *.gif
