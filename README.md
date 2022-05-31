@@ -2,6 +2,9 @@
 
 > Centralized management and utilization of all your Python Installations.
 
+[![PyPI version](https://badge.fury.io/py/pizazz.svg)](https://badge.fury.io/py/pynball)
+[![Documentation Status](https://readthedocs.org/projects/pynball/badge/?version=latest)](https://pynball.readthedocs.io/en/latest/?badge=latest)
+[![Downloads](https://static.pepy.tech/personalized-badge/pynball?period=total&units=international_system&left_color=black&right_color=orange&left_text=Downloads)](https://pepy.tech/project/pynball)
 [![pre-commit][pre-commit-image]][pre-commit-url]
 [![Imports: isort][isort-image]][isort-url]
 [![Code style: black][black-image]][black-url]
@@ -198,6 +201,7 @@ _For more examples and usage, please refer to the [Wiki][wiki]._
 
 [![](assets/linkedin.png)](https://linkedin.com/in/stephen-k-3a4644210)
 [![](assets/github.png)](https://github.com/Stephen-RA-King/Stephen-RA-King)
+[![](assets/pypi.png)](https://pypi.org/project/pynball/)
 [![](assets/www.png)](https://www.Stephen-RA-King)
 [![](assets/email.png)](mailto:stephen.ra.king@gmail.com)
 
