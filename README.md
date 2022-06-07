@@ -10,6 +10,7 @@
 [![Code style: black][black-image]][black-url]
 [![Checked with mypy][mypy-image]][mypy-url]
 [![security: bandit][bandit-image]][bandit-url]
+[![CodeFactor](https://www.codefactor.io/repository/github/stephen-ra-king/pynball/badge)](https://www.codefactor.io/repository/github/stephen-ra-king/pynball)
 [![licence: mit][mit-license-image]][mit-license-url]
 
 ![](assets/header.png)
