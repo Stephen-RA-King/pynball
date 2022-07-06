@@ -1,6 +1,6 @@
 # Pynball
 
-> Centralized management and utilization of all your Python Installations.
+> Centralized management and utilization of all your Python versions, installations and virtual environments.
 
 [![PyPI version](https://badge.fury.io/py/pizazz.svg)](https://badge.fury.io/py/pynball)
 [![Documentation Status](https://readthedocs.org/projects/pynball/badge/?version=latest)](https://pynball.readthedocs.io/en/latest/?badge=latest)
@@ -73,8 +73,9 @@ Commands:
   delete      Deletes a name / path of an installation of Python.
   exportconf  Creates a configuration file backup.
   importconf  Creates a configuration from a file backup
-  lsproject   Displays all Virtual Environment projects
+  lsproject   Displays all Virtual Environment projects (with versions: native, tox and pyenv)
   mkproject   Creates a Virtual Environment from a specific Python version.
+  mvproject   Renames a Virtual Environment (optionally updates GitHub and git)
   pyenv       Automatically include the pyenv versions in Pynball
   reset       Deletes all names / paths
   rmproject   Deletes a Virtual Environment.
@@ -166,12 +167,12 @@ pynball mkproject 3.8.10 hobgoblin
 
 ```sh
 pynball lsproject
-Project Name             System Version           Pyenv Versions
-============             ==============           ==============
-hobgoblin                3.8.10                   -
-organizer                3.9.10                   -
-pizazz                   3.9.10                   -
-template                 3.9.10                   -
+Project Name             Native Version           Pyenv Versions        Tox Versions
+============             ==============           ==============        ============
+hobgoblin                3.8.10                   -                     3.8, 3.9, 3.10
+organizer                3.9.10                   -                     -
+pizazz                   3.9.10                   -                     -
+template                 3.9.10                   -                     -
 ```
 
 ### Change system interpreter
@@ -193,7 +194,9 @@ pynball versions
 3.5.2     C:\Users\conta\.pyenv\pyenv-win\versions\3.5.2
 ```
 
-_For more examples and usage, please refer to the [Wiki][wiki]._
+_For more information, please refer to the wiki_
+
+## [Wiki][wiki]
 
 ## Documentation
 
@@ -204,7 +207,7 @@ _For more examples and usage, please refer to the [Wiki][wiki]._
 [![](assets/linkedin.png)](https://linkedin.com/in/stephen-k-3a4644210)
 [![](assets/github.png)](https://github.com/Stephen-RA-King/Stephen-RA-King)
 [![](assets/pypi.png)](https://pypi.org/project/pynball/)
-[![](assets/www.png)](https://www.Stephen-RA-King)
+[![](assets/www.png)](https://www.justpython.tech)
 [![](assets/email.png)](mailto:stephen.ra.king@gmail.com)
 
 Author: Stephen R A King
