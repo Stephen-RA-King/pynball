@@ -11,7 +11,7 @@ import subprocess
 import sys
 import winreg
 from pathlib import Path
-from typing import Union
+from typing import Any
 
 # Third party modules
 import click
@@ -34,7 +34,7 @@ _SYSTEM_SUBKEY = r"System\CurrentControlSet\Control\Session Manager\Environment"
 config = configparser.ConfigParser()
 
 
-def get_environ(env_name):
+def get_environ(env_name: str) -> Path:
     try:
         env_value = Path(os.environ[env_name])
     except KeyError:
@@ -48,7 +48,7 @@ _PYENV_HOME = get_environ("PYENV_HOME")
 
 
 @click.group()
-def cli():
+def cli() -> None:
     """Utility script to help manage development with various versions of Python
     in conjunction with Virtual Environments and optionally the pyenv module"""
 
@@ -76,7 +76,15 @@ def _feedback(message: str, feedback_type: str) -> None:
             click.secho(f"ERROR: {message}", fg="bright_red", bg="black")
 
 
-def _execute(*args, supress_exception=False):
+def _file_word_replace(filepath: Path, old_word: str, new_word: str) -> Any:
+    with open(filepath) as file:
+        file_data = file.read()
+    file_data = file_data.replace(old_word, new_word)
+    with open(filepath, "w") as file:
+        file.write(file_data)
+
+
+def _execute(*args: Any, supress_exception: bool = False) -> Any:
     """A utility method to run command line tools
 
     Args:
@@ -152,7 +160,7 @@ def _setenv(scope: str, name: str, value: str) -> None:
         pass
 
 
-def _getenv(scope: str, name: str) -> Union[None, str]:
+def _getenv(scope: str, name: str) -> Any:
     """Gets an environment variable given a scope and key name.
 
     Note:
@@ -174,7 +182,7 @@ def _getenv(scope: str, name: str) -> Union[None, str]:
         if scope != "user" and scope != "system":
             message = "Scope value must be 'user' or 'system'"
             _feedback(message, "warning")
-            return
+            return None
         elif scope == "user":
             key = winreg.CreateKey(_USER_KEY, _USER_SUBKEY)
         elif scope == "system":
@@ -222,7 +230,7 @@ def _delenv(scope: str, name: str) -> None:
         pass
 
 
-def _set_pynball(dict_object: dict[str:Path], varname: str) -> None:
+def _set_pynball(dict_object: dict[str, Path], varname: str) -> None:
     """Accepts and converts a dictionary object, then writes to the registry.
 
     Args:
@@ -233,7 +241,7 @@ def _set_pynball(dict_object: dict[str:Path], varname: str) -> None:
     _setenv("user", varname, pynball)
 
 
-def _get_pynball(returntype: str, varname: str):
+def _get_pynball(returntype: str, varname: str) -> Any:
     """Reads the environment variable 'PYNBALL' from the user scope as a string.
 
     The string is then converted to the data structure specified by the
@@ -289,7 +297,7 @@ def _get_system_path() -> tuple[list, list]:
     python_system_paths_objects = []
     pynball_system_names = []
     pynball_versions = _get_pynball("dict_path_object", "PYNBALL")
-    system_path_string: str = _getenv("system", "PATH")
+    system_path_string = _getenv("system", "PATH")
     system_path_variables = system_path_string.split(";")
     for path in system_path_variables:
         pathobject = Path(path)
@@ -358,7 +366,7 @@ def add(name: str, version_path: str) -> None:
 
 @cli.command()
 @click.pass_context
-def addall(ctx) -> None:
+def addall(ctx: Any) -> None:
     """Add all versions to the Pynball configuration."""
     try:
         _PYNBALL_HOME = Path(os.environ["PYNBALL_HOME"])
@@ -384,7 +392,7 @@ def addall(ctx) -> None:
         if exe.exists():
             active_dirs += 1
             pyver_raw = _execute(exe, "--version")
-            pyver = re.search(pattern, pyver_raw).group(0)
+            pyver = re.search(pattern, pyver_raw).group(0)  # type: ignore
             ctx.invoke(add, name=pyver, version_path=str(directory))
     if active_dirs > 0:
         _setenv("user", "PYNBALL_HOME", str(_PYNBALL_HOME))
@@ -392,7 +400,7 @@ def addall(ctx) -> None:
 
 @cli.command()
 @click.argument("name")
-def delete(name) -> None:
+def delete(name: str) -> None:
     """Deletes a name / path of an installation of Python.
 
     \b
@@ -463,7 +471,7 @@ def versions() -> None:
 @cli.command()
 @click.argument("name")
 @click.pass_context
-def system(ctx, name) -> None:
+def system(ctx: Any, name: str) -> None:
     """Changes the system Python Interpreter version.
 
     \b
@@ -518,7 +526,7 @@ def system(ctx, name) -> None:
 @click.option("--noforce", "use_force", flag_value="n", default=True)
 @click.option("-f", "--force", "use_force", flag_value="y")
 @click.pass_context
-def pyenv(ctx, use_pyenv, use_force) -> None:
+def pyenv(ctx: Any, use_pyenv: str, use_force: str) -> None:
     """Automatically include the pyenv versions in Pynball
 
     \b
@@ -619,7 +627,7 @@ def mkproject(name: str, project_name: str) -> None:
 @click.option("--noall", "delete_all", flag_value="n", default=True)
 @click.option("-a", "--all", "delete_all", flag_value="y")
 @click.argument("project_name")
-def rmproject(delete_all, project_name) -> None:
+def rmproject(delete_all: str, project_name: str) -> None:
     """Deletes a Virtual Environment.
 
     \b
@@ -672,7 +680,7 @@ def lsproject() -> None:
             continue
         for pattern in [pattern1, pattern2]:
             try:
-                virtver = re.search(pattern, cfg_content).group(0)
+                virtver = re.search(pattern, cfg_content).group(0)  # type: ignore
                 break
             except AttributeError:
                 virtver = ""
@@ -687,7 +695,29 @@ def lsproject() -> None:
 
 
 @cli.command()
-def exportconf():
+@click.argument("old_name")
+@click.argument("new_name")
+def mvproject(old_name: str, new_name: str) -> None:
+    """Renames a virtual Environment"""
+    replace_text_files = [
+        _WORKON_HOME / old_name / "Scripts" / "activate",
+        _WORKON_HOME / old_name / "Scripts" / "activate.bat",
+        _WORKON_HOME / old_name / "Scripts" / "activate.fish",
+        _WORKON_HOME / old_name / "Scripts" / "activate.nu",
+        _WORKON_HOME / old_name / "Scripts" / "activate.ps1",
+        _WORKON_HOME / old_name / ".project",
+        _WORKON_HOME / old_name / "pyvenv.cfg",
+    ]
+    rename_files = [_WORKON_HOME / old_name, _PROJECT_HOME / old_name]
+    for file in replace_text_files:
+        _file_word_replace(file, old_name, new_name)
+    for file in rename_files:
+        newname = file.parent / f"{new_name}{file.suffix}"
+        file.rename(newname)
+
+
+@cli.command()
+def exportconf() -> None:
     """Creates a configuration file backup."""
     config["PYNBALL"] = {}
     config["PYNBALL"]["PYNBALL"] = _get_pynball("string", "PYNBALL")
@@ -697,7 +727,7 @@ def exportconf():
 
 @cli.command()
 @click.argument("config_path", type=click.Path())
-def importconf(config_path: str):
+def importconf(config_path: str) -> None:
     """Creates a configuration from a file backup
 
     Args:
