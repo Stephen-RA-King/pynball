@@ -710,11 +710,11 @@ def mvproject(old_name: str, new_name: str) -> None:
     ]
     rename_files = [_WORKON_HOME / old_name, _PROJECT_HOME / old_name]
     try:
-        for file in replace_text_files:
-            _file_word_replace(file, old_name, new_name)
         for file in rename_files:
             newname = file.parent / f"{new_name}{file.suffix}"
             file.rename(newname)
+        for file in replace_text_files:
+            _file_word_replace(file, old_name, new_name)
     except FileNotFoundError:
         message = f"Virtual environment '{old_name}' does not exist"
         _feedback(message, "warning")

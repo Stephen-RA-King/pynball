@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.1.2 (2022-07-17)
+### Fix
+* Add exception handling for mvproject ([`3265299`](https://github.com/Stephen-RA-King/pynball/commit/3265299ee5da6f3781d8fa3c070d38bd28bcc384))
+
 ## v1.1.1 (2022-07-17)
 ### Fix
 * Error in entrypoint ([`2e95fb1`](https://github.com/Stephen-RA-King/pynball/commit/2e95fb141cda3645135462b160d3696f1be3d5aa))
