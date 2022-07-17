@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.1.3 (2022-07-17)
+### Fix
+* Change test order for mvproject function ([`e87dabc`](https://github.com/Stephen-RA-King/pynball/commit/e87dabc89d949b1be9a6eb74616ec24390e4c54c))
+
 ## v1.1.2 (2022-07-17)
 ### Fix
 * Add exception handling for mvproject ([`3265299`](https://github.com/Stephen-RA-King/pynball/commit/3265299ee5da6f3781d8fa3c070d38bd28bcc384))
