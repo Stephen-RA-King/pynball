@@ -73,12 +73,12 @@ colorama==0.4.4
     #   flakeheaven
     #   twine
 commitizen==2.27.1
-    # via -r development.in
-coverage[toml]==6.4
     # via
     #   -r development.in
     #   coverage-conditional-plugin
 coverage-conditional-plugin==0.5.0
+    # via -r development.in
+coverage[toml]==6.4
     # via -r development.in
 cryptography==37.0.4
     # via secretstorage
