@@ -2,6 +2,15 @@
 
 <!--next-version-placeholder-->
 
+## v1.1.0 (2022-07-17)
+### Feature
+* Add venv renaming function ([`df2e727`](https://github.com/Stephen-RA-King/pynball/commit/df2e7275296885b991ae247a9c3fd6ee2e67de44))
+
+### Fix
+* Tests.yml - run tests on windows only ([`43adc6e`](https://github.com/Stephen-RA-King/pynball/commit/43adc6ed5c4c6d9a9aaf152086e9ed5d02af25c1))
+* Add badges ([`8fc7318`](https://github.com/Stephen-RA-King/pynball/commit/8fc73182ad161b3ff1865a5e1ea663ab9a38645e))
+* Add sphinx requirements file ([`55ad58a`](https://github.com/Stephen-RA-King/pynball/commit/55ad58af6a62cbf937ac3c73e62c7a23be62023d))
+
 ## v1.0.3 (2022-05-31)
 ### Fix
 * Update uri link ([`764ad41`](https://github.com/Stephen-RA-King/pynball/commit/764ad4117abbf5c3dc10d9f6cdc4eb37e8d9f59d))
