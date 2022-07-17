@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.1.4 (2022-07-17)
+### Fix
+* Make rmproject warning more descriptive ([`e0b14c2`](https://github.com/Stephen-RA-King/pynball/commit/e0b14c2f870c83d41cc190b1548d4e8c2c10f8c3))
+
 ## v1.1.3 (2022-07-17)
 ### Fix
 * Change test order for mvproject function ([`e87dabc`](https://github.com/Stephen-RA-King/pynball/commit/e87dabc89d949b1be9a6eb74616ec24390e4c54c))
