@@ -268,7 +268,7 @@ mdurl==0.1.1
     # via markdown-it-py
 mistune==0.8.4
     # via nbconvert
-mypy==0.960
+mypy==0.961
     # via -r development.in
 mypy-extensions==0.4.3
     # via
