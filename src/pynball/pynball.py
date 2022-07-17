@@ -709,11 +709,20 @@ def mvproject(old_name: str, new_name: str) -> None:
         _WORKON_HOME / old_name / "pyvenv.cfg",
     ]
     rename_files = [_WORKON_HOME / old_name, _PROJECT_HOME / old_name]
-    for file in replace_text_files:
-        _file_word_replace(file, old_name, new_name)
-    for file in rename_files:
-        newname = file.parent / f"{new_name}{file.suffix}"
-        file.rename(newname)
+    try:
+        for file in replace_text_files:
+            _file_word_replace(file, old_name, new_name)
+        for file in rename_files:
+            newname = file.parent / f"{new_name}{file.suffix}"
+            file.rename(newname)
+    except FileNotFoundError:
+        message = f"Virtual environment '{old_name}' does not exist"
+        _feedback(message, "warning")
+        return
+    except FileExistsError:
+        message = f"Virtual environment '{new_name}' already exits"
+        _feedback(message, "warning")
+        return
 
 
 @cli.command()
