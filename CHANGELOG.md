@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.1.1 (2022-07-17)
+### Fix
+* Error in entrypoint ([`2e95fb1`](https://github.com/Stephen-RA-King/pynball/commit/2e95fb141cda3645135462b160d3696f1be3d5aa))
+
 ## v1.1.0 (2022-07-17)
 ### Feature
 * Add venv renaming function ([`df2e727`](https://github.com/Stephen-RA-King/pynball/commit/df2e7275296885b991ae247a9c3fd6ee2e67de44))
