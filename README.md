@@ -33,12 +33,12 @@ system installations etc. Pynball can make leveraging such environments a lot ea
 
 1. Python 3.8, 3.9 or 3.10
 2. [**pipx**][pipx-url]
+3. [**Virtualenv**][virtualenv-url] (which has benefits over venv)
+4. [**Virtualenvwrapper**][virtualenvwrapper-url]
 
 #### For Maximum Benefits additionally install the following:
 
-3. [**Virtualenv**][virtualenv-url] (which has benefits over venv)
-4. [**Virtualenvwrapper**][virtualenvwrapper-url]
-5. [**pyenv**][pyenv-url]
+1. [**pyenv**][pyenv-url]
 
 ## Installation
 

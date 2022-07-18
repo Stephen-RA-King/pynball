@@ -653,7 +653,7 @@ def rmproject(delete_all: str, project_name: str) -> None:
         try:
             shutil.rmtree(del_path)
             message = f"'{del_path}' has been deleted"
-            _feedback(message, "warning")
+            _feedback(message, "nominal")
         except FileNotFoundError:
             message = f"Project: '{del_path}' does not exist"
             _feedback(message, "warning")
