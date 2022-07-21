@@ -7,6 +7,7 @@ import configparser
 import os
 import re
 import shutil
+import stat
 import subprocess
 import sys
 import winreg
@@ -51,6 +52,11 @@ _PYENV_HOME = get_environ("PYENV_HOME")
 def cli() -> None:
     """Utility script to help manage development with various versions of Python
     in conjunction with Virtual Environments and optionally the pyenv module"""
+
+
+def del_rw(action, name, exc):  # type: ignore
+    os.chmod(name, stat.S_IWRITE)
+    os.remove(name)
 
 
 def _feedback(message: str, feedback_type: str) -> None:
@@ -651,11 +657,14 @@ def rmproject(delete_all: str, project_name: str) -> None:
         if directory == _PROJECT_HOME and delete_all != "y":
             continue
         try:
-            shutil.rmtree(del_path)
+            shutil.rmtree(del_path, onerror=del_rw)
             message = f"'{del_path}' has been deleted"
             _feedback(message, "nominal")
         except FileNotFoundError:
             message = f"Project: '{del_path}' does not exist"
+            _feedback(message, "warning")
+        except PermissionError:
+            message = f"Insufficient permissions to delete {del_path}"
             _feedback(message, "warning")
 
 
