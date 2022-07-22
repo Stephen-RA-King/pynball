@@ -2,6 +2,9 @@
 
 <!--next-version-placeholder-->
 
+## v1.1.5 (2022-07-22)
+
+
 ## v1.1.4 (2022-07-17)
 ### Fix
 * Make rmproject warning more descriptive ([`e0b14c2`](https://github.com/Stephen-RA-King/pynball/commit/e0b14c2f870c83d41cc190b1548d4e8c2c10f8c3))
