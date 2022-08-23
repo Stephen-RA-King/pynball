@@ -73,12 +73,12 @@ colorama==0.4.4
     #   flakeheaven
     #   twine
 commitizen==2.27.1
+    # via -r development.in
+coverage[toml]==6.4
     # via
     #   -r development.in
     #   coverage-conditional-plugin
 coverage-conditional-plugin==0.5.0
-    # via -r development.in
-coverage[toml]==6.4
     # via -r development.in
 cryptography==37.0.4
     # via secretstorage
@@ -247,7 +247,9 @@ keyring==23.5.1
 lazy-object-proxy==1.7.1
     # via astroid
 lxml==4.9.1
-    # via -r development.in
+    # via
+    #   -r development.in
+    #   nbconvert
 markdown-it-py==2.1.0
     # via
     #   mdit-py-plugins
@@ -283,7 +285,7 @@ nbclient==0.5.13
     #   jupyter-cache
     #   myst-nb
     #   nbconvert
-nbconvert==6.5.0
+nbconvert==6.5.1
     # via
     #   jupyter
     #   notebook
