@@ -80,7 +80,7 @@ repos:
         exclude: |
           (?x)^(
               docs/source/conf.py|
-              cleanup.py
+              cleanup.py|
               tasks.py
           )$
         additional_dependencies:
