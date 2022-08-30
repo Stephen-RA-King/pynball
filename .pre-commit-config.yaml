@@ -81,6 +81,7 @@ repos:
           (?x)^(
               docs/source/conf.py|
               cleanup.py
+              tasks.py
           )$
         additional_dependencies:
           - types-dataclasses >= 0.1.3
