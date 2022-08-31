@@ -710,30 +710,7 @@ def lsproject() -> None:
 @click.argument("new_name")
 def mvproject(old_name: str, new_name: str) -> None:
     """Renames a virtual Environment"""
-    replace_text_files = [
-        _WORKON_HOME / old_name / "Scripts" / "activate",
-        _WORKON_HOME / old_name / "Scripts" / "activate.bat",
-        _WORKON_HOME / old_name / "Scripts" / "activate.fish",
-        _WORKON_HOME / old_name / "Scripts" / "activate.nu",
-        _WORKON_HOME / old_name / "Scripts" / "activate.ps1",
-        _WORKON_HOME / old_name / ".project",
-        _WORKON_HOME / old_name / "pyvenv.cfg",
-    ]
-    rename_files = [_WORKON_HOME / old_name, _PROJECT_HOME / old_name]
-    try:
-        for file in rename_files:
-            newname = file.parent / f"{new_name}{file.suffix}"
-            file.rename(newname)
-        for file in replace_text_files:
-            _file_word_replace(file, old_name, new_name)
-    except FileNotFoundError:
-        message = f"Virtual environment '{old_name}' does not exist"
-        _feedback(message, "warning")
-        return
-    except FileExistsError:
-        message = f"Virtual environment '{new_name}' already exits"
-        _feedback(message, "warning")
-        return
+    print("function under development")
 
 
 @cli.command()
