@@ -21,7 +21,7 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v2.32.2
+    rev: v2.34.0
     hooks:
       - id: commitizen
         stages: [commit-msg]
@@ -45,7 +45,7 @@ repos:
         args: ["--filter-files"]
 
   - repo: https://github.com/psf/black
-    rev: 22.6.0
+    rev: 22.8.0
     hooks:
       - id: black
 
@@ -61,7 +61,7 @@ repos:
         args: ["--ignore=E800,F842,F841,W503"]
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.37.3
+    rev: v2.38.0
     hooks:
       - id: pyupgrade
         args: [--py39]
