@@ -576,15 +576,22 @@ def pyenv(ctx: Any, use_pyenv: str, use_force: str) -> None:
 
 
 @cli.command()
+@click.option("-n", "--noall", "create_all", flag_value="n")
+@click.option("-a", "--all", "create_all", flag_value="y", default=True)
 @click.argument("name")
 @click.argument("project_name")
-def mkproject(name: str, project_name: str) -> None:
+def mkproject(create_all: str, name: str, project_name: str) -> None:
     """Creates a Virtual Environment from a specific Python version.
+    \b
+    Options:
+        -n, --noall:      Only create the virtual environment. Skips project area.
 
     \b
     Args:
         name:           The Pynball friendly version name.
         project_name:   The project name only. Not the path.
+        \f
+        create_all:     Determines if the project folder gets created.
     """
     if _WORKON_HOME == Path("") or _PROJECT_HOME == Path(""):
         message = """Virtualenv-wrapper is not configured on your system:
@@ -604,29 +611,34 @@ def mkproject(name: str, project_name: str) -> None:
         _feedback(message, "warning")
         return
     for directory in [_WORKON_HOME, _PROJECT_HOME]:
-        new_path = directory / project_name
-        try:
-            new_path.mkdir(parents=False, exist_ok=False)
-            if directory == _WORKON_HOME:
-                python_path = version_path / "python.exe"
-                _execute(
-                    "virtualenv",
-                    f"-p={str(python_path)}",
-                    str(new_path),
+        if directory == _PROJECT_HOME and create_all == "n":
+            continue
+        else:
+            new_path = directory / project_name
+            try:
+                new_path.mkdir(parents=False, exist_ok=False)
+                if directory == _WORKON_HOME:
+                    python_path = version_path / "python.exe"
+                    _execute(
+                        "virtualenv",
+                        f"-p={str(python_path)}",
+                        str(new_path),
+                    )
+                    (new_path / ".project").touch()
+                    (new_path / ".project").write_text(
+                        f"{_PROJECT_HOME / project_name}"
+                    )
+            except FileNotFoundError:
+                message = (
+                    f"Project: '{project_name}' has NOT be created - "
+                    f"{directory} does not exist"
                 )
-                (new_path / ".project").touch()
-                (new_path / ".project").write_text(f"{_PROJECT_HOME / project_name}")
-        except FileNotFoundError:
-            message = (
-                f"Project: '{project_name}' has NOT be created - "
-                f"{directory} does not exist"
-            )
-            _feedback(message, "warning")
-            return
-        except FileExistsError:
-            message = f"The directory '{project_name}' already exits"
-            _feedback(message, "warning")
-            return
+                _feedback(message, "warning")
+                return
+            except FileExistsError:
+                message = f"The directory '{project_name}' already exits"
+                _feedback(message, "warning")
+                return
 
 
 @cli.command()
@@ -708,7 +720,7 @@ def lsproject() -> None:
 @cli.command()
 @click.argument("old_name")
 @click.argument("new_name")
-def mvproject(old_name: str, new_name: str) -> None:
+def mvproject(ctx: Any, old_name: str, new_name: str) -> None:
     """Renames a virtual Environment"""
     print("function under development")
 
