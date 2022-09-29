@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v1.2.0 (2022-09-29)
+### Feature
+* Add mvproject feature ([`165ecdd`](https://github.com/Stephen-RA-King/pynball/commit/165ecdd77d329d430ee143780709e7467e99ef35))
+* Add -n option for mkproject ([`dd57c50`](https://github.com/Stephen-RA-King/pynball/commit/dd57c50cd70555a1b4e1eba0f9e1c69b30ed6bff))
+
 ## v1.1.5 (2022-07-22)
 
 
