@@ -1,9 +1,11 @@
 """Utility script to help manage Development with various versions of Python
 in conjunction with Virtual Environments and the pyenv module.
 """
+
 # Core Library modules
 import ast
 import configparser
+import fnmatch
 import os
 import re
 import shutil
@@ -16,6 +18,7 @@ from typing import Any
 
 # Third party modules
 import click
+import magic
 
 _PLATFORM = sys.platform
 if _PLATFORM != "win32":
@@ -718,11 +721,103 @@ def lsproject() -> None:
 
 
 @cli.command()
+@click.pass_context
 @click.argument("old_name")
 @click.argument("new_name")
 def mvproject(ctx: Any, old_name: str, new_name: str) -> None:
-    """Renames a virtual Environment"""
-    print("function under development")
+    """Renames an existing project.
+
+    \b
+    Args:
+        old_name:   The existing project to rename.
+        new_name:   The new project name.
+    """
+
+    project_root = _PROJECT_HOME / old_name
+    virt_project_root = _WORKON_HOME / old_name
+    files = project_root.rglob("*")
+    mime = magic.Magic(mime=True)
+    dir_name_change, file_search, file_name_change = [], [], []
+    dir_name_change.append(project_root)
+    ignore_dirs = [
+        ".idea",
+    ]
+    ignore_files = [
+        "filetype.py",
+        "hello",
+        "search*.py",
+    ]
+
+    def glob_to_re(glob_list: list) -> str:
+        re_list = [fnmatch.translate(x) for x in glob_list]
+        combined = "(" + ")|(".join(re_list) + ")"
+        return combined
+
+    ignore_files_re = glob_to_re(ignore_files)
+    ignore_dirs_set = set(ignore_dirs)
+
+    for file in files:
+        if file.is_file():
+            if (
+                "text" in mime.from_file(str(file))
+                and not re.match(ignore_files_re, file.name)
+                and not set(file.parent.parts).intersection(ignore_dirs_set)
+            ):
+                file_search.append(file)
+            if old_name in str(file):
+                file_name_change.append(file)
+        elif old_name in str(file) and file.stem not in ignore_dirs:
+            dir_name_change.append(file)
+
+    # replace text inside files
+    for file in file_search:
+        text = file.read_text()
+        text = text.replace(old_name, new_name)
+        file.write_text(text)
+
+    # replace text in filenames
+    for file in file_name_change:
+        old_file_name = file.name
+        new_file_name = old_file_name.replace(old_name, new_name)
+        file.rename(file.parent / new_file_name)
+
+    # replace text in folder names
+    for directory in reversed(dir_name_change):
+        old_dir_name = directory.stem
+        new_dir_name = old_dir_name.replace(old_name, new_name)
+        directory.rename(directory.parent / new_dir_name)
+
+    # find version of python for old virtual environment
+    pattern1 = r"(?<=version_info = )\d{1,2}.\d{1,2}.\d{1,2}"
+    pattern2 = r"(?<=version = )\d{1,2}.\d{1,2}.\d{1,2}"
+    envcfg = virt_project_root / "pyvenv.cfg"
+    if envcfg.exists():
+        cfg_content = envcfg.read_text()
+        for pattern in [pattern1, pattern2]:
+            try:
+                virtver = re.search(pattern, cfg_content).group(0)  # type: ignore
+                break
+            except AttributeError:
+                message = "Cannot ascertain existing python version"
+                _feedback(message, "warning")
+                exit(1)
+    else:
+        message = "Cannot ascertain existing python version"
+        _feedback(message, "warning")
+        exit(1)
+
+    # delete existing virtual environment
+    try:
+        shutil.rmtree(virt_project_root, onerror=del_rw)
+    except FileNotFoundError:
+        message = f"Project: '{old_name}'does not exist"
+        _feedback(message, "warning")
+    except PermissionError:
+        message = f"Insufficient permissions to delete {old_name}"
+        _feedback(message, "warning")
+
+    # Create the new virtual environment
+    ctx.invoke(mkproject, create_all="n", name=virtver, project_name=new_name)
 
 
 @cli.command()
