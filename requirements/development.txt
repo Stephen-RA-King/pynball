@@ -377,6 +377,8 @@ python-dateutil==2.8.2
     # via jupyter-client
 python-gitlab==3.9.0
     # via python-semantic-release
+python-magic-bin==0.4.14
+    # via -r requirements\base.txt
 python-semantic-release==7.31.4
     # via -r requirements\development.in
 pytz==2022.2.1
