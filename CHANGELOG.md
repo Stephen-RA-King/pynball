@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.2.1 (2022-09-30)
+### Fix
+* Libmagic import error ([`a00fb7b`](https://github.com/Stephen-RA-King/pynball/commit/a00fb7b9656eea1737bd0bab280eded7c11c541c))
+
 ## v1.2.0 (2022-09-29)
 ### Feature
 * Add mvproject feature ([`165ecdd`](https://github.com/Stephen-RA-King/pynball/commit/165ecdd77d329d430ee143780709e7467e99ef35))
