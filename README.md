@@ -11,7 +11,6 @@
 [![Checked with mypy][mypy-image]][mypy-url]
 [![security: bandit][bandit-image]][bandit-url]
 [![CodeFactor](https://www.codefactor.io/repository/github/stephen-ra-king/pynball/badge)](https://www.codefactor.io/repository/github/stephen-ra-king/pynball)
-[![Coverage Status](https://coveralls.io/repos/github/Stephen-RA-King/pynball/badge.svg?branch=main)](https://coveralls.io/github/Stephen-RA-King/pynball?branch=main)
 [![licence: mit][mit-license-image]][mit-license-url]
 
 ![](assets/header.png)
