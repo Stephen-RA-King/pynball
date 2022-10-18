@@ -147,6 +147,7 @@ def _clean_test():
     patterns = [
         ".pytest_cache",
         "htmlcov",
+        ".tox",
         ".coverage",
         "coverage.xml",
         "pytest-report.html",
@@ -205,14 +206,14 @@ def _clean_flake8():
 @task
 def clean(c):
     """Removes all test, build, log and lint artifacts from the environment."""
-    _clean_bandit()
-    _clean_mypy()
-    _clean_build()
-    _clean_python()
+    # _clean_bandit()
+    # _clean_mypy()
+    # _clean_build()
+    # _clean_python()
     _clean_test()
-    _clean_docs()
-    _clean_logs()
-    _clean_flake8()
+    # _clean_docs()
+    # _clean_logs()
+    # _clean_flake8()
 
 
 @task(
