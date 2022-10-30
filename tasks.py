@@ -206,14 +206,14 @@ def _clean_flake8():
 @task
 def clean(c):
     """Removes all test, build, log and lint artifacts from the environment."""
-    # _clean_bandit()
-    # _clean_mypy()
-    # _clean_build()
-    # _clean_python()
+    _clean_bandit()
+    _clean_mypy()
+    _clean_build()
+    _clean_python()
     _clean_test()
-    # _clean_docs()
-    # _clean_logs()
-    # _clean_flake8()
+    _clean_docs()
+    _clean_logs()
+    _clean_flake8()
 
 
 @task(
@@ -357,7 +357,7 @@ def tests(c, open_browser=False):
     _clean_test()
     print(TEST_DIR)
     c.run(
-        f'pytest "{str(TEST_DIR)}" --cov=piptools_sync --cov-report=html'
+        f'pytest "{str(TEST_DIR)}" --cov=pynball --cov-report=html'
         f" --html=pytest-report.html -ra"
     )
     if open_browser:
