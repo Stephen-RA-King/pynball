@@ -26,6 +26,8 @@ myst-nb
 pep8-naming
 pre-commit
 pytest
+pytest-cov
+pytest-html
 pynacl
 pyyaml
 requests
