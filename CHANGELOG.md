@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.3.1 (2022-10-30)
+### Fix
+* Imports and docstrintgs ([`c87c3b8`](https://github.com/Stephen-RA-King/pynball/commit/c87c3b8981b2ff6eeef4d038102f065c572adb9e))
+
 ## v1.4.0 (2022-10-08)
 
 
