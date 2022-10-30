@@ -731,6 +731,10 @@ def mvproject(ctx: Any, old_name: str, new_name: str) -> None:
     Args:
         old_name:   The existing project to rename.
         new_name:   The new project name.
+        \f
+        ctx:        The click context - Implementation detail that enables this
+                    command to call another click command.
+                    (click says this is quite naughty. But I still did it anyway)
     """
 
     project_root = _PROJECT_HOME / old_name
