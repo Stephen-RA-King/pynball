@@ -202,9 +202,9 @@ _For more information, please refer to the wiki_
 
 ## Meta
 
-[![](assets/linkedin.png)](https://linkedin.com/in/stephen-k-3a4644210)
-[![](assets/github.png)](https://github.com/Stephen-RA-King/Stephen-RA-King)
-[![](assets/pypi.png)](https://pypi.org/project/pynball/)
+[![](assets/linkedin.png)](https://www.linkedin.com/in/sr-king)
+[![](assets/github.png)](https://github.com/Stephen-RA-King)
+[![](assets/pypi.png)](https://pypi.org/project/pynball)
 [![](assets/www.png)](https://www.justpython.tech)
 [![](assets/email.png)](mailto:stephen.ra.king@gmail.com)
 
