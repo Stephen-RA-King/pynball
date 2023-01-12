@@ -206,7 +206,7 @@ _For more information, please refer to the wiki_
 [![](assets/github.png)](https://github.com/Stephen-RA-King)
 [![](assets/pypi.png)](https://pypi.org/project/pynball)
 [![](assets/www.png)](https://www.justpython.tech)
-[![](assets/email.png)](mailto:stephen.ra.king@gmail.com)
+[![](assets/email.png)](mailto:sking.github@gmail.com)
 
 Author: Stephen R A King
 
