@@ -291,7 +291,7 @@ matplotlib-inline==0.1.6
     #   ipython
 mccabe==0.7.0
     # via flake8
-mdit-py-plugins==0.3.4
+mdit-py-plugins==0.3.5
     # via myst-parser
 mdurl==0.1.2
     # via markdown-it-py
@@ -372,7 +372,7 @@ pickleshare==0.7.5
     # via ipython
 pkginfo==1.9.6
     # via twine
-platformdirs==3.0.0
+platformdirs==3.1.0
     # via
     #   black
     #   jupyter-core
@@ -424,7 +424,7 @@ pyproject-hooks==1.0.0
     # via build
 pyrsistent==0.19.3
     # via jsonschema
-pytest==7.2.1
+pytest==7.2.2
     # via
     #   -r requirements/development.in
     #   pytest-cov
