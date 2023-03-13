@@ -525,8 +525,13 @@ def system(ctx: Any, name: str) -> None:
     _setenv("system", "PATH", all_paths)
     message = "New version set"
     _feedback(message, "nominal")
-    message = "Remember to restart the shell to use the new version"
+    message = "restarting the shell to use the new version"
     _feedback(message, "warning")
+    if os.name == "nt":
+        os.system("taskkill /f /im explorer.exe > nul 2>&1")
+    else:
+        os.system("taskkill /f /im explorer.exe > /dev/null 2>&1")
+    os.system("start explorer.exe")
 
 
 @cli.command()
