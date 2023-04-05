@@ -673,13 +673,13 @@ def rmproject(delete_all: str, project_name: str) -> None:
             continue
         try:
             shutil.rmtree(del_path, onerror=del_rw)
-            message = f"'{del_path}' has been deleted"
+            message = f"'{project_name}' has been deleted"
             _feedback(message, "nominal")
         except FileNotFoundError:
-            message = f"Project: '{del_path}' does not exist"
+            message = f"Project: '{project_name}' does not exist"
             _feedback(message, "warning")
         except PermissionError:
-            message = f"Insufficient permissions to delete {del_path}"
+            message = f"Insufficient permissions to delete {project_name}"
             _feedback(message, "warning")
 
 
