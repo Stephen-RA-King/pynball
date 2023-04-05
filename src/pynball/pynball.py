@@ -156,7 +156,7 @@ def _setenv(scope: str, name: str, value: str) -> None:
         None:   If registry write is successful.
     """
     if _PLATFORM == "win32":
-        if scope != "user" and scope != "system":
+        if scope not in ("user", "system"):
             message = "Scope value must be 'user' or 'system'"
             _feedback(message, "warning")
             return
@@ -189,7 +189,7 @@ def _getenv(scope: str, name: str) -> Any:
         FileNotFoundError:  When the key is not found
     """
     if _PLATFORM == "win32":
-        if scope != "user" and scope != "system":
+        if scope not in ("user", "system"):
             message = "Scope value must be 'user' or 'system'"
             _feedback(message, "warning")
             return None
@@ -223,7 +223,7 @@ def _delenv(scope: str, name: str) -> None:
         OSError:  If the deletion failed.
     """
     if _PLATFORM == "win32":
-        if scope != "user" and scope != "system":
+        if scope not in ("user", "system"):
             message = "Scope value must be 'user' or 'system'"
             _feedback(message, "warning")
             return
@@ -737,7 +737,6 @@ def mvproject(ctx: Any, old_name: str, new_name: str) -> None:
                     command to call another click command.
                     (click says this is quite naughty. But I still did it anyway)
     """
-
     project_root = _PROJECT_HOME / old_name
     virt_project_root = _WORKON_HOME / old_name
     files = project_root.rglob("*")
