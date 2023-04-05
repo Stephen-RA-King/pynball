@@ -26,7 +26,7 @@ if _PLATFORM != "win32":
         "Your Operating system is not supported yet."
         "Linux will be supported in version 2."
     )
-    exit(1)
+    sys.exit(1)
 _IDLEMODE = 1 if "idlelib.run" in sys.modules else 0
 _ENV_VARIABLES = os.environ
 _ENVIRONMENT = os.name
@@ -54,7 +54,8 @@ _PYENV_HOME = get_environ("PYENV_HOME")
 @click.group()
 def cli() -> None:
     """Utility script to help manage development with various versions of Python
-    in conjunction with Virtual Environments and optionally the pyenv module"""
+    in conjunction with Virtual Environments and optionally the pyenv module.
+    """
 
 
 def del_rw(action, name, exc):  # type: ignore
@@ -804,11 +805,11 @@ def mvproject(ctx: Any, old_name: str, new_name: str) -> None:
             except AttributeError:
                 message = "Cannot ascertain existing python version"
                 _feedback(message, "warning")
-                exit(1)
+                sys.exit(1)
     else:
         message = "Cannot ascertain existing python version"
         _feedback(message, "warning")
-        exit(1)
+        sys.exit(1)
 
     # delete existing virtual environment
     try:
