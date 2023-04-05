@@ -2,3 +2,10 @@
 
 
 pytest
+pytest-clarity
+pytest-cov
+pytest-dependency
+pytest-html
+pytest-randomly
+pytest-sugar
+pytest-tldr
