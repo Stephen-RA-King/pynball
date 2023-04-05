@@ -2,16 +2,26 @@
 
 > Centralized management and utilization of all your Python versions, installations and virtual environments.
 
-[![PyPI version](https://badge.fury.io/py/pizazz.svg)](https://badge.fury.io/py/pynball)
-[![Documentation Status](https://readthedocs.org/projects/pynball/badge/?version=latest)](https://pynball.readthedocs.io/en/latest/?badge=latest)
-[![Downloads](https://static.pepy.tech/personalized-badge/pynball?period=total&units=international_system&left_color=black&right_color=orange&left_text=Downloads)](https://pepy.tech/project/pynball)
+[![PyPI][pypi-image]][pypi-url]
+[![Downloads][downloads-image]][downloads-url]
+[![Status][status-image]][pypi-url]
+[![Python Version][python-version-image]][pypi-url]
+[![Format][format-image]][pypi-url]
+[![tests][tests-image]][tests-url]
+[![Codecov][codecov-image]][codecov-url]
+[![CodeFactor][codefactor-image]][codefactor-url]
+[![Codeclimate][codeclimate-image]][codeclimate-url]
+[![CodeQl][codeql-image]][codeql-url]
+[![readthedocs][readthedocs-image]][readthedocs-url]
 [![pre-commit][pre-commit-image]][pre-commit-url]
 [![Imports: isort][isort-image]][isort-url]
 [![Code style: black][black-image]][black-url]
 [![Checked with mypy][mypy-image]][mypy-url]
 [![security: bandit][bandit-image]][bandit-url]
-[![CodeFactor](https://www.codefactor.io/repository/github/stephen-ra-king/pynball/badge)](https://www.codefactor.io/repository/github/stephen-ra-king/pynball)
-[![licence: mit][mit-license-image]][mit-license-url]
+[![Commitizen friendly][commitizen-image]][commitizen-url]
+[![Conventional Commits][conventional-commits-image]][conventional-commits-url]
+[![DeepSource][deepsource-image]][deepsource-url]
+[![license][license-image]][license-url]
 
 ![](assets/header.png)
 
@@ -214,20 +224,49 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 <!-- Markdown link & img dfn's -->
 
-[virtualenvwrapper-url]: https://pypi.org/project/virtualenvwrapper/
-[virtualenv-url]: https://github.com/pypa/virtualenv
-[pipx-url]: https://github.com/pypa/pipx
-[pyenv-url]: https://github.com/pyenv/pyenv
-[pre-commit-image]: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
-[pre-commit-url]: https://github.com/pre-commit/pre-commit
-[isort-image]: https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336
-[isort-url]: https://pycqa.github.io/isort/
-[black-image]: https://img.shields.io/badge/code%20style-black-000000.svg
-[black-url]: https://github.com/psf/black
 [bandit-image]: https://img.shields.io/badge/security-bandit-yellow.svg
 [bandit-url]: https://github.com/PyCQA/bandit
+[black-image]: https://img.shields.io/badge/code%20style-black-000000.svg
+[black-url]: https://github.com/psf/black
+[cc_template-url]: https://github.com/Stephen-RA-King/cc_template
+[codeclimate-image]: https://api.codeclimate.com/v1/badges/9543c409696e9976a987/maintainability
+[codeclimate-url]: https://codeclimate.com/github/Stephen-RA-King/pynball/maintainability
+[codecov-image]: https://codecov.io/gh/Stephen-RA-King/pynball/branch/main/graph/badge.svg
+[codecov-url]: https://app.codecov.io/gh/Stephen-RA-King/pynball
+[codefactor-image]: https://www.codefactor.io/repository/github/Stephen-RA-King/pynball/badge
+[codefactor-url]: https://www.codefactor.io/repository/github/Stephen-RA-King/pynball
+[codeql-image]: https://github.com/Stephen-RA-King/pynball/actions/workflows/github-code-scanning/codeql/badge.svg
+[codeql-url]: https://github.com/Stephen-RA-King/pynball/actions/workflows/github-code-scanning/codeql
+[commitizen-image]: https://img.shields.io/badge/commitizen-friendly-brightgreen.svg
+[commitizen-url]: http://commitizen.github.io/cz-cli/
+[conventional-commits-image]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square
+[conventional-commits-url]: https://conventionalcommits.org
+[deepsource-image]: https://static.deepsource.io/deepsource-badge-light-mini.svg
+[deepsource-url]: https://deepsource.io/gh/Stephen-RA-King/pynball/?ref=repository-badge
+[downloads-image]: https://static.pepy.tech/personalized-badge/pynball?period=total&units=international_system&left_color=black&right_color=orange&left_text=Downloads
+[downloads-url]: https://pepy.tech/project/pynball
+[format-image]: https://img.shields.io/pypi/format/pynball
+[isort-image]: https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336
+[isort-url]: https://github.com/pycqa/isort/
+[lgtm-alerts-image]: https://img.shields.io/lgtm/alerts/g/Stephen-RA-King/pynball.svg?logo=lgtm&logoWidth=18
+[lgtm-alerts-url]: https://lgtm.com/projects/g/Stephen-RA-King/pynball/alerts/
+[lgtm-quality-image]: https://img.shields.io/lgtm/grade/python/g/Stephen-RA-King/pynball.svg?logo=lgtm&logoWidth=18
+[lgtm-quality-url]: https://lgtm.com/projects/g/Stephen-RA-King/pynball/context:python
+[license-image]: https://img.shields.io/pypi/l/pynball
+[license-url]: https://github.com/Stephen-RA-King/pynball/blob/main/LICENSE
 [mypy-image]: http://www.mypy-lang.org/static/mypy_badge.svg
 [mypy-url]: http://mypy-lang.org/
-[mit-license-image]: https://img.shields.io/badge/license-MIT-blue
-[mit-license-url]: https://choosealicense.com/licenses/mit/
-[wiki]: https://github.com/stephen-ra-king/pynball/wiki
+[pip-tools-url]: https://github.com/jazzband/pip-tools/
+[pre-commit-image]: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
+[pre-commit-url]: https://github.com/pre-commit/pre-commit
+[pre-commit.ci-image]: https://results.pre-commit.ci/badge/github/Stephen-RA-King/pynball/main.svg
+[pre-commit.ci-url]: https://results.pre-commit.ci/latest/github/Stephen-RA-King/pynball/main
+[pypi-url]: https://pypi.org/project/pynball/
+[pypi-image]: https://img.shields.io/pypi/v/pynball.svg
+[python-version-image]: https://img.shields.io/pypi/pyversions/pynball
+[readthedocs-image]: https://readthedocs.org/projects/pynball/badge/?version=latest
+[readthedocs-url]: https://pynball.readthedocs.io/en/latest/?badge=latest
+[status-image]: https://img.shields.io/pypi/status/pynball.svg
+[tests-image]: https://github.com/Stephen-RA-King/pynball/actions/workflows/tests.yml/badge.svg
+[tests-url]: https://github.com/Stephen-RA-King/pynball/actions/workflows/tests.yml
+[wiki]: https://github.com/Stephen-RA-King/pynball/wiki
