@@ -13,4 +13,4 @@ def test_version(mock_get_env):
     runner = CliRunner()
     result = runner.invoke(pynball.version)
     assert result.exit_code == 0
-    assert result.output == "3.9.10  ReleaseLevel: final, Serial: 0\n"
+    assert result.output == "3.9.13  ReleaseLevel: final, Serial: 0\n"
