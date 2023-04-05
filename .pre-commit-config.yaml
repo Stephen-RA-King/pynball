@@ -80,6 +80,7 @@ repos:
         exclude: |
           (?x)^(
               docs/source/conf.py|
+              tests/*|
               cleanup.py|
               tasks.py
           )$
