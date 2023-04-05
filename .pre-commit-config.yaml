@@ -77,7 +77,7 @@ repos:
     hooks:
       - id: mypy
         args: [--ignore-missing-imports, --disallow-untyped-defs]
-        exclude: docs/source/conf.py,tests/*,cleanup.py,tasks.py
+        exclude: ^tests/|^tasks.py|^cleanup.py|^conf.py
         additional_dependencies:
           - types-dataclasses >= 0.1.3
           - lxml
