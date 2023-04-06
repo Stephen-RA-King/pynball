@@ -444,9 +444,10 @@ def reset() -> None:
 @cli.command()
 def version() -> None:
     """Display details about the system Python Interpreter."""
+    info = sys.version_info
     message = (
-        "{0.major}.{0.minor}.{0.micro}  ReleaseLevel: {0.releaselevel}, "
-        "Serial: {0.serial}".format(sys.version_info)
+        f"{info.major}.{info.minor}.{info.micro}  ReleaseLevel: {info.releaselevel},"
+        f" Serial: {info.serial}"
     )
     _feedback(message, "nominal")
 
