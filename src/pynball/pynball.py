@@ -610,9 +610,9 @@ def mkproject(create_all: str, name: str, project_name: str) -> None:
     ver = str(name)
     version_path = Path("")
     pynball_versions = _get_pynball("dict_path_object", "PYNBALL")
-    for name in pynball_versions:
-        if name == ver:
-            version_path = pynball_versions[name]
+    for label in pynball_versions:
+        if label == ver:
+            version_path = pynball_versions[label]
             break
     if version_path == Path(""):
         message = f"{ver} is not configured in Pynball - Use the 'add' command"
