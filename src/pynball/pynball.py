@@ -39,6 +39,7 @@ config = configparser.ConfigParser()
 
 
 def get_environ(env_name: str) -> Path:
+    """Return the Path given the environment variable name"""
     try:
         env_value = Path(os.environ[env_name])
     except KeyError:
@@ -59,6 +60,7 @@ def cli() -> None:
 
 
 def del_rw(action, name, exc):  # type: ignore
+    """Change the access permissions for a file object to writeable and delete it"""
     os.chmod(name, stat.S_IWRITE)
     os.remove(name)
 
@@ -87,6 +89,7 @@ def _feedback(message: str, feedback_type: str) -> None:
 
 
 def _file_word_replace(filepath: Path, old_word: str, new_word: str) -> Any:
+    """Open the given file and replace old word with a new word"""
     with open(filepath) as file:
         file_data = file.read()
     file_data = file_data.replace(old_word, new_word)
@@ -754,6 +757,7 @@ def mvproject(ctx: Any, old_name: str, new_name: str) -> None:
     ]
 
     def glob_to_re(glob_list: list) -> str:
+        """Given a glob file pattern return a regex pattern"""
         re_list = [fnmatch.translate(x) for x in glob_list]
         combined = "(" + ")|(".join(re_list) + ")"
         return combined
