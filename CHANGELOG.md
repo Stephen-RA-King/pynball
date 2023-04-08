@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v1.5.2 (2023-04-08)
+### Documentation
+* Add mnissing docstrings to functions ([`d19176f`](https://github.com/Stephen-RA-King/pynball/commit/d19176f36d3abe491f006757600bc87a885bbb20))
+* Update readme with test results & coverage ([`cad0b5e`](https://github.com/Stephen-RA-King/pynball/commit/cad0b5e8724936f652f3fe2a83c6f80173a129be))
+
 ## v1.5.1 (2023-03-14)
 ### Fix
 * Reverse last commit ([`ed7130b`](https://github.com/Stephen-RA-King/pynball/commit/ed7130bd4ab127362c7f4b3dfca797dd28f06814))
