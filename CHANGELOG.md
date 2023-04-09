@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.5.3 (2023-04-09)
+### Fix
+* Missing url links ([`c7209ee`](https://github.com/Stephen-RA-King/pynball/commit/c7209eeeb1e09ea8cc35049d5d7deabd94104cc1))
+
 ## v1.5.2 (2023-04-08)
 ### Documentation
 * Add mnissing docstrings to functions ([`d19176f`](https://github.com/Stephen-RA-King/pynball/commit/d19176f36d3abe491f006757600bc87a885bbb20))
