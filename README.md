@@ -51,11 +51,11 @@ system installations etc. Pynball can make leveraging such environments a lot ea
 
 ## Installation
 
-OS X & Linux:
+**OS X & Linux:**
 
 Will be supported in version 2
 
-Windows:
+**Windows:**
 
 ```sh
 pipx install pynball
@@ -257,10 +257,12 @@ Distributed under the MIT License. See `LICENSE` for more information.
 [mypy-image]: http://www.mypy-lang.org/static/mypy_badge.svg
 [mypy-url]: http://mypy-lang.org/
 [pip-tools-url]: https://github.com/jazzband/pip-tools/
+[pipx-url]: https://pypa.github.io/pipx/
 [pre-commit-image]: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
 [pre-commit-url]: https://github.com/pre-commit/pre-commit
 [pre-commit.ci-image]: https://results.pre-commit.ci/badge/github/Stephen-RA-King/pynball/main.svg
 [pre-commit.ci-url]: https://results.pre-commit.ci/latest/github/Stephen-RA-King/pynball/main
+[pyenv-url]: https://github.com/pyenv/pyenv
 [pypi-url]: https://pypi.org/project/pynball/
 [pypi-image]: https://img.shields.io/pypi/v/pynball.svg
 [python-version-image]: https://img.shields.io/pypi/pyversions/pynball
@@ -269,4 +271,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 [status-image]: https://img.shields.io/pypi/status/pynball.svg
 [tests-image]: https://github.com/Stephen-RA-King/pynball/actions/workflows/tests.yml/badge.svg
 [tests-url]: https://github.com/Stephen-RA-King/pynball/actions/workflows/tests.yml
+[virtualenv-url]: https://github.com/pypa/virtualenv
+[virtualenvwrapper-url]: https://pypi.org/project/virtualenvwrapper/
 [wiki]: https://github.com/Stephen-RA-King/pynball/wiki
