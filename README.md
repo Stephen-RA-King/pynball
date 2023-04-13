@@ -32,12 +32,16 @@ system installations etc. Pynball can make leveraging such environments a lot ea
 
 ## Features
 
+---
+
 - Consolidates all Python installations including [**pyenv**][pyenv-url] into one management system
 - Easily create Virtual Environments using any Python version.
 - Track which virtual environments have which Python versions and tox versions.
 - Quickly change the System interpreter
 
 ## Pre Installation Requirements
+
+---
 
 #### Minimum Requirements
 
@@ -52,6 +56,8 @@ system installations etc. Pynball can make leveraging such environments a lot ea
 
 ## Installation
 
+---
+
 **OS X & Linux:**
 
 Will be supported in version 2
@@ -63,6 +69,8 @@ pipx install pynball
 ```
 
 ## Usage example
+
+---
 
 ### View Available commands
 
@@ -205,9 +213,9 @@ pynball versions
 
 _For more information, please refer to the wiki_
 
-## [Wiki][wiki]
-
 ## Documentation
+
+---
 
 [**Read the Docs**](https://pynball.readthedocs.io/en/latest/?)
 
@@ -216,7 +224,11 @@ _For more information, please refer to the wiki_
 - [**Changelog**](https://pynball.readthedocs.io/en/latest/changelog.html)
 - [**API Reference**](https://pynball.readthedocs.io/en/latest/autoapi/index.html)
 
+- [**Wiki**][wiki]
+
 ## Meta
+
+---
 
 [![](assets/linkedin.png)](https://www.linkedin.com/in/sr-king)
 [![](assets/github.png)](https://github.com/Stephen-RA-King)
@@ -224,9 +236,11 @@ _For more information, please refer to the wiki_
 [![](assets/www.png)](https://www.justpython.tech)
 [![](assets/email.png)](mailto:sking.github@gmail.com)
 
-Author: Stephen R A King
+Stephen R A King : sking.github@gmail.com
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT license. See [![][license-image]][license-url] for more information.
+
+Created with Cookiecutter template: [**cc_template**][cc_template-url] version 1.2.1
 
 <!-- Markdown link & img dfn's -->
 
