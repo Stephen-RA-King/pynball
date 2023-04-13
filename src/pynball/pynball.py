@@ -12,14 +12,19 @@ import shutil
 import stat
 import subprocess
 import sys
+
+# TODO: implement conditional imports based on OS
 import winreg
 from pathlib import Path
 from typing import Any
 
 # Third party modules
 import click
+
+# TODO: replace 3rd party libmagic library with standard mimetypes library
 import magic
 
+#: Specifies the operating system to which the module is installed
 _PLATFORM = sys.platform
 if _PLATFORM != "win32":
     print(
@@ -171,6 +176,7 @@ def _setenv(scope: str, name: str, value: str) -> None:
         winreg.CloseKey(key)
     else:
         pass
+        # TODO: generate linux version of _setenv
 
 
 def _getenv(scope: str, name: str) -> Any:
@@ -207,6 +213,7 @@ def _getenv(scope: str, name: str) -> Any:
         return value
     else:
         pass
+        # TODO: generate linux version of _getenv
 
 
 def _delenv(scope: str, name: str) -> None:
@@ -241,6 +248,7 @@ def _delenv(scope: str, name: str) -> None:
             _feedback(message, "warning")
     else:
         pass
+        # TODO: generate linux version of _delenv
 
 
 def _set_pynball(dict_object: dict[str, Path], varname: str) -> None:
