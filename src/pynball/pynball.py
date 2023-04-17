@@ -786,9 +786,10 @@ def mvproject(ctx: Any, old_name: str, new_name: str) -> None:
         elif old_name in str(file) and file.stem not in ignore_dirs:
             dir_name_change.append(file)
 
+    # TODO: find a solution to possible encoding issues here
     # replace text inside files
     for file in file_search:
-        text = file.read_text()
+        text = file.read_text(encoding="utf-8", errors="ignore")
         text = text.replace(old_name, new_name)
         file.write_text(text)
 
