@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v1.5.4 (2023-04-17)
+### Fix
+* File open encoding error ([`4304034`](https://github.com/Stephen-RA-King/pynball/commit/4304034b56d81cb34ffce552294a20a07fd55ea7))
+
+### Documentation
+* Rename base cookiecutter ([`9db5538`](https://github.com/Stephen-RA-King/pynball/commit/9db5538bfecb24210b138997f4efaeb7f3ffef34))
+* Update meta ([`5275172`](https://github.com/Stephen-RA-King/pynball/commit/52751725028692807284dc65ac8101781bd30e50))
+* Add pre-coomit.ci badge and docs sections ([`71ef0a6`](https://github.com/Stephen-RA-King/pynball/commit/71ef0a654672246a7db13b9e038dbf87c8d74c36))
+* Correct type ([`5e350d2`](https://github.com/Stephen-RA-King/pynball/commit/5e350d27199ba2d80f86eb23a02edbf34249125a))
+
 ## v1.5.3 (2023-04-09)
 ### Fix
 * Missing url links ([`c7209ee`](https://github.com/Stephen-RA-King/pynball/commit/c7209eeeb1e09ea8cc35049d5d7deabd94104cc1))
