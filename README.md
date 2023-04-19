@@ -1,6 +1,6 @@
 # Pynball
 
-> Centralized management and utilization of all your Python versions, installations and virtual environments.
+_**Centralized management and utilization of all your Python versions, installations and virtual environments.**_
 
 [![PyPI][pypi-image]][pypi-url]
 [![Downloads][downloads-image]][downloads-url]
