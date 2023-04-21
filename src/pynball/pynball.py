@@ -20,8 +20,6 @@ from typing import Any
 
 # Third party modules
 import click
-
-# TODO: replace 3rd party libmagic library with standard mimetypes library
 import magic
 
 #: Specifies the operating system to which the module is installed

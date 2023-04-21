@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Top-level package for _pynball."""
 
 __title__ = "_pynball"
