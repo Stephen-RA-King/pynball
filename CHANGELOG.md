@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v1.5.5 (2023-04-21)
+### Fix
+* Shebang for version 3 env ([`57d4c92`](https://github.com/Stephen-RA-King/pynball/commit/57d4c927521b73c715f5f574fe208b2f9966f878))
+
+### Documentation
+* Update email link ([`39fba7a`](https://github.com/Stephen-RA-King/pynball/commit/39fba7adc7058d786735e65daab3f8c7d979aaee))
+* Update email address ([`736bb43`](https://github.com/Stephen-RA-King/pynball/commit/736bb432ab7501c58c9bab0813b560e6316cae22))
+
 ## v1.5.4 (2023-04-17)
 ### Fix
 * File open encoding error ([`4304034`](https://github.com/Stephen-RA-King/pynball/commit/4304034b56d81cb34ffce552294a20a07fd55ea7))

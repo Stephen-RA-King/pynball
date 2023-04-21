@@ -7,7 +7,7 @@
 # -- Project information -----------------------------------------------------
 
 project = "pynball"
-version = "1.5.4"
+version = "1.5.5"
 copyright = "2022, Stephen R A King"
 author = "Stephen R A King"
 
