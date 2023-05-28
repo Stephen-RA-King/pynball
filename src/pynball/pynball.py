@@ -684,7 +684,10 @@ def rmproject(delete_all: str, project_name: str) -> None:
             continue
         try:
             shutil.rmtree(del_path, onerror=del_rw)
-            message = f"'{project_name}' has been deleted"
+            if directory == _WORKON_HOME:
+                message = f"'{project_name}' (virtualenv files) have been deleted"
+            else:
+                message = f"'{project_name}' (project files) have been deleted"
             _feedback(message, "nominal")
         except FileNotFoundError:
             message = f"Project: '{project_name}' does not exist"
