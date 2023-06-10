@@ -2,6 +2,9 @@
 
 <!--next-version-placeholder-->
 
+## v1.5.6 (2023-05-28)
+
+
 ## v1.5.5 (2023-04-21)
 ### Fix
 * Shebang for version 3 env ([`57d4c92`](https://github.com/Stephen-RA-King/pynball/commit/57d4c927521b73c715f5f574fe208b2f9966f878))
