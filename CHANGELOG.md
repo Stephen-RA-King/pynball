@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v1.5.7 (2023-06-10)
+### Fix
+* Tasks invoke script ([`433d68b`](https://github.com/Stephen-RA-King/pynball/commit/433d68b060afd8f492b54e65328bd5ed83375a8b))
+
+### Documentation
+* Add citation badge ([`de25c9d`](https://github.com/Stephen-RA-King/pynball/commit/de25c9dcba347dce13c98c7ea6fdcdb1ff1ec7c2))
+
 ## v1.5.6 (2023-05-28)
 
 
