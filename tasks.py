@@ -12,7 +12,7 @@ from pathlib import Path
 
 # Third party modules
 import yaml  # type: ignore
-from invoke import call, task
+from invoke import task, call
 from jinja2 import Template
 
 ROOT_DIR = Path(__file__).parent
@@ -25,7 +25,7 @@ DOCS_INDEX = "".join(['"', str(ROOT_DIR / "docs" / "_build" / "index.html"), '"'
 LOG_DIR = ROOT_DIR.joinpath("logs")
 TEST_DIR = ROOT_DIR.joinpath("tests")
 SRC_DIR = ROOT_DIR.joinpath("src")
-PKG_DIR = SRC_DIR.joinpath("piptools_sync")
+PKG_DIR = SRC_DIR.joinpath("pynball")
 PYTHON_FILES_ALL = list(ROOT_DIR.rglob("*.py"))
 PYTHON_FILES_ALL.remove(ROOT_DIR / "tasks.py")
 PYTHON_FILES_ALL_STR = ""
@@ -83,7 +83,7 @@ logger = logging.getLogger("main")
 logger.debug("Total python files: %s", len(PYTHON_FILES_ALL))
 for file in PYTHON_FILES_ALL:
     logger.debug("%s", file)
-logger.debug("Total python files: %s", len(PYTHON_FILES_SRC))
+logger.debug("src python files: %s", len(PYTHON_FILES_SRC))
 for file in PYTHON_FILES_SRC:
     logger.debug("%s", file)
 
@@ -104,7 +104,7 @@ def _delete_director(items_to_delete):
 def _finder(directory, item, exclusions):
     """Utility function to generate a Path list of files based on globs."""
     item_list = list(directory.rglob(item))
-    logger.debug("for %s: Found: %s", item, item_list)
+    logger.debug("for %s : Found: %s", item, item_list)
     for exc in exclusions:
         logger.debug("removing exclusion: %s", exc)
         if exc in item_list:
@@ -137,7 +137,7 @@ def _clean_build():
     ]
     # specify pathlib objects to exclude from deletion (can be directories of files)
     excludes = [
-        SRC_DIR / "piptools_sync.egg-info/",
+        SRC_DIR / "pynball.egg-info/",
     ]
     for pattern in patterns:
         _finder(ROOT_DIR, pattern, excludes)
@@ -146,14 +146,19 @@ def _clean_build():
 def _clean_test():
     """Clean up test artifacts."""
     patterns = [
+        "assets",
+        "coverage",
+        "mypy",
         ".pytest_cache",
         "htmlcov",
-        ".tox",
         ".coverage",
+        ".tox",
         "coverage.xml",
-        "pytest-report.html",
+        "coverage.html",
+        "pytest.html",
+        "coverage.html",
     ]
-    excludes = []
+    excludes = [ROOT_DIR / "assets", ROOT_DIR / "docs" / "assets"]
     for pattern in patterns:
         _finder(ROOT_DIR, pattern, excludes)
 
