@@ -34,7 +34,7 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           pip install flake8 pytest pytest-cov
           pip install -r requirements/test.txt
-      # Step 5. Install our pycounts package
+      # Step 5. Install package
       - name: Install package
         run: |
           pip install -e .
@@ -53,5 +53,5 @@ jobs:
       # Step 7. Use Codecov to track coverage
       - uses: codecov/codecov-action@v3
         with:
-          file: ./coverage.xml # coverage report
-          fail_build_if_error: true # terminate workflow if there's an error
+          file: ./coverage.xml
+          fail_build_if_error: true
