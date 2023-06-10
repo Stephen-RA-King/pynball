@@ -34,10 +34,10 @@ system installations etc. Pynball can make leveraging such environments a lot ea
 
 ---
 
-- Consolidates all Python installations including [**pyenv**][pyenv-url] into one management system
-- Easily create Virtual Environments using any Python version.
-- Track which virtual environments have which Python versions and tox versions.
-- Quickly change the System interpreter
+-   Consolidates all Python installations including [**pyenv**][pyenv-url] into one management system
+-   Easily create Virtual Environments using any Python version.
+-   Track which virtual environments have which Python versions and tox versions.
+-   Quickly change the System interpreter
 
 ## Pre Installation Requirements
 
@@ -219,10 +219,10 @@ _For more information, please refer to the wiki_
 
 [**Read the Docs**](https://pynball.readthedocs.io/en/latest/?)
 
-- [**Example Usage**](https://pynball.readthedocs.io/en/latest/example.html)
-- [**Credits**](https://pynball.readthedocs.io/en/latest/example.html)
-- [**Changelog**](https://pynball.readthedocs.io/en/latest/changelog.html)
-- [**API Reference**](https://pynball.readthedocs.io/en/latest/autoapi/index.html)
+-   [**Example Usage**](https://pynball.readthedocs.io/en/latest/example.html)
+-   [**Credits**](https://pynball.readthedocs.io/en/latest/example.html)
+-   [**Changelog**](https://pynball.readthedocs.io/en/latest/changelog.html)
+-   [**API Reference**](https://pynball.readthedocs.io/en/latest/autoapi/index.html)
 
 [**Wiki**][wiki]
 
@@ -241,6 +241,8 @@ Stephen R A King : [sking.github@gmail.com](mailto:sking.github@gmail.com)
 Distributed under the MIT license. See [![][license-image]][license-url] for more information.
 
 Created with Cookiecutter template: [**pydough**][pydough-url] version 1.2.1
+
+[![DOI](https://zenodo.org/badge/464560536.svg)](https://zenodo.org/badge/latestdoi/464560536)
 
 <!-- Markdown link & img dfn's -->
 
