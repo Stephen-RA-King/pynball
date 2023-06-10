@@ -219,7 +219,6 @@ _For more information, please refer to the wiki_
 
 [**Read the Docs**](https://pynball.readthedocs.io/en/latest/?)
 
--   [**Example Usage**](https://pynball.readthedocs.io/en/latest/example.html)
 -   [**Credits**](https://pynball.readthedocs.io/en/latest/example.html)
 -   [**Changelog**](https://pynball.readthedocs.io/en/latest/changelog.html)
 -   [**API Reference**](https://pynball.readthedocs.io/en/latest/autoapi/index.html)
