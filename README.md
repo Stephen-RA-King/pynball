@@ -6,15 +6,13 @@ _**Centralized management and utilization of all your Python versions, installat
 [![Downloads][downloads-image]][downloads-url]
 [![Status][status-image]][pypi-url]
 [![Python Version][python-version-image]][pypi-url]
-[![Format][format-image]][pypi-url]
 [![tests][tests-image]][tests-url]
 [![Codecov][codecov-image]][codecov-url]
-[![pre-commit.ci][pre-commit.ci-image]][pre-commit.ci-url]
+[![CodeQl][codeql-image]][codeql-url]
+[![pre-commit.ci status][pre-commit.ci-image]][pre-commit.ci-url]
+[![readthedocs][readthedocs-image]][readthedocs-url]
 [![CodeFactor][codefactor-image]][codefactor-url]
 [![Codeclimate][codeclimate-image]][codeclimate-url]
-[![CodeQl][codeql-image]][codeql-url]
-[![readthedocs][readthedocs-image]][readthedocs-url]
-[![pre-commit][pre-commit-image]][pre-commit-url]
 [![Imports: isort][isort-image]][isort-url]
 [![Code style: black][black-image]][black-url]
 [![Checked with mypy][mypy-image]][mypy-url]
@@ -34,7 +32,7 @@ system installations etc. Pynball can make leveraging such environments a lot ea
 
 ---
 
--   Consolidates all Python installations including [**pyenv**][pyenv-url] into one management system
+-   Consolidates all Python installations including [**pyenv**][pyenv-url] versions into a single management system.
 -   Easily create Virtual Environments using any Python version.
 -   Track which virtual environments have which Python versions and tox versions.
 -   Quickly change the System interpreter
