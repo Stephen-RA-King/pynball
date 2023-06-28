@@ -230,7 +230,7 @@ _For more information, please refer to the wiki_
 [![](assets/linkedin.png)](https://www.linkedin.com/in/sr-king)
 [![](assets/github.png)](https://github.com/Stephen-RA-King)
 [![](assets/pypi.png)](https://pypi.org/project/pynball)
-[![](assets/www.png)](https://www.justpython.tech)
+[![](assets/www.png)](https://stephen-ra-king.github.io/justpython/)
 [![](assets/email.png)](mailto:sking.github@gmail.com)
 
 Stephen R A King : [sking.github@gmail.com](mailto:sking.github@gmail.com)
