@@ -21,6 +21,8 @@ _**Centralized management and utilization of all your Python versions, installat
 [![Conventional Commits][conventional-commits-image]][conventional-commits-url]
 [![DeepSource][deepsource-image]][deepsource-url]
 [![license][license-image]][license-url]
+[![pydough][pydough-image]][pydough-url]
+<!-- [![OpenSSFScorecard][openssf-image]][openssf-url] -->
 
 ![](assets/header.png)
 
@@ -237,9 +239,9 @@ Stephen R A King : [sking.github@gmail.com](mailto:sking.github@gmail.com)
 
 Distributed under the MIT license. See [![][license-image]][license-url] for more information.
 
-Created with Cookiecutter template: [**pydough**][pydough-url] version 1.2.1
+Created with Cookiecutter template: [![pydough][pydough-image]][pydough-url] version 1.2.1
 
-[![DOI](https://zenodo.org/badge/464560536.svg)](https://zenodo.org/badge/latestdoi/464560536)
+Digital object identifier:  [![DOI](https://zenodo.org/badge/464560536.svg)](https://zenodo.org/badge/latestdoi/464560536)
 
 <!-- Markdown link & img dfn's -->
 
@@ -247,7 +249,6 @@ Created with Cookiecutter template: [**pydough**][pydough-url] version 1.2.1
 [bandit-url]: https://github.com/PyCQA/bandit
 [black-image]: https://img.shields.io/badge/code%20style-black-000000.svg
 [black-url]: https://github.com/psf/black
-[pydough-url]: https://github.com/Stephen-RA-King/pydough
 [codeclimate-image]: https://api.codeclimate.com/v1/badges/9543c409696e9976a987/maintainability
 [codeclimate-url]: https://codeclimate.com/github/Stephen-RA-King/pynball/maintainability
 [codecov-image]: https://codecov.io/gh/Stephen-RA-King/pynball/branch/main/graph/badge.svg
@@ -260,8 +261,8 @@ Created with Cookiecutter template: [**pydough**][pydough-url] version 1.2.1
 [commitizen-url]: http://commitizen.github.io/cz-cli/
 [conventional-commits-image]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square
 [conventional-commits-url]: https://conventionalcommits.org
-[deepsource-image]: https://static.deepsource.io/deepsource-badge-light-mini.svg
-[deepsource-url]: https://deepsource.io/gh/Stephen-RA-King/pynball/?ref=repository-badge
+[deepsource-image]: https://app.deepsource.com/gh/Stephen-RA-King/pynball.svg/?label=active+issues&show_trend=true
+[deepsource-url]: https://app.deepsource.com/gh/Stephen-RA-King/pynball/?ref=repository-badge
 [downloads-image]: https://static.pepy.tech/personalized-badge/pynball?period=total&units=international_system&left_color=black&right_color=orange&left_text=Downloads
 [downloads-url]: https://pepy.tech/project/pynball
 [format-image]: https://img.shields.io/pypi/format/pynball
@@ -275,15 +276,19 @@ Created with Cookiecutter template: [**pydough**][pydough-url] version 1.2.1
 [license-url]: https://github.com/Stephen-RA-King/pynball/blob/main/LICENSE
 [mypy-image]: http://www.mypy-lang.org/static/mypy_badge.svg
 [mypy-url]: http://mypy-lang.org/
+[openssf-image]: https://api.securityscorecards.dev/projects/github.com/Stephen-RA-King/pynball/badge
+[openssf-url]: https://api.securityscorecards.dev/projects/github.com/Stephen-RA-King/pynball
 [pip-tools-url]: https://github.com/jazzband/pip-tools/
 [pipx-url]: https://pypa.github.io/pipx/
 [pre-commit-image]: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
 [pre-commit-url]: https://github.com/pre-commit/pre-commit
 [pre-commit.ci-image]: https://results.pre-commit.ci/badge/github/Stephen-RA-King/pynball/main.svg
 [pre-commit.ci-url]: https://results.pre-commit.ci/latest/github/Stephen-RA-King/pynball/main
+[pydough-image]: https://img.shields.io/badge/pydough-2023-orange
+[pydough-url]: https://github.com/Stephen-RA-King/pydough
 [pyenv-url]: https://github.com/pyenv/pyenv
-[pypi-url]: https://pypi.org/project/pynball/
 [pypi-image]: https://img.shields.io/pypi/v/pynball.svg
+[pypi-url]: https://pypi.org/project/pynball/
 [python-version-image]: https://img.shields.io/pypi/pyversions/pynball
 [readthedocs-image]: https://readthedocs.org/projects/pynball/badge/?version=latest
 [readthedocs-url]: https://pynball.readthedocs.io/en/latest/?badge=latest
