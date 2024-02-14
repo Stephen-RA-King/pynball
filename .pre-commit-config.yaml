@@ -1,6 +1,7 @@
 exclude: |
   (?x)^(
       docs/source/conf.py|
+      docs/example.ipynb|
       tests/[\w]*.py|
       tools/[\w]*.py|
       reports/[\w]*|
