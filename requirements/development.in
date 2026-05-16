@@ -4,6 +4,7 @@ bandit
 black
 build
 python-semantic-release
+cffi>=1.17.0
 click
 colorama
 commitizen
@@ -29,7 +30,7 @@ pytest
 pytest-cov
 pytest-html
 pynacl
-pyyaml
+pyyaml==6.0.1
 requests
 # safety temporarily removed...
 # There are incompatible versions in the resolved dependencies:
