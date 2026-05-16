@@ -57,7 +57,7 @@ exclude = [
 ]
 
 [tool.semantic_release]
-version_variable = [
+version_variables = [
     "src/pynball/__init__.py:__version__",
     "docs/conf.py:version",
 ]
