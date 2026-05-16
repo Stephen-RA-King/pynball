@@ -709,7 +709,7 @@ def lsproject() -> None:
     head2 = "System Version"
     head3 = "Pyenv Versions"
     print(f"{head1:25}{head2:25}{head3}")
-    print(f"{len(head1)*'=':25}{len(head2)*'=':25}{len(head3)*'='}")
+    print(f"{len(head1) * '=':25}{len(head2) * '=':25}{len(head3) * '='}")
     for virt in dirs:
         envcfg = _WORKON_HOME / virt / "pyvenv.cfg"
         if envcfg.exists():
