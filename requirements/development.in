@@ -15,6 +15,7 @@ flake8-bugbear
 flake8-comprehensions
 flake8-docstrings
 flake8-eradicate
+flake8-pyproject
 flake8-pytest-style
 flake8-simplify
 isort
@@ -25,6 +26,10 @@ types-requests
 mypy
 myst-nb
 pep8-naming
+# latest pip-tools is required to resolve dependencies correctly, see https://github.com/jazzband/pip-tools/issues/2379
+pip-tools==7.5.3
+pip==25.2
+# ===================================
 pre-commit
 pytest
 pytest-cov
