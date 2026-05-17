@@ -28,7 +28,7 @@ keywords = [
 ]
 requires-python = ">=3.10"
 dependencies = [
-    "click>=8.1.3,<8.2.0",
+    "click>=8.1.3,<9.0.0",
     "python-magic-bin==0.4.14; platform_system=='Windows'",
 ]
 classifiers = [
@@ -70,39 +70,29 @@ max-line-length = 88
 select = ["B", "B9", "C", "D", "E", "F", "N", "W"]
 exclude = ["tests/*", ".tox/*", ".nox/*", "docs/*", ".git/*", ".github/*"]
 ignore = ["E203", "W503"]
+per-file-ignores = [
+    "__init__.py:F401",
+    "pathmagic.py:F401",
+    "test_pynball.py:F401",
+]
 
-[tool.flake8.per-file-ignores]
-"__init__.py" = ["F401"]
-"pathmagic.py" = ["F401"]
-"test_pynball.py" = ["F401"]
 
 [tool.black]
 line-length = 88
 
+
 [tool.isort]
+profile = "black"
+line_length = 88
+known_third_party = ["click", "pytest", "setuptools", "piptools", "pre_commit"]
+known_first_party = ["pathmagic"]
 import_heading_stdlib = "Core Library modules"
 import_heading_thirdparty = "Third party modules"
 import_heading_firstparty = "First party modules"
 import_heading_localfolder = "Local modules"
-include_trailing_comma = true
-indent = '    '
-known_third_party = [
-    "click",
-    "pytest",
-    "setuptools",
-    "pip-tools",
-    "pre-commit"
-]
-known_first_party = [
-    "pathmagic"
-]
-line_length = 80
-multi_line_output = 3
-force_grid_wrap = 0
-use_parentheses = true
 ensure_newline_before_comments = true
-balanced_wrapping = true
 combine_as_imports = true
+
 
 [tool.mypy]
 ignore_missing_imports = true
@@ -114,24 +104,28 @@ warn_redundant_casts = true
 warn_unused_configs = true
 disallow_untyped_calls = false
 disallow_incomplete_defs = true
-follow_imports = "skip"
-html_report = "reports/mypy"
+follow_imports = "normal"
 cache_dir = 'cache/.mypy_cache'
-mypy_path = "typeshed/pyi:typeshed/imports"
+mypy_path = ["typeshed/pyi", "typeshed/imports"]
 exclude = [
     '^tests/[\w]*.py$',
     '^tools/[\w]*.py$',
     '^tasks.py$'
 ]
 
+[tool.mypy.reports]
+html = "reports/mypy"
+
 [tool.semantic_release]
 version_variables = [
     "src/pynball/__init__.py:__version__",
     "docs/conf.py:version",
 ]
-changelog_file = "CHANGELOG.md"
 build_command = "python -m build"
 commit_message = "chore: generate release with PSR"
+
+[tool.semantic_release.changelog]
+file = "CHANGELOG.md"
 
 [tool.semantic_release.remote.token]
 env = "GH_TOKEN"
