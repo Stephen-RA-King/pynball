@@ -45,7 +45,7 @@ system installations etc. Pynball can make leveraging such environments a lot ea
 
 #### Minimum Requirements
 
-1. Python 3.8+
+1. Python 3.10+
 2. [**pipx**][pipx-url]
 3. [**Virtualenv**][virtualenv-url] (which has benefits over venv)
 4. [**Virtualenvwrapper**][virtualenvwrapper-url]
@@ -287,7 +287,7 @@ Digital object identifier:  [![DOI](https://zenodo.org/badge/464560536.svg)](htt
 [pydough-image]: https://img.shields.io/badge/pydough-2023-orange
 [pydough-url]: https://github.com/Stephen-RA-King/pydough
 [pyenv-url]: https://github.com/pyenv/pyenv
-[pypi-image]: https://img.shields.io/pypi/v/pynball.svg
+[pypi-image]: https://img.shields.io/pypi/v/pynball
 [pypi-url]: https://pypi.org/project/pynball/
 [python-version-image]: https://img.shields.io/pypi/pyversions/pynball
 [readthedocs-image]: https://readthedocs.org/projects/pynball/badge/?version=latest
