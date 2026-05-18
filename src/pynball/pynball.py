@@ -1,4 +1,5 @@
-"""Utility script to help manage Development with various versions of Python
+"""Utility script to help manage Development with various versions of Python.
+
 in conjunction with Virtual Environments and the pyenv module.
 """
 
@@ -42,7 +43,7 @@ config = configparser.ConfigParser()
 
 
 def get_environ(env_name: str) -> Path:
-    """Return the Path given the environment variable name"""
+    """Return the Path given the environment variable name."""
     try:
         env_value = Path(os.environ[env_name])
     except KeyError:
@@ -57,13 +58,11 @@ _PYENV_HOME = get_environ("PYENV_HOME")
 
 @click.group()
 def cli() -> None:
-    """Utility script to help manage development with various versions of Python
-    in conjunction with Virtual Environments and optionally the pyenv module.
-    """
+    """Manage development with various versions of Python."""
 
 
 def del_rw(action, name, exc):  # type: ignore
-    """Change the access permissions for a file object to writeable and delete it"""
+    """Change the access permissions for a file object to writeable and delete it."""
     os.chmod(name, stat.S_IWRITE)
     os.remove(name)
 
@@ -92,7 +91,7 @@ def _feedback(message: str, feedback_type: str) -> None:
 
 
 def _file_word_replace(filepath: Path, old_word: str, new_word: str) -> Any:
-    """Open the given file and replace old word with a new word"""
+    """Open the given file and replace old word with a new word."""
     with open(filepath) as file:
         file_data = file.read()
     file_data = file_data.replace(old_word, new_word)
@@ -101,7 +100,7 @@ def _file_word_replace(filepath: Path, old_word: str, new_word: str) -> Any:
 
 
 def _execute(*args: Any, supress_exception: bool = False) -> Any:
-    """A utility method to run command line tools
+    """A utility method to run command line tools.
 
     Args:
         *args:  The commands typically entered at the command line.
@@ -446,7 +445,7 @@ def delete(name: str) -> None:
 
 @cli.command()
 def reset() -> None:
-    """Deletes all names / paths"""
+    """Deletes all names / paths."""
     _delenv("user", "PYNBALL")
 
 
@@ -463,7 +462,7 @@ def version() -> None:
 
 @cli.command()
 def versions() -> None:
-    """Lists the names / paths of the configured Python installations"""
+    """Lists the names / paths of the configured Python installations."""
     system_paths, pynball_names = _get_system_path()
     pynball_versions = _get_pynball("dict", "PYNBALL")
     if not system_paths:
@@ -547,7 +546,7 @@ def system(ctx: Any, name: str) -> None:
 @click.option("-f", "--force", "use_force", flag_value="y")
 @click.pass_context
 def pyenv(ctx: Any, use_pyenv: str, use_force: str) -> None:
-    """Automatically include the pyenv versions in Pynball
+    """Automatically include the pyenv versions in Pynball.
 
     \b
     Args:
@@ -699,7 +698,7 @@ def rmproject(delete_all: str, project_name: str) -> None:
 
 @cli.command()
 def lsproject() -> None:
-    """Displays all Virtual Environment projects"""
+    """Displays all Virtual Environment projects."""
     if _check_virtual_env() == 1:
         return
     dirs = [e.name for e in _WORKON_HOME.iterdir() if e.is_dir()]
@@ -766,7 +765,7 @@ def mvproject(ctx: Any, old_name: str, new_name: str) -> None:
     ]
 
     def glob_to_re(glob_list: list) -> str:
-        """Given a glob file pattern return a regex pattern"""
+        """Given a glob file pattern return a regex pattern."""
         re_list = [fnmatch.translate(x) for x in glob_list]
         combined = "(" + ")|(".join(re_list) + ")"
         return combined
@@ -851,7 +850,7 @@ def exportconf() -> None:
 @cli.command()
 @click.argument("config_path", type=click.Path())
 def importconf(config_path: str) -> None:
-    """Creates a configuration from a file backup
+    """Creates a configuration from a file backup.
 
     Args:
         config_path:  The commands typically entered at the command line.
