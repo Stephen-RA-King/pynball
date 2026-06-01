@@ -284,7 +284,7 @@ Digital object identifier:  [![DOI](https://zenodo.org/badge/464560536.svg)](htt
 [pre-commit-url]: https://github.com/pre-commit/pre-commit
 [pre-commit.ci-image]: https://results.pre-commit.ci/badge/github/Stephen-RA-King/pynball/main.svg
 [pre-commit.ci-url]: https://results.pre-commit.ci/latest/github/Stephen-RA-King/pynball/main
-[pydough-image]: https://img.shields.io/badge/pydough-2023-orange
+[pydough-image]: https://img.shields.io/badge/Cookiecutter-pydough-orange?logo=cookiecutter
 [pydough-url]: https://github.com/Stephen-RA-King/pydough
 [pyenv-url]: https://github.com/pyenv/pyenv
 [pypi-image]: https://img.shields.io/pypi/v/pynball
