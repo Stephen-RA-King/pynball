@@ -1,6 +1,125 @@
 # CHANGELOG
 
 
+## v1.5.9 (2026-07-10)
+
+### Bug Fixes
+
+- Psr version templating
+  ([`6f9317a`](https://github.com/Stephen-RA-King/pynball/commit/6f9317a4d6e841157ff223933461a657d1818a12))
+
+- Test version variable update
+  ([`ed35fb9`](https://github.com/Stephen-RA-King/pynball/commit/ed35fb9c8058558f1232186ddd1c8dd4bb0522a0))
+
+### Build System
+
+- Add flake8-pyproject
+  ([`51988ed`](https://github.com/Stephen-RA-King/pynball/commit/51988ed804e47a27228eae944b620d95907118f4))
+
+### Chores
+
+- Add eol
+  ([`18d96ea`](https://github.com/Stephen-RA-King/pynball/commit/18d96eae0817c3d7b3de5a977ba8aa67b2ff1f6d))
+
+- Drop dependency python-magic-bin
+  ([`bd6b851`](https://github.com/Stephen-RA-King/pynball/commit/bd6b8512b2692b4dabaee10d0df680fdf214baa3))
+
+- Update config
+  ([`c0f2ad6`](https://github.com/Stephen-RA-King/pynball/commit/c0f2ad695098816c45d823719ad34c686f718ef3))
+
+- Update os matrix
+  ([`a1b6efc`](https://github.com/Stephen-RA-King/pynball/commit/a1b6efc2d2c8f177a3825787d31066bc1baa3b32))
+
+- Update reqs
+  ([`f95fb36`](https://github.com/Stephen-RA-King/pynball/commit/f95fb36fd2d6bcfc6a52482cf64ed1b26cbf6e9c))
+
+- Update versions
+  ([`75be7d6`](https://github.com/Stephen-RA-King/pynball/commit/75be7d69929f770d8eae3ed2e65b4f962c845726))
+
+- **deps**: Bump actions/checkout from 6 to 7
+  ([`9237829`](https://github.com/Stephen-RA-King/pynball/commit/9237829927f1518ecd7e481069fd84ce29fed02f))
+
+Bumps [actions/checkout](https://github.com/actions/checkout) from 6 to 7. - [Release
+  notes](https://github.com/actions/checkout/releases) -
+  [Changelog](https://github.com/actions/checkout/blob/main/CHANGELOG.md) -
+  [Commits](https://github.com/actions/checkout/compare/v6...v7)
+
+--- updated-dependencies: - dependency-name: actions/checkout dependency-version: '7'
+
+dependency-type: direct:production
+
+update-type: version-update:semver-major ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps**: Bump codecov/codecov-action from 4 to 6
+  ([`20b12e9`](https://github.com/Stephen-RA-King/pynball/commit/20b12e9a3ece4f76324482937014218ff64bb514))
+
+Bumps [codecov/codecov-action](https://github.com/codecov/codecov-action) from 4 to 6. - [Release
+  notes](https://github.com/codecov/codecov-action/releases) -
+  [Changelog](https://github.com/codecov/codecov-action/blob/main/CHANGELOG.md) -
+  [Commits](https://github.com/codecov/codecov-action/compare/v4...v6)
+
+--- updated-dependencies: - dependency-name: codecov/codecov-action dependency-version: '6'
+
+dependency-type: direct:production
+
+update-type: version-update:semver-major ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+- **deps**: Bump codecov/codecov-action from 6 to 7
+  ([`cf2ec33`](https://github.com/Stephen-RA-King/pynball/commit/cf2ec336a1826ed6a616e97069437d4ec7f3dc32))
+
+Bumps [codecov/codecov-action](https://github.com/codecov/codecov-action) from 6 to 7. - [Release
+  notes](https://github.com/codecov/codecov-action/releases) -
+  [Changelog](https://github.com/codecov/codecov-action/blob/main/CHANGELOG.md) -
+  [Commits](https://github.com/codecov/codecov-action/compare/v6...v7)
+
+--- updated-dependencies: - dependency-name: codecov/codecov-action dependency-version: '7'
+
+dependency-type: direct:production
+
+update-type: version-update:semver-major ...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+
+### Continuous Integration
+
+- Add flake8-pyproject to yaml
+  ([`2af67b6`](https://github.com/Stephen-RA-King/pynball/commit/2af67b6a28a0e90e6b87d220ce04ae5c2ed61619))
+
+- Ci fix
+  ([`991a591`](https://github.com/Stephen-RA-King/pynball/commit/991a591978e5e45abff02b3ab4d7f1d10a2640b4))
+
+### Documentation
+
+- Update badge definition
+  ([`dea62e4`](https://github.com/Stephen-RA-King/pynball/commit/dea62e4e7c726cab825e3363a354900074302aeb))
+
+- Update minimum python version
+  ([`b458581`](https://github.com/Stephen-RA-King/pynball/commit/b45858113d3802c88e2260919f9618e27663ec34))
+
+- Update python version
+  ([`9cfcea4`](https://github.com/Stephen-RA-King/pynball/commit/9cfcea45abc7668fd242a280aac0efb46b360836))
+
+- Update python version
+  ([`1d78d1d`](https://github.com/Stephen-RA-King/pynball/commit/1d78d1d4339fdca569ce942872209f80bc110310))
+
+- Update ubuntu version
+  ([`ff63ca9`](https://github.com/Stephen-RA-King/pynball/commit/ff63ca95fcbeb4b36f767eae71d703b6aa6a567c))
+
+### Refactoring
+
+- Move configs to pyproject.toml
+  ([`1ac38a7`](https://github.com/Stephen-RA-King/pynball/commit/1ac38a76cfbce2cffb5efca8664b92351f07da9d))
+
+### Testing
+
+- Increase test coverage
+  ([`b402eaf`](https://github.com/Stephen-RA-King/pynball/commit/b402eafad4e9cf602c33f24f6c2ead1093a1cc24))
+
+
 ## v1.5.8 (2026-05-16)
 
 ### Bug Fixes
@@ -15,6 +134,9 @@
 
 - Bump versions
   ([`f826122`](https://github.com/Stephen-RA-King/pynball/commit/f826122ca1eb85e302d99678a31692b1720c9ef1))
+
+- Generate by PSR
+  ([`945fe28`](https://github.com/Stephen-RA-King/pynball/commit/945fe288f32faa0c80ceab96a50e32a56807afba))
 
 - Update action versions
   ([`5535ad2`](https://github.com/Stephen-RA-King/pynball/commit/5535ad2b0fe0d0e12ad0c3298456f6589b845ecb))
