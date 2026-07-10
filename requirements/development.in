@@ -29,7 +29,6 @@ pep8-naming
 # latest pip-tools is required to resolve dependencies correctly, see https://github.com/jazzband/pip-tools/issues/2379
 pip-tools==7.5.3
 pip==25.2
-# ===================================
 pre-commit
 pytest
 pytest-cov
@@ -37,11 +36,6 @@ pytest-html
 pynacl
 pyyaml==6.0.1
 requests
-# safety temporarily removed...
-# There are incompatible versions in the resolved dependencies:
-#   packaging<22.0,>=21.0 (from safety==2.3.5->-r requirements.in (line 2))
-#   packaging>=22.0 (from black==23.1.0->-r requirements.in (line 1))
-# safety
 sphinx
 sphinx-autoapi
 sphinx-rtd-theme

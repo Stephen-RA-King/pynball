@@ -4,9 +4,11 @@
 #
 #    pip-compile base.in
 #
+--index-url https://pkgs.safetycli.com/repository/none-4c687/pypi/simple/
+
 click==8.4.2
     # via -r base.in
 colorama==0.4.6
     # via click
-python-magic-bin==0.4.14
+puremagic==2.2.0
     # via -r base.in

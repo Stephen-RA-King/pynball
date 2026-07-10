@@ -21,7 +21,7 @@ from typing import Any
 
 # Third party modules
 import click
-import magic
+import puremagic
 
 #: Specifies the operating system to which the module is installed
 _PLATFORM = sys.platform
@@ -752,7 +752,6 @@ def mvproject(ctx: Any, old_name: str, new_name: str) -> None:
     project_root = _PROJECT_HOME / old_name
     virt_project_root = _WORKON_HOME / old_name
     files = project_root.rglob("*")
-    mime = magic.Magic(mime=True)
     dir_name_change, file_search, file_name_change = [], [], []
     dir_name_change.append(project_root)
     ignore_dirs = [
@@ -775,8 +774,12 @@ def mvproject(ctx: Any, old_name: str, new_name: str) -> None:
 
     for file in files:
         if file.is_file():
+            try:
+                file_mime = puremagic.from_file(str(file), mime=True)
+            except puremagic.PureError:
+                file_mime = ""
             if (
-                "text" in mime.from_file(str(file))
+                "text" in file_mime
                 and not re.match(ignore_files_re, file.name)
                 and not set(file.parent.parts).intersection(ignore_dirs_set)
             ):

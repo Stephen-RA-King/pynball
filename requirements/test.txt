@@ -4,6 +4,8 @@
 #
 #    pip-compile test.in
 #
+--index-url https://pkgs.safetycli.com/repository/none-4c687/pypi/simple/
+
 click==8.4.2
     # via -r production.txt
 colorama==0.4.6
@@ -11,7 +13,7 @@ colorama==0.4.6
     #   -r production.txt
     #   click
     #   pytest
-coverage[toml]==7.14.3
+coverage[toml]==7.15.0
     # via pytest-cov
 iniconfig==2.3.0
     # via pytest
@@ -31,6 +33,8 @@ pluggy==1.6.0
     #   pytest-cov
 pprintpp==0.4.0
     # via pytest-clarity
+puremagic==2.2.0
+    # via -r production.txt
 pygments==2.20.0
     # via
     #   pytest
@@ -62,8 +66,6 @@ pytest-sugar==1.1.1
     # via -r test.in
 pytest-tldr==0.2.6
     # via -r test.in
-python-magic-bin==0.4.14
-    # via -r production.txt
 rich==15.0.0
     # via pytest-clarity
 termcolor==3.3.0
