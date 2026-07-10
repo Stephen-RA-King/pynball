@@ -45,7 +45,7 @@ system installations etc. Pynball can make leveraging such environments a lot ea
 
 #### Minimum Requirements
 
-1. Python 3.10+
+1. Python >=3.12
 2. [**pipx**][pipx-url]
 3. [**Virtualenv**][virtualenv-url] (which has benefits over venv)
 4. [**Virtualenvwrapper**][virtualenvwrapper-url]
