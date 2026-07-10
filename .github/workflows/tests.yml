@@ -8,27 +8,24 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
-    branches: [main]
 
 jobs:
   test:
     # Step 1. Set up operating system
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [windows-latest]
-        python-version: ["3.13.12"]
-        exclude:
-          - os: windows-latest
-            python-version: "3.8"
+        os: [windows-latest, ubuntu-latest]
+        python-version: ["3.12", "3.13", "3.14"]
     steps:
-      # Step 3. Check-out repository so we can access its contents
+      # Step 2. Check-out repository so we can access its contents
       - uses: actions/checkout@v7
-      # Step 2. Set up Python 3.13
+      # Step 3. Set up Python
       - uses: actions/setup-python@v6
         with:
-          python-version: 3.13.12
-      # step 3. Install the dependencies from requirements.txt file
+          python-version: ${{ matrix.python-version }}
+      # Step 4. Install the dependencies from requirements.txt file
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip setuptools wheel
@@ -38,20 +35,19 @@ jobs:
       - name: Install package
         run: |
           pip install -e .
-      # Step 5. Lint the files with flake8
+      # Step 6. Lint the files with flake8
       - name: Lint with flake8
         run: |
-          # stop the build if there are Python syntax errors or undefined names
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
         continue-on-error: true
-      # Step 6. Run the tests
+      # Step 7. Run the tests
       - name: Test with pytest
         run: |
           pytest tests/ --cov=pynball --cov-report=xml
-      # Step 7. Use Codecov to track coverage
+      # Step 8. Use Codecov to track coverage
       - uses: codecov/codecov-action@v7
         with:
-          file: ./coverage.xml
-          fail_build_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          fail_ci_if_error: true
