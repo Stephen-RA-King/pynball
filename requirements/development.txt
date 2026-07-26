@@ -8,13 +8,13 @@
 
 alabaster==1.0.0
     # via sphinx
-annotated-types==0.7.0
+annotated-types==0.8.0
     # via pydantic
-anyio==4.14.1
+anyio==4.14.2
     # via
     #   httpx
     #   jupyter-server
-argcomplete==3.6.3
+argcomplete==3.7.0
     # via commitizen
 argon2-cffi==25.1.0
     # via jupyter-server
@@ -26,7 +26,7 @@ ast-serialize==0.6.0
     # via mypy
 astroid==4.1.2
     # via sphinx-autoapi
-asttokens==3.0.1
+asttokens==3.0.2
     # via stack-data
 async-lru==2.3.0
     # via jupyterlab
@@ -49,13 +49,13 @@ black==26.5.1
     # via -r development.in
 bleach[css]==6.4.0
     # via nbconvert
-build==1.5.1
+build==1.5.0
     # via
     #   -r development.in
     #   pip-tools
-cachetools==7.1.4
+cachetools==7.1.6
     # via tox
-certifi==2026.6.17
+certifi==2026.7.22
     # via
     #   httpcore
     #   httpx
@@ -98,14 +98,14 @@ comm==0.2.3
     # via
     #   ipykernel
     #   ipywidgets
-commitizen==4.16.4
+commitizen==4.16.5
     # via
     #   -r development.in
     #   coverage-conditional-plugin
     #   pytest-cov
 coverage-conditional-plugin==0.9.0
     # via -r development.in
-coverage[toml]==7.15.0
+coverage[toml]==7.15.2
     # via -r development.in
 debugpy==1.8.21
     # via ipykernel
@@ -133,9 +133,9 @@ eradicate==2.3.0
     # via flake8-eradicate
 executing==2.2.1
     # via stack-data
-fastjsonschema==2.21.2
+fastjsonschema==2.22.0
     # via nbformat
-filelock==3.29.7
+filelock==3.32.0
     # via
     #   python-discovery
     #   tox
@@ -170,9 +170,9 @@ fqdn==1.5.1
     # via jsonschema
 gitdb==4.0.12
     # via gitpython
-gitpython==3.1.50
+gitpython==3.1.57
     # via python-semantic-release
-greenlet==3.5.3
+greenlet==3.5.4
     # via sqlalchemy
 h11==0.16.0
     # via httpcore
@@ -224,7 +224,7 @@ jaraco-classes==3.4.0
     # via keyring
 jaraco-context==6.1.2
     # via keyring
-jaraco-functools==4.5.0
+jaraco-functools==4.6.0
     # via keyring
 jedi==0.20.0
     # via ipython
@@ -253,7 +253,7 @@ jsonschema[format-nongpl]==4.26.0
     # via jsonschema
 jupyter==1.1.1
     # via -r development.in
-jupyter-builder==1.0.2
+jupyter-builder==1.1.1
     # via
     #   jupyterlab
     #   notebook
@@ -291,7 +291,7 @@ jupyter-server==2.20.0
     #   notebook-shim
 jupyter-server-terminals==0.5.4
     # via jupyter-server
-jupyterlab==4.6.1
+jupyterlab==4.6.2
     # via
     #   jupyter
     #   notebook
@@ -332,13 +332,13 @@ mdit-py-plugins==0.6.1
     # via myst-parser
 mdurl==0.1.2
     # via markdown-it-py
-mistune==3.3.3
+mistune==3.3.4
     # via nbconvert
 more-itertools==11.1.0
     # via
     #   jaraco-classes
     #   jaraco-functools
-mypy==2.2.0
+mypy==2.3.0
     # via -r development.in
 mypy-extensions==1.1.0
     # via
@@ -370,7 +370,7 @@ nh3==0.3.6
     # via readme-renderer
 nodeenv==1.10.0
     # via pre-commit
-notebook==7.6.0
+notebook==7.6.1
     # via jupyter
 notebook-shim==0.2.4
     # via
@@ -404,9 +404,9 @@ pathspec==1.1.1
     #   mypy
 pep8-naming==0.15.1
     # via -r development.in
-pip-tools==7.5.3
+pip-tools==7.6.0
     # via -r development.in
-platformdirs==4.10.0
+platformdirs==4.11.0
     # via
     #   black
     #   jupyter-core
@@ -418,9 +418,9 @@ pluggy==1.6.0
     #   pytest
     #   pytest-cov
     #   tox
-pre-commit==4.6.0
+pre-commit==4.6.1
     # via -r development.in
-prometheus-client==0.25.0
+prometheus-client==0.26.0
     # via jupyter-server
 prompt-toolkit==3.0.51
     # via
@@ -460,7 +460,7 @@ pygments==2.20.0
     #   sphinx
 pynacl==1.6.2
     # via -r development.in
-pyproject-api==1.10.1
+pyproject-api==1.11.0
     # via tox
 pyproject-hooks==1.2.0
     # via
@@ -482,7 +482,7 @@ python-dateutil==2.9.0.post0
     # via
     #   arrow
     #   jupyter-client
-python-discovery==1.4.4
+python-discovery==1.5.0
     # via
     #   tox
     #   virtualenv
@@ -577,7 +577,7 @@ snowballstemmer==3.1.1
     # via
     #   pydocstyle
     #   sphinx
-soupsieve==2.8.4
+soupsieve==2.9.1
     # via beautifulsoup4
 sphinx==9.1.0
     # via
@@ -635,7 +635,7 @@ tornado==6.5.7
     #   jupyterlab
     #   notebook
     #   terminado
-tox==4.56.4
+tox==4.58.0
     # via -r development.in
 traitlets==5.15.1
     # via
@@ -655,7 +655,7 @@ traitlets==5.15.1
     #   nbformat
 twine==6.2.0
     # via -r development.in
-types-requests==2.33.0.20260518
+types-requests==2.33.0.20260712
     # via -r development.in
 typing-extensions==4.16.0
     # via
@@ -679,7 +679,7 @@ urllib3==2.7.0
     #   requests
     #   twine
     #   types-requests
-virtualenv==21.6.0
+virtualenv==21.7.0
     # via
     #   pre-commit
     #   tox
