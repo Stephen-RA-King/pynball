@@ -1,5 +1,5 @@
--r base.txt
-
+-r base.in
+-r test.in
 bandit
 black
 build
