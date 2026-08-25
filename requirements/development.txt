@@ -14,7 +14,7 @@ argcomplete==3.7.2
     # via commitizen
 argon2-cffi==25.1.0
     # via jupyter-server
-argon2-cffi-bindings==25.1.0
+argon2-cffi-bindings==26.1.0
     # via argon2-cffi
 arrow==1.4.0
     # via isoduration
@@ -93,7 +93,7 @@ comm==0.2.3
     # via
     #   ipykernel
     #   ipywidgets
-commitizen==4.17.1
+commitizen==4.18.0
     # via -r requirements/development.in
 coverage==7.15.4
     # via
@@ -128,7 +128,7 @@ executing==2.2.1
     # via stack-data
 fastjsonschema==2.22.2
     # via nbformat
-filelock==3.32.3
+filelock==3.32.4
     # via
     #   python-discovery
     #   tox
@@ -183,7 +183,7 @@ idna==3.19
     #   httpx
     #   jsonschema
     #   requests
-imagesize==2.0.0
+imagesize==2.0.1
     # via sphinx
 importlib-metadata==9.0.0
     # via
@@ -359,7 +359,7 @@ nbformat==5.11.1
     #   nbconvert
 nest-asyncio2==1.7.2
     # via ipykernel
-nh3==0.3.6
+nh3==0.3.7
     # via readme-renderer
 nodeenv==1.10.0
     # via pre-commit
@@ -403,7 +403,7 @@ pip==26.2.1
     #   pip-tools
 pip-tools==7.6.1
     # via -r requirements/development.in
-platformdirs==4.11.3
+platformdirs==4.11.4
     # via
     #   black
     #   jupyter-core
@@ -500,7 +500,7 @@ python-dateutil==2.9.0.post0
     # via
     #   arrow
     #   jupyter-client
-python-discovery==1.5.2
+python-discovery==1.5.3
     # via
     #   tox
     #   virtualenv
@@ -530,7 +530,7 @@ pyyaml==6.0.1
     #   myst-parser
     #   pre-commit
     #   sphinx-autoapi
-pyzmq==27.1.0
+pyzmq==27.2.0
     # via
     #   ipykernel
     #   jupyter-client
@@ -610,7 +610,7 @@ sphinx==9.1.0
     #   sphinx-autoapi
     #   sphinx-rtd-theme
     #   sphinxcontrib-jquery
-sphinx-autoapi==3.8.0
+sphinx-autoapi==3.8.1
     # via -r requirements/development.in
 sphinx-rtd-theme==3.1.0
     # via -r requirements/development.in
@@ -632,7 +632,7 @@ sqlalchemy==2.0.52
     # via jupyter-cache
 stack-data==0.6.3
     # via ipython
-stevedore==5.9.0
+stevedore==5.9.1
     # via bandit
 tabulate==0.10.0
     # via jupyter-cache
@@ -660,7 +660,7 @@ tornado==6.5.8
     #   jupyterlab
     #   notebook
     #   terminado
-tox==4.60.0
+tox==4.60.1
     # via -r requirements/development.in
 traitlets==5.16.1
     # via
@@ -704,7 +704,7 @@ urllib3==2.7.0
     #   requests
     #   twine
     #   types-requests
-virtualenv==21.7.4
+virtualenv==21.7.5
     # via
     #   pre-commit
     #   tox
