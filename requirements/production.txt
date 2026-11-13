@@ -2,9 +2,7 @@
 #    uv pip compile requirements\production.in -o requirements\production.txt
 -e .
     # via -r requirements/base.in
-click==8.4.2
+click==8.5.1
     # via pynball
-colorama==0.4.6
-    # via click
-puremagic==2.2.0
+puremagic==2.2.1
     # via pynball
